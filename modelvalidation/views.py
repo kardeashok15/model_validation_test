@@ -62,6 +62,8 @@ plot_dir_view='static/media/'
 
 src_files='static/cnfrmsrc_files/'
 
+# comments for github test
+
 def index(request):
     return render(request, 'index.html')
 
