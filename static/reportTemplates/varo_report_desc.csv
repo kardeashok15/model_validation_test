@@ -1,0 +1,820 @@
+reqID,section,title,titleIdx,subtitle,subtitleIdx,subsubtitle,subsubtitleIdx,comment,img,imgWidth,imgHeight,imgAlign,ImgTitle,TitleAlign
+1,Comment,Executive Summary,1,,0.0,,0,"<p><b>1 Executive Summary</b></p>
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[The purpose of this section is to provide a
+high-level overview of the model, the validation outcome, and the findings
+identified.] </span></p>
+
+<br /></p>",-,-,-,-,-,-
+2,Comment,Model Assessment,2,,0.0,,0,"<b>2 Model Assessment</b>
+<br />",-,-,-,-,-,-
+3,Comment,Model Performance & Testing,3,,0.0,,0,"<b>3 Model Performance &amp; Testing</b>
+<br />",-,-,-,-,-,-
+4,Comment,Implementation and Controls,4,,0.0,,0,"<b>4 Implementation and Controls</b>
+<br />",-,-,-,-,-,-
+5,Comment,Governance and Oversight,5,,0.0,,0,"<b>5 Governance and Oversight</b>
+<br />",-,-,-,-,-,-
+6,Comment,Executive Summary,1,Model Purpose and Use,1.1,,0,"<b>1.1 Model Purpose and Use</b>
+<br />
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[Provide a clear description of the model
+purpose and use(s). Identify which business function this model is used for and
+covered products as well as restrictions. If the model has specific regulatory
+requirements, provide a summary and briefly comment on compliance with such
+requirements.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+7,Comment,Executive Summary,1,Model Description,1.2,,0,"<b>1.2 Model Description</b>
+<br />
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[Provide a brief description of the model and
+theoretical framework, including brief description of inputs and outputs.
+Include description of model category, business area, portfolio sizes /
+exposures, and management actions driven / impacted by the model]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+8,Comment,Executive Summary,1,Model Risk Tier,1.3,,0,"<b>1.3 Model Risk Tier</b>
+<br />
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[Include the model risk tier as well as the
+components used for its determination.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+9,Comment,Executive Summary,1,Validation Scope and Approach,1.4,,0,"<b>1.4 Validation Scope and Approach</b>
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[Identify the scope of the validation
+conducted; i.e. state whether this is a full scope, a revalidation, or a
+change-based validation:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#7030A0""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#7030A0"">Full Scope validation: done when a new model is requested to be
+used in production, as well as for major model changes</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#7030A0""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#7030A0"">Change-based validation: targeted validation when revisions or a
+material change to targeted area is made to the model</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#7030A0""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#7030A0"">Revalidation: Occurs periodically or when a model is posing high
+residual risk (breaching monitoring thresholds, failed annual reviews).
+Periodic revalidations are based on risk tier of the model:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:1.0in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Courier New&quot;;color:#7030A0""><span>o<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp; </span></span></span><span style=""font-size:10.0pt;line-height:107%;color:#7030A0"">Every 2 years for high
+risk models</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:1.0in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Courier New&quot;;color:#7030A0""><span>o<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp; </span></span></span><span style=""font-size:10.0pt;line-height:107%;color:#7030A0"">Every 3 years for
+medium risk models</span></p>
+
+<p style=""margin-left:1.0in;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Courier New&quot;;color:#7030A0""><span>o<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp; </span></span></span><span style=""font-size:10.0pt;line-height:107%;color:#7030A0"">Every 5 years for low
+risk models]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+10,Comment,Executive Summary,1,Validation Outcome,1.5,,0,"<b>1.5 Validation Outcome</b>
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[Provide the outcome of the validation, which
+should be reported as one of the following [3] outcomes, along with rational
+for assigning the outcome; i.e. conclusions of the model validation.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#7030A0""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#7030A0"">Approval: unconditional approval of the model</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:0in;
+margin-left:.5in;margin-bottom:.0001pt;text-indent:-.25in;
+border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#7030A0""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#7030A0"">Conditional Approval: an approval contingent on the
+resolution/mitigation of identified findings </span></p>
+
+<span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;color:#7030A0"">Rejection:
+a model is generally rejected due to significant modeling deficiencies and
+weaknesses, rendering the model inappropriate for the intended usage. In such
+cases, the model will require further development or immediate resolution to be
+further considered for validation]</span><br /></p>",-,-,-,-,-,-
+11,Comment,Executive Summary,1,Validation Findings,1.6,,0,"<b>1.6 Validation Findings</b>
+<br />
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#7030A0"">[Over the course of the validation,
+observations may be made by the validator(s) about different aspects of the
+model. Observations can be raised as findings if they are deemed model issues.
+Depending on the nature of the finding, actions by the developer(s) or owner(s)
+may be required.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+12,Comment,Model Assessment,2,Development Overview,2.1,,0,"<b>2.1 Development Overview</b>
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#4D1D93"">[Provide a brief description of the model
+development process employed by the developers for: </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Development data (including sources, sampling, and
+transformations) </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Theoretical approach and model design </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Model selection process</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Model segmentation </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Production platform, including upstream and downstream
+dependencies </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">For vendor models, include name of third-party vendor and a
+brief overview of customization and implementation </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">End-to-end model implementation process, including a process
+flow diagram as applicable]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+13,Comment,Model Assessment,2,Development Documentation,2.2,,0,"<b>2.2 Development Documentation</b>
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#4D1D93"">[Assess whether development documentation is
+sufficient, including descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Comprehensiveness and transparency of model documentation</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Consistency of all aspects of the model with documentation</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Inclusion of all challenge sessions that occurred as a part of
+validation</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Availability of full development data set]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+14,Comment,Model Assessment,2,Input and Data Integrity,2.3,,0,"<b>2.3 Input and Data Integrity</b>
+<p>
+
+<p style=""text-align:justify""><span style=""font-size:10.0pt;
+line-height:107%;color:#4D1D93"">[Provide a description of the model inputs and
+development data and asses the data calibration methods presented by developers
+in development documentation. Provide an assessment of any analyses or tests
+related to data characteristics that were performed by the developer and the
+validation team.</span></p>
+
+<br /></p>",-,-,-,-,-,-
+15,Comment,Model Assessment,2,Input and Data Integrity,2.3,Input Data Source,2.3.1,"<b>2.3.1 Input Data Source</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+the suitability of the model input data for the modeling purpose including
+descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Definition, reliability, and appropriateness of chosen data
+source</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Consistency of chosen data source with typical industry practice</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Sufficiency of data quality checks and acceptability of outcomes</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness of the use of qualitative data (i.e. expert
+judgment)</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Clear identification and assessment of data limitations</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Checks for quality of data feeds from the source]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+16,Comment,Model Assessment,2,Input and Data Integrity,2.3,"Data Transformation, Cleaning",2.3.2,"<b>2.3.2 Data Transformation, Cleaning</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+that data transformation, cleaning, processing, and handling capabilities are
+appropriate, including descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Proper extraction of data from raw data source </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness of data transformation, cleaning, processing,
+and handling procedures</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Utilization of reconciliation check post-data transformation,
+cleaning, processing, and handling to ensure final data sample consistency with
+sample pulled from raw source]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+17,Comment,Model Assessment,2,Input and Data Integrity,2.3,Final Model Development Dataset,2.3.3,"<b>2.3.3 Final Model Development Dataset</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+the dataset used during development, including descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Consistency of data sample design with modeling objective,
+typical industry practice, regulatory guidance, and intended use of the model</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness of data sample and data proxies for the given
+purpose</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Consistency of sampling method with industry best practice and
+statistical theory</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Consistency of data sample generation</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriate justification of data exclusions]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+18,Comment,Model Assessment,2,Conceptual Soundness,2.4,,0,<b>2.4 Conceptual Soundness</b>,-,-,-,-,-,-
+19,Comment,Model Assessment,2,Conceptual Soundness,2.4,Methodology,2.4.3,"<b>2.4.1 Methodology</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Provide
+an assessment of the model methodology and structure including, but not limited
+to: </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">A description of the model approach and processing components that
+implement the theory, including the mathematical specification and the
+numerical techniques and approximations</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Critical Review of any approximations, judgmental and
+qualitative aspects of the model, where applicable </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">The appropriateness and soundness of the chosen mathematical
+structure /design of the model.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+20,Comment,Model Assessment,2,Conceptual Soundness,2.4,Suitability,2.4.4,"<b>2.4.2 Suitability</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+whether the modeling methodology utilized is appropriate, including
+descriptions of: </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness for the stated business purpose and intended use
+</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Compliance with relevant regulatory requirements and internal
+policies, standards, and procedures' Comprehensive addressing of all internal
+and regulatory findings (e.g., audit reports, OCC exam reports) </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assess the model's variable/output definitions for consistency
+with business and regulatory standards and relevance to the model purpose/scope
+(incl. unusual features such as lead variables). If there are deviations from
+the standard definition, assess the justification given by the business, and
+any potential impacts]</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assess whether the merits and limitations of alternative
+theories and methodologies have been considered when selecting the modeling
+approach.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+21,Comment,Model Assessment,2,Conceptual Soundness,2.4,Variable Selection and Segmentation,2.4.5,"<b>2.4.3 Variable Selection and Segmentation</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+the variable selection process as well as the completeness and appropriateness of
+the variables selected for use in the model per typical industry practice,
+business standards, and economic intuition. </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assessment of the suitability of the model segmentation and the
+variables selected for the model. </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Description of the variable selection process based on economic
+intuition, in addition to statistical significance, where applicable.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assessment of the rationale for the macroeconomic variables or
+other risk drivers chosen for all quantitative approaches, including why
+certain variables or risk drivers were not selected</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assessment of whether the variables selected are consistent with
+business rationale and capture material risks.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assessment of the risk drivers associated with each material
+risk.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">This sub section may not be applicable for all models]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+22,Comment,Model Assessment,2,Conceptual Soundness,2.4,Development Platform and Code,2.4.6,"<b>2.4.4 Development Platform and Code</b>
+<p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:0in""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+and justify the development platform and code used to construct the model,
+including descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness of chosen platform</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Merits and limitations of alternative platform choices</span></p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Readability, reusability, and efficiency of code]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+23,Comment,Model Assessment,2,Conceptual Soundness,2.4,Assumptions,2.4.7,"<b>2.4.5 Assumptions</b>
+<p>
+
+<p class=""MsoNormalM""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Assess
+the completeness and appropriateness of key model assumptions, including
+qualitative aspects of the model and expert opinions. Evaluate the
+appropriateness of each model assumption by assessing model developmental
+evidence such as statistical testing, business logic/industry practice,
+materiality or alternative assumptions considered and provide a conclusion.
+Identify and assess any additional key assumptions not flagged by developers.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+24,Comment,Model Assessment,2,Conceptual Soundness,2.4,Limitations,2.4.8,"<b>2.4.6 Limitations</b>
+<p>
+
+<p class=""MsoNormalM""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Provide
+details regarding model limitations and any planned/existing mitigating
+controls.</span></p>
+
+<p class=""MsoNormalM""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">Assess
+the documentation and communication of model use, limitations and weaknesses
+that ensure that model results are appropriately interpreted, including
+descriptions of:</span></p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Clear definition of model use, scope of application, and
+restrictions</span></p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Identification of external factors that may affect t-model
+performance</span></p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness of conservatism used in the model to compensate
+for limitations and weaknesses</span></p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Assessment and communication of impact of limitations and
+weaknesses on business decisions and downstream models</span></p>
+
+<p style=""margin-top:3.0pt;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriateness of model output, including units and measures of
+uncertainty</span></p>
+
+<p class=""MsoNormalM""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">Each
+limitation should be documented in the following format:</span></p>
+
+<table style=""border-collapse:collapse"" width=""649
+"" cellspacing=""0"" cellpadding=""0"" border=""0"">
+ <tbody><tr style=""height:19.0pt"">
+  <td style=""width:67.05pt;border:solid black 1.0pt;background:#D9D9D9;padding:0in 5.4pt 0in 5.4pt;
+  height:19.0pt"" width=""89"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><b><span style=""font-size:10.0pt;
+  line-height:107%"">Limitation ID#</span></b></p>
+  </td>
+  <td style=""width:85.7pt;border:solid black 1.0pt;
+  border-left:none;
+  background:#D9D9D9;padding:0in 5.4pt 0in 5.4pt;height:19.0pt"" width=""114"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><b><span style=""font-size:10.0pt;
+  line-height:107%"">Identified by</span></b></p>
+  </td>
+  <td style=""width:247.5pt;border:solid black 1.0pt;
+  border-left:none;
+  background:#D9D9D9;padding:0in 5.4pt 0in 5.4pt;height:19.0pt"" width=""330"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><b><span style=""font-size:10.0pt;
+  line-height:107%"">Description</span></b></p>
+  </td>
+  <td style=""width:86.5pt;border:solid black 1.0pt;
+  border-left:none;
+  background:#D9D9D9;padding:0in 5.4pt 0in 5.4pt;height:19.0pt"" width=""115"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><b><span style=""font-size:10.0pt;
+  line-height:107%"">Severity</span></b></p>
+  </td>
+ </tr>
+ <tr style=""height:19.0pt"">
+  <td style=""width:67.05pt;border:solid black 1.0pt;
+  border-top:none;
+  background:white;padding:0in 5.4pt 0in 5.4pt;height:19.0pt"" width=""89"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><b><span style=""font-size:10.0pt;
+  line-height:107%;color:#4D1D93"">1</span></b></p>
+  </td>
+  <td style=""width:85.7pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;background:white;padding:0in 5.4pt 0in 5.4pt;
+  height:19.0pt"" width=""114"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Developer,
+  Validator]<b></b></span></p>
+  </td>
+  <td style=""width:247.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;background:white;padding:0in 5.4pt 0in 5.4pt;
+  height:19.0pt"" width=""330"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[Include
+  description of the limitation]<b></b></span></p>
+  </td>
+  <td style=""width:86.5pt;border-top:none;border-left:
+  none;border-bottom:solid black 1.0pt;border-right:solid black 1.0pt;background:white;padding:0in 5.4pt 0in 5.4pt;
+  height:19.0pt"" width=""115"" valign=""top"">
+  <p style=""margin-bottom:0in;margin-bottom:.0001pt;text-align:
+  justify""><span style=""font-size:10.0pt;line-height:107%;color:#4D1D93"">[High,
+  Medium, or Low]<b></b></span></p>
+  </td>
+ </tr>
+</tbody></table>
+
+<br /></p>",-,-,-,-,-,-
+25,Comment,Model Performance & Testing,3,Model Diagnostic Testing,3.1,,0,"<b>3.1 Model Diagnostic Testing</b>
+<p>
+
+<p style=""margin-bottom:3.0pt;border:none""><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">[Provide a description and an assessment of the Model diagnostic
+testing conducted. </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Evaluate the adequacy of diagnostic testing regarding the
+accuracy, robustness and stability of the implementation and the calibration,
+if applicable.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Evaluate the model's behavior over a range of input values.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Provide an overall conclusion of the adequacy of the diagnostic
+testing and the corresponding test results.</span></p>
+
+<br /></p>",-,-,-,-,-,-
+26,Comment,Model Performance & Testing,3,Outcome Analysis / Back-testing,3.2,,0,"<b>3.2 Outcome Analysis / Back-testing&nbsp;</b>
+
+<p><p style=""margin-bottom:3.0pt;border:none""><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">[Evaluate the adequacy of the outcome analysis tests provided by
+the Model Developers and assess their results. Include any independent tests
+conducted. An example of the three types of back-testing typically conducted as
+part of outcome analysis are:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">In-sample back-testing: Assess the graphical and numerical
+results on how the model prediction compares against the observed values on the
+training dataset as provided by the developers.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Out-of-sample back-testing: Assess graphical and numerical
+results on how the model prediction compares against the observed values on a
+dataset on which the model was not trained as provided by the developers. </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Out-of-time back-testing: assess graphical and numerical results
+on how the model prediction compares against the observed values on a time
+period on which the model was not trained.</span></p>
+
+<p style=""margin-bottom:3.0pt;border:none""><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Review and challenge the outcome analysis methodology and
+results as documented by the Model Developers (when outcomes fall outside the
+intended intervals, an analysis of the discrepancies should be done; further
+analysis may be conducted to identify the underlying causes of significant
+gaps).]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+27,Comment,Model Performance & Testing,3,Benchmarking,3.3,,0,"<b>3.3 Benchmarking</b>
+<p>
+
+<p style=""margin-bottom:3.0pt;border:none""><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">[Provide a description of benchmarking tests conducted by the
+developer. Include any independent tests conducted by the validator.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Review the comparison of model’s output to estimates from
+alternative internal or external data and/or models. If the model being
+developed will replace an existing model, the existing model may be one of the
+benchmarks.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Any discrepancies between the model output and benchmarks should
+trigger further analysis; significant issues should be tied to a model
+limitation and corresponding action items. </span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Provide an assessment of the model’s performance relative to the
+benchmark.</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Provide details of the independent tests performed to compare
+model outputs with estimates from alternative internal or external data and/or
+models.]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+28,Comment,Model Performance & Testing,3,"Sensitivity, Stability, and Robustness",3.4,,0,"<b>3.4 Sensitivity, Stability, and Robustness</b>
+<p>
+
+<p style=""margin-bottom:3.0pt;border:none""><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">[Assess model outputs across a relevant range to ensure that
+they are sensitive, stable, and robust, including descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Appropriate output sensitivity to model inputs (i.e. is the
+resulting sensitivity of model output to ranges in perturbations in input
+consistent with expectations?)</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Does the specification of the model on a subset of the sampled
+data materially different than if specified on another sampled subset of data?</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Identification of input limits, beyond which model performance
+deteriorates</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Proper evaluation of goodness-of-fit measures</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Provide details of any independent tests performed to estimate
+the impact from shocks in inputs or parameter values on model outputs]</span></p>
+
+<br /></p>",-,-,-,-,-,-
+29,Comment,Governance and Oversight,5,Model Reference Tables,5.1,,0,"<b>5.1 Model Reference Tables</b>
+<p>
+
+<p style=""margin-bottom:3.0pt;border:none""><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">[Assess whether the performance and risk monitoring plan is in
+line with the Ongoing Model Management Standards, including descriptions of:</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Sufficiency of frequency of monitoring, outcomes analyses, and
+thresholds for performance degradation for detecting performance degradation</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Consistency of performance metrics with the model's intended use</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Adequacy of governance plan for security controls for model
+data, versions, and backup</span></p>
+
+<p style=""margin-top:0in;margin-right:0in;margin-bottom:3.0pt;
+margin-left:.5in;text-indent:-.25in;border:none""><span style=""font-size:10.0pt;line-height:107%;font-family:&quot;Noto Sans Symbols&quot;;
+color:#4D1D93""><span>●<span style=""font:7.0pt &quot;Times New Roman&quot;"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><span style=""font-size:10.0pt;line-height:107%;
+color:#4D1D93"">Inclusion of a defined escalation process when issues are
+identified during performance and risk monitoring]</span></p>
+
+<br /></p>",-,-,-,-,-,-

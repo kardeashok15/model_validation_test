@@ -1,0 +1,350 @@
+{% extends 'base.html' %}  
+{% load static %} 
+{% block content %}
+<div class="row"  style="margin: auto;display: flex; justify-content:center;">
+    <form method="POST">
+    {% csrf_token %}  
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                     Documentation
+                </div>
+                <div class="card-body card-block">
+                    <div class="table-responsive table--no-card m-b-40">
+                        <table id='csvData' class="table table-borderless table-striped table-earning">
+                            
+                            <tbody> 
+                                <tr> 
+                                    <td>Model Development</td>  
+                                    <td><input type="checkbox" id="chk_1"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_1"  class="form-control-sm form-control" ></td> 
+                                    <td  style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('1')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_1_Comment" id="txt_1_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>Operating Procedures Documentation
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_2"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_2"  class="form-control-sm form-control"></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('2')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_2_Comment" id="txt_2_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>Technical Manual
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_3"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_3"  class="form-control-sm form-control" ></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('3')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_3_Comment" id="txt_3_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>User Manual
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_4"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_4"  class="form-control-sm form-control" ></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('4')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_4_Comment" id="txt_4_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>Validation Documentation
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_5"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_5"   class="form-control-sm form-control"></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('5')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_5_Comment" id="txt_5_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>Production Policy
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_6"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_6"  class="form-control-sm form-control" ></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('6')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_6_Comment" id="txt_6_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>Security Policy
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_7"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_7"  class="form-control-sm form-control" ></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('7')"> <i class="fa fa-comment" style="font-size: 12px;color:black;" title="Add comments"></i></a>
+                                        <input type="text" name="txt_7_Comment" id="txt_7_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                                <tr> 
+                                    <td>Change Control Policy
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_8"></td>  
+                                    <td style="padding: 10px 0px;"><input type="text" id="txt_8"  class="form-control-sm form-control" ></td> 
+                                    <td style="padding: 10px 10px;">
+                                        <a href="#" onclick="showComment('8')"> <i class="fa fa-comment" style="font-size: 12px;color:black" title="Add comments"></i></a>
+                                        <input type="text" name="txt_8_Comment" id="txt_8_Comment" class="form-control-sm form-control" style="display: none;"/>                      
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                </div>
+                <div class="card-footer">     
+    
+                    <div class="row" style="display: flex; justify-content: flex-end"> 
+                        <button type="button" class="btn btn-primary btn-sm" onclick="save();" >Save</button>
+                        <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="divComment" title="Add comments" style="display: none;width:70%">
+            <!-- <div style="width:100%">
+                
+                <textarea id="txtcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" ></textarea>
+           </div>  -->
+           <div class="card">  
+            <div class="card-body card-block">     
+                      <div class="card-body card-block">
+                        <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;"> 
+                            <div class="col col-md-3">
+                                <label class=" form-control-label">Comments </label>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <select id="optComments" onchange="getData()"  class="form-control-sm form-control">
+                                    <option value="0">Select</option> 
+                                    {% for data in List %}
+                                      <option value="{{data.val}}" style="color: {{data.color}};  background-color: {{data.bgColor}};">{{data.val}}</option>  
+                                    {% endfor %}
+                                    <option value="-1">Add New</option>  
+                                </select>
+                            </div> 
+                        </div>
+                        <div class="row form-group"  style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                          <div class="col col-md-3">
+                              <label class=" form-control-label">Date </label>
+                          </div>
+                          <div class="col-12 col-md-4">
+                            <input type="text"   readonly value="{{today}}" id="txtDate" name="text-input" class="form-control-sm form-control"> 
+                          </div> 
+                        </div>
+                        <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                            <div class="col col-md-3">
+                                <label class=" form-control-label">Section</label>
+                            </div>
+                            <div class="col-12 col-md-7"> 
+                                <input type="text"  id="txtSection" name="text-input" class="form-control-sm form-control"> 
+                            </div>
+                            
+                        </div>  
+                        <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col col-md-2">
+                            <label class=" form-control-label">Description
+                            </label>
+                        </div>
+                        </div>
+                        <div class="row form-group" style="padding-bottom:0px;margin-bottom:10px;padding-top:0px;margin-top:0px;"> 
+                            <div class="col-12 col-md-12">
+                                 <textarea id="txtComments" rows="3" style="resize: none;width: 100%;font-size: 10pt;" class="form-control form-control-sm"></textarea>
+                            </div>
+                        </div>
+                        <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col col-md-2">
+                            <label class=" form-control-label">Response
+                            </label>
+                          </div>
+                        </div>
+                        <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                            <div class="col-12 col-md-12">
+                                 <textarea id="txtResp" rows="3" disabled style="resize: none;width: 100%;font-size: 10pt;" class="form-control form-control-sm"></textarea>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                          <div class="row" style="display: flex; justify-content: flex-end;"> 
+                            <div class="col-12 col-md-4">
+                              <select id="optEmail" onchange="getEmail()" class="form-control-sm form-control">
+                                <option value="0">Select Email</option>
+                                {% for emailids in emailLst %}
+                                    <option value="{{emailids.email}}">{{emailids.firstName}} {{emailids.lastName}} </option>
+                                {% endfor %}
+                                <option value="-1">Other</option>
+                            </select>
+                              <input type="text" style="display:none;" id="txtemail" name="text-input" class="form-control-sm form-control">
+                            </div>  
+                            <input type="text" id="txtDocSel" class="form-control-sm form-control" style="display: none;"/>  
+                              <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="sendMail()" >Email</button>
+                               <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="saveFindings()" >Save</button>.
+                               <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="closeDiv()" >Cancel</button>
+                              
+                          </div>
+                      </div> 
+                  <div class="row form-group">
+                    <div class="col col-md-4">
+                       
+                    </div>
+                  </div>  
+               
+            </div> 
+        </div>
+          </div>
+    </form> 
+</div>
+                        {% endblock content %}
+                        {%  block script %}
+                        <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' > 
+    window.onload=function(){ 
+        var jsonData="{{Documentation|safe}}";  
+        jsonData=jsonData.replaceAll("'",'"');
+        jsonData=jsonData.replaceAll("\\","\\\\");
+        jsonData=jsonData.replaceAll('None','"-"'); 
+        jsonData=$.parseJSON(jsonData)
+        //filarr={'Model Development':'MD','User Manual':'UM','Model Data':'MDT','Model Code':'MCD','User Acceptance Testing':'UT','Technical Manual':'TM','Onboarding Documents':'OD'}
+        filarr={'Model Development':'1','Operating Procedures Documentation':'2','Technical Manual':'3','User Manual':'4','Validation Documentation':'5','Production Policy':'6','Security Policy':'7','Change Control Policy':'8'}
+        for(var x in jsonData){   
+          $('#txt_'+filarr[jsonData[x].doc]).val(jsonData[x].doc_file)
+        } 
+      }; 
+
+    function save(){ 
+        arrDocs=['Model Development','Operating Procedures Documentation','Technical Manual','User Manual','Validation Documentation','Production Policy','Security Policy','Change Control Policy'];
+        var updatedData = []
+        for(irow=1;irow<9;irow++)
+        {
+            if($('#chk_'+irow).prop('checked')){
+                item = {}
+                item ["doc_type"] =arrDocs[irow-1]; 
+                item ["doc_file"] =$('#txt_'+irow).val() ; 
+                item ["doc_comment"] =$('#txt_'+irow+'_Comment').val() ; 
+                console.log(item)
+                updatedData.push(item); 
+                
+            }       
+
+        }
+        $.ajax({
+            url: '/saveDocumentationData/',  
+            data:{ doc_type:JSON.stringify(updatedData)},
+            dataType: 'json',
+            success: function (data) {              
+               if(data.is_taken){
+                    console.log(data) 
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        /**/        
+    }
+
+    function sendMail()
+    {  
+      $.ajax({ 
+        url: '/sendCommentsMail/',
+        data:{'emailId':$('#txtemail').val()},
+        dataType: 'json',
+        success: function (data) {  
+          if(data.is_taken)
+          { 
+            alert('Mail sent sucessfully.') 
+          }            
+                  
+        }
+        });
+    }
+
+    function saveFindings()
+    { 
+      $.ajax({ 
+        url: '/saveDocComments/',
+        data:{'DocSel':$('#txtDocSel').val(),'commentsId':$('#optComments').val(),'Desc': $("#txtComments").val(),'Section':$('#txtSection').val()},
+        dataType: 'json',
+        success: function (data) {
+                if(data.is_taken)
+                { 
+                  $('#optComments option:last').remove();
+                   
+                    $('#optComments').append(new Option(data.findingsId,data.findingsId));
+                    $('#optComments').append(new Option("Add New","-1"));                 
+                }   
+        }
+        });
+    } 
+
+    function getData()
+    {
+      $("#txtComments").val('');
+      $("#txtResp").val(''); 
+      $('#txtSection').val('') ; 
+      $("#txtDate").val(''); 
+      if($('#optComments').val()!="-1" && $('#optComments').val()!="0")
+      {
+        $('#txtSection').attr('disabled',true);
+      }
+      else{
+        $('#txtSection').attr('disabled',false);
+      }
+      $.ajax({ 
+        url: '/getDocComments/',
+        data:{'commentsId':$('#optComments').val(),'DocSel':$('#txtDocSel').val()},
+        dataType: 'json',
+        success: function (data) {  
+                  $("#txtComments").val(data.findingData[0].Desc); 
+                  $('#txtSection').val(data.findingData[0].Section) ;
+                  $("#txtResp").val(data.findingData[0].Response);    
+                  $("#txtDate").val(data.findingData[0].Date);                  
+        }
+        });
+    }
+   
+    function showComment(id)
+    {  
+        $('#txtDocSel').val(id)
+        $("#divComment").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+               /*{
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        $("#txt_"+id+ "_Comment").val($("#txtcomment").val()) 
+                        $("#txtcomment").val('')
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                } */
+            ],  
+        }); 
+    }
+
+    function closeDiv()
+    {
+        $("#divComment").dialog("close");
+    }
+
+    function goNext(){
+        window.location="{% url 'confirmSrc' %}"
+}
+    </script>
+{% endblock script %}

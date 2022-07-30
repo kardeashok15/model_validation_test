@@ -1,0 +1,129 @@
+{% extends 'base2.html' %} 
+{% load static %} 
+{% block content %} 
+    <div class="row" style="padding-left:10px;">
+        <div class="col-lg-6">
+            <textarea id="txtComments" rows="20" style="resize: none;font-size: 10pt;width:99%"  readonly class="form-control form-control-sm">{{comments}}</textarea>
+        </div>
+        <div class="col-lg-6" style="overflow: auto;">
+            <img id="imgGraph" style="cursor: zoom-in;height:427px;width: 820px;" src="{{ graphpath }}">
+        </div>
+    </div>
+    <div class="row" style="height:15px"></div>
+     
+
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript'> 
+    $(document).ready(function () {
+        $('#liDataV').click(function(){
+            $('#sub_sub_menu').hide();
+        });
+        var zoomin=0;  
+        $('#imgGraph').click(function(){  
+            if(zoomin==0)
+            { 
+                zoomin=1; 
+                $('#imgGraph').css("transform", "scale(1.5)");
+                $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-out'});
+            }
+            else if(zoomin==1)
+            {
+                zoomin=0; 
+               $('#imgGraph').css("transform", "scale(1)");
+               $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-in'});
+            } 
+        }); 
+    });
+
+    function  goBack()
+    {
+        window.location="{% url 'showChartTypes' %}"
+    }
+
+    function showComment()
+    {  
+        $("#divComment").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveChartComments/',
+                            data:{ comments: $('#txtcomment').val(),'chartType':$("#txtchartType").val()}, 
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Comments added to pdf file.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function showFilename()
+    {  
+        $("#divFilename").dialog({   
+            width: "50%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveChartImage/',
+                            data:{ 'chartImg': $('#txtchartFile').val(),'chartType':$("#txtchartType").val()}, 
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Image saved successfully.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+ 
+</script>
+{% endblock script %}

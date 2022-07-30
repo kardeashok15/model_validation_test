@@ -1,0 +1,31 @@
+reqID,section,title,titleIdx,subtitle,subtitleIdx,subsubtitle,subsubtitleIdx,comment,img,imgWidth,imgHeight,imgAlign,ImgTitle,TitleAlign
+1,Comment,Executive Summary,1,,0,,0,<b>1 Executive Summary</b><br />,-,-,-,-,-,-
+2,Comment,Model Assessment,2,,0,,0,<b>2 Model Assessment</b><br />,-,-,-,-,-,-
+3,Comment,Model Performance & Testing,3,,0,,0,<b>3 Model Performance & Testing</b><br />,-,-,-,-,-,-
+4,Comment,Implementation and Controls,4,,0,,0,<b>4 Implementation and Controls</b><br />,-,-,-,-,-,-
+5,Comment,Governance and Oversight,5,,0,,0,<b>5 Governance and Oversight</b><br />,-,-,-,-,-,-
+6,Comment,Executive Summary,1,Model Purpose and Use,1.1,,0,<b>1.1 Model Purpose and Use</b><br />,-,-,-,-,-,-
+7,Comment,Executive Summary,1,Model Description,1.2,,0,"<b>1.2 Model Description</b><br />
+",-,-,-,-,-,-
+8,Comment,Executive Summary,1,Model Risk Tier,1.3,,0,<b>1.3 Model Risk Tier</b><br />,-,-,-,-,-,-
+9,Comment,Executive Summary,1,Validation Scope and Approach,1.4,,0,<b>1.4 Validation Scope and Approach</b><br />,-,-,-,-,-,-
+10,Comment,Executive Summary,1,Validation Outcome,1.5,,0,<b>1.5 Validation Outcome</b><br /> ,-,-,-,-,-,-
+11,Comment,Executive Summary,1,Validation Findings,1.6,,0,<b>1.6 Validation Findings</b><br />,-,-,-,-,-,-
+12,Comment,Model Assessment,2,Development Overview,2.1,,0,<b>2.1 Development Overview</b> <br />,-,-,-,-,-,-
+13,Comment,Model Assessment,2,Development Documentation,2.2,,0,<b>2.2 Development Documentation</b> <br />,-,-,-,-,-,-
+14,Comment,Model Assessment,2,Input and Data Integrity,2.3,,0,<b>2.3 Input and Data Integrity</b><br />,-,-,-,-,-,-
+15,Comment,Model Assessment,2,Input and Data Integrity,2.3,Input Data Source,2.3.1,<b>2.3.1 Input Data Source</b><br />,-,-,-,-,-,-
+16,Comment,Model Assessment,2,Input and Data Integrity,2.3,"Data Transformation, Cleaning",2.3.2,"<b>2.3.2 Data Transformation, Cleaning</b><br />",-,-,-,-,-,-
+17,Comment,Model Assessment,2,Input and Data Integrity,2.3,Final Model Development Dataset,2.3.3,<b>2.3.3 Final Model Development Dataset</b><br />,-,-,-,-,-,-
+18,Comment,Model Assessment,2,Conceptual Soundness,2.4,,0,<b>2.4 Conceptual Soundness</b><br />,-,-,-,-,-,-
+19,Comment,Model Assessment,2,Conceptual Soundness,2.4,Methodology,2.4.3,<b>2.4.1 Methodology</b><br />,-,-,-,-,-,-
+20,Comment,Model Assessment,2,Conceptual Soundness,2.4,Suitability,2.4.4,<b>2.4.2 Suitability</b><br />,-,-,-,-,-,-
+21,Comment,Model Assessment,2,Conceptual Soundness,2.4,Variable Selection and Segmentation,2.4.5,<b>2.4.3 Variable Selection and Segmentation</b><br />,-,-,-,-,-,-
+22,Comment,Model Assessment,2,Conceptual Soundness,2.4,Development Platform and Code,2.4.6,<b>2.4.4 Development Platform and Code</b><br /> ,-,-,-,-,-,-
+23,Comment,Model Assessment,2,Conceptual Soundness,2.4,Assumptions,2.4.7,<b>2.4.5 Assumptions</b><br />,-,-,-,-,-,-
+24,Comment,Model Assessment,2,Conceptual Soundness,2.4,Limitations,2.4.8,<b>2.4.6 Limitations</b><br />,-,-,-,-,-,-
+25,Comment,Model Performance & Testing,3,Model Diagnostic Testing,3.1,,0,<b>3.1 Model Diagnostic Testing</b><br />,-,-,-,-,-,-
+26,Comment,Model Performance & Testing,3,Outcome Analysis / Back-testing,3.2,,0,<b>3.2 Outcome Analysis / Back-testing&nbsp;</b><br />,-,-,-,-,-,-
+27,Comment,Model Performance & Testing,3,Benchmarking,3.3,,0,<b>3.3 Benchmarking</b><br />,-,-,-,-,-,-
+28,Comment,Model Performance & Testing,3,"Sensitivity, Stability, and Robustness",3.4,,0,"<b>3.4 Sensitivity, Stability, and Robustness</b><br />",-,-,-,-,-,-
+29,Comment,Governance and Oversight,5,Model Reference Tables,5.1,,0,<b>5.1 Model Reference Tables</b><br />,-,-,-,-,-,-

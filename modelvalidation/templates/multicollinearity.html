@@ -1,0 +1,440 @@
+{% extends 'base.html' %} 
+{% load static %}  
+{% block style%}
+<style> 
+      .big-col {
+        width: 300px !important;
+      }
+    .mid-col {
+    width: 150px !important;
+    }  
+</style>
+{% endblock style %}
+{% block content %}
+<div style="margin-left:auto;">  
+    <form method="post" id="target"  action="{{skipUpdateData}}?name=renameCols">                  
+                {% csrf_token %}    
+                    <div class="col-lg-12"> 
+                        <div class="card">
+                            <div class="card-header">
+                                <div  class="row form-group" style="margin-bottom: 0px;">
+                                    <div class="col col-md-11"> {{ tableHead }}  
+                                    </div> 
+                                    <div class="col-12 col-md-1" style="display: flex;justify-content: flex-end;">         
+                                        <div style="border:solid 1px #573dd9;border-radius: 4px; background-color:#6148df; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;"> 
+                                           <img src='\static\images\save_white.png' onclick="showFilename()" title="Save" style='cursor:pointer;'/>                                               
+                                        </div>  
+                                   </div> 
+                                </div>                  
+                            </div>
+                            <div class="card-body card-block">   
+                            
+                            <nav>
+                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link active" id="custom-nav-profile-tab" onclick="setType('VIFData')" data-toggle="tab" href="#custom-nav-profile" role="tab" aria-controls="custom-nav-profile"
+                                     aria-selected="false">VIF Data</a>
+                                    <a class="nav-item nav-link" id="custom-nav-home-tab" data-toggle="tab" href="#custom-nav-home" role="tab" aria-controls="custom-nav-home"
+                                     aria-selected="true">Frequency of Categorical Variables</a>
+                                    <a class="nav-item nav-link" id="custom-nav-crosstab-tab" onclick="setType('TarvsCat')" data-toggle="tab" href="#custom-nav-crosstab" role="tab" aria-controls="custom-nav-crosstab"
+                                     aria-selected="true">Target Variable vs Categorical Variable Crosstab</a> 
+                                    <a class="nav-item nav-link" id="custom-nav-dropCols-tab" data-toggle="tab" href="#custom-nav-dropCols" role="tab" aria-controls="custom-nav-dropCols"
+                                     aria-selected="true">Drop Features</a> 
+                                </div>
+                            </nav>
+                            <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                                <div class="tab-pane fade" id="custom-nav-home" role="tabpanel" aria-labelledby="custom-nav-home-tab">
+                                    <div style="height: 500px;overflow:auto">
+                                        {% for data in FreqData %}
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="au-card recent-report">
+                                                    <h4 class="title-2 m-b-25" style="font-size: 18px;"> The Frequency for {{data.colName}}</h2>
+                                                        <div class="au-card-inner">
+                                                            <table class="table table-borderless table-striped table-earning">
+                                
+                                                                <tbody>
+                                                                    {% for key,val in data.freqVal.items %}
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{ key }}
+                                                                        </td>
+                                                                        <td>
+                                                                            {{ val }}
+                                                                        </td>
+                                                                    </tr>
+                                                                    {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div>Total :{{ data.total_rows }}</div>
+                                                        <div>Missing Values :{{ data.missing_rows }}</div>                                                        
+                                                </div>
+                                            </div>
+                                
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade show active" id="custom-nav-profile" role="tabpanel" aria-labelledby="custom-nav-profile-tab">
+                                    <div class="table-responsive table--no-card m-b-40">
+                                        <table id='VIFData' class="table table-borderless table-striped table-earning">
+                                            <thead>
+                                                <tr> 
+                                                    {% for data in dataTypes %}
+                                                    <th style='padding-top:10px;padding-bottom:10px;'>
+                                                        {{data.colName}}
+                                                    </th> 
+                                                    {% endfor %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for k in df %}
+                                                <tr> 
+                                                {% for key, val in k.items %} 
+                                                    {% if  val  == None and key == 'VIF' %}
+                                                        <td>inf</td>                                                 
+                                                    {% else %}
+                                                        <td>{{ val }}</td>                                                    
+                                                    {% endif %}
+                                                {% endfor %}
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>  
+                                </div> 
+                                <div class="tab-pane fade"  id="custom-nav-dropCols" role="tabpanel" aria-labelledby="custom-nav-dropCols-tab">
+                                    
+                                    <div class="table-responsive table--no-card m-b-40">
+                                        <table id='dropFeaturesData' class="table table-borderless table-striped table-earning">
+                                            <thead>
+                                                <tr>
+                                                    <th style='padding-top:10px;padding-bottom:10px;'>Column Name</th>
+                                                    <th style='padding-top:10px;padding-bottom:10px;'>Select</th> 
+                                                </tr>
+                                            </thead>  
+                                            <tbody>      
+                                                {% for data in x_scaledDttypes %}
+                                                <tr> 
+                                                    <td>
+                                                        {{data.colName}}
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" id="chk_{{data.chkId}}"/>
+                                                    </td>                                            
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div> 
+                                    <div class="row" style="display: flex; justify-content: flex-end"> 
+                                        <button type="button" class="btn btn-primary btn-sm"  onclick="DropFeatures()">Drop</button>
+                                        <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;" >Skip</button>
+                                        <button  class="btn btn-primary btn-sm"   {{isDisabled}} onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="custom-nav-crosstab" role="tabpanel" aria-labelledby="custom-nav-crosstab-tab">
+                                    <div style="height: 500px;overflow:auto">
+                                        <div class="col-lg-12"> 
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <select name="var1" id="var1">
+                                                        {% for catcol in catCols %}
+                                                            {% if  rowname  == catcol %}
+                                                                <option value="{{ catcol }}" selected="selected"> {{ catcol }}</option>                                                    
+                                                            {% else %}
+                                                                <option value="{{ catcol }}">{{ catcol }}</option>                                                    
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                    <select name="var2" id="var2">
+                                                        {% for catcol in catCols %}
+                                                            {% if  colname  == catcol %}
+                                                                <option value="{{ catcol }}" selected="selected"> {{ catcol }}</option>                                                    
+                                                            {% else %}
+                                                                <option value="{{ catcol }}">{{ catcol }}</option>                                                    
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </select>
+                                                    <button type="button" class="btn btn-primary btn-sm" onclick="updateCT()" >Update</button>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="height: 15;"></div>
+                                            <div class="table-responsive table--no-card m-b-40">
+                                                <table id='crosstabData' class="table table-borderless table-striped table-earning">
+                                                    <thead>
+                                                        <tr> 
+                                                            <th style='padding-top:10px;padding-bottom:10px;'> 
+                                                                {{colname}}
+                                                            </th>
+                                                            {% for data in ColNames %}
+                                                            <th style='padding-top:10px;padding-bottom:10px;'>
+                                                                {{data}}
+                                                            </th> 
+                                                            {% endfor %}
+                                                        </tr>
+                                                        <tr> 
+                                                            <th style='padding-top:10px;padding-bottom:10px;'>
+                                                                {{rowname}}
+                                                            </th>   
+                                                            {% for data in ColNames %}
+                                                            <th style='padding-top:10px;padding-bottom:10px;'> 
+                                                            </th> 
+                                                            {% endfor %}                                           
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for key, val in resultCrossTab.items  %}
+                                                        <tr> 
+                                                            <td>{{ key }}</td> 
+                                                            {% for key1, val1 in val.items  %}
+                                                                <td>{{ val1 }}</td> 
+                                                            {% endfor %}
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div> 
+                </div>
+            </div>    
+              </form>
+
+              <div id="divFilename" title="Save table" style="display: none;width:70%">
+                <div style="width:100%">
+                    
+                    <div class="row form-group"> 
+        
+                        <div class="col-12 col-md-2"> 
+                            Table Name : 
+                        </div>
+                        <div class="col-12 col-md-9"> 
+                            <input type="text" style="border:1px solid black;width:100%;"  id="txtFile"/>
+                        </div>
+                    </div>
+               </div> 
+            </div>
+            </div>
+                        {% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+    <script type='text/javascript' >
+        var tblcrosstab;
+        var tbldrop;
+        let tabSel='VIFData'  
+        $(document).ready( function () {  
+            $( "#custom-nav-dropCols-tab" ).on( "click", function() { 
+                tbldrop.columns.adjust().draw();
+                console.log('tab clicked')
+              });
+
+            $('#VIFData').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 400,
+            scrollX: true,
+            scroller: true,
+            paging:false,
+            info:false
+            });
+            
+            tblcrosstab=$('#crosstabData').DataTable({
+                sDom: 'lrtip', 
+                "ordering": false,
+                scrollY: 350,
+                scrollX: true,
+                scroller: true,
+                paging:false,
+                info:false
+                });
+            
+            setTimeout(function() {
+            tbldrop=$('#dropFeaturesData').DataTable({
+                sDom: 'lrtip',                
+                "ordering": false, 
+                scrollY: 350,
+                scrollX: true,
+                scroller: true,
+                paging:false,
+                info:false, 
+                });     
+            }, 1000);
+
+            
+        } );
+
+        function updateCT()
+        { 
+            tblcrosstab.destroy();
+            $("#crosstabData").empty(); // empty in case the columns change
+            $.ajax({
+                url: '/ajax/updateCT/', 
+                data:{var1: $('#var1').val(),var2: $('#var2').val()},
+                dataType: 'json',
+                success: function (data) {
+                    populateGrid(data);  
+                }
+                }); 
+        }
+
+        function populateGrid(data){
+            /* <tr> 
+                <th>
+                    {{colname}}
+                </th>
+                {% for data in ColNames %}
+                <th>
+                    {{data}}
+                </th> 
+                {% endfor %}
+            </tr>
+            <tr> 
+                <th>
+                    {{rowname}}
+                </th>   
+                {% for data in ColNames %}
+                <th> 
+                </th> 
+                {% endfor %}                                           
+            </tr>
+        </thead> */ 
+            var appendHeaderData1='';
+            appendHeaderData1='<thead><tr><th style="padding-top:10px;padding-bottom:10px;">'+ data.colname +'</th>';
+            appendHeaderData2='<tr><th style="padding-top:10px;padding-bottom:10px;">'+ data.rowname +'</th>';
+            appendBodyData='<tbody>'
+            var irow=0;    
+            $.each(data.ctData,function(key,val){ 
+                console.log(key)
+                $.each(val,function(key1,val1){  
+                    appendHeaderData1 = appendHeaderData1 +'<th style="padding-top:10px;padding-bottom:10px;">'+ key1 +'</th>';
+                    appendHeaderData2 =appendHeaderData2+ '<th style="padding-top:10px;padding-bottom:10px;"></th>';
+                });
+                appendHeaderData1=appendHeaderData1+'</tr>'
+                appendHeaderData2=appendHeaderData2+'</tr></thead>' 
+                irow++;
+                if (irow>0) {
+                    return false;
+                }
+            });
+            $.each(data.ctData,function(key,val){ 
+                appendBodyData=appendBodyData+'<tr>';
+                appendBodyData=appendBodyData+'<td>'+key+'</td>';
+                console.log(key)
+                $.each(val,function(key1,val1){ 
+                    appendBodyData=appendBodyData+'<td>'+val1+'</td>'; 
+                }); 
+                appendBodyData=appendBodyData+'</tr>';                
+            });
+            appendBodyData=appendBodyData+'</tbody>';   
+            $('#crosstabData').append(appendHeaderData1+appendHeaderData2+appendBodyData); 
+            tblcrosstab=$('#crosstabData').DataTable({
+                sDom: 'lrtip', 
+                "ordering": false,
+                scrollY: 350,
+                scrollX: true,
+                scroller: true,
+                paging:false,
+                info:false
+                });
+        }
+
+        function DropFeatures()
+        { 
+            var updatedData=[]
+            var idx=1;
+            tbldrop.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+                var data = this.data(); // able to fetch the data. 
+                if($('#chk_'+idx).prop('checked')==true){ 
+                    item = {}
+                    item ["column"] = data[0]; 
+                    updatedData.push(item); 
+                }
+                idx=idx+1;
+            } ); 
+
+            $.ajax({
+            url: '/ajax/dropFinalColumns/', 
+            data:{ delcolList: JSON.stringify(updatedData)  },
+            dataType: 'json',
+            success: function (data) {
+                if (data.is_taken) {
+                    alert("Variable(s) dropped.");
+                    $("#target").submit();
+                }
+                }
+            }); 
+        }
+        
+        function setType(tab){
+            tabSel=tab 
+        }
+
+    function showFilename()
+    {  
+        $("#txtFile").val(''); 
+            if(tabSel=="VIFData"){
+                $("#txtFile").val('VIFData');
+            }
+        $("#divFilename").dialog({   
+            width: "50%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveTableInfo/',
+                            data:{tableType:tabSel,tableName:$("#txtFile").val(), comments:'',var1:$("#var1").val(),var2:$("#var2").val()}, 
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Table saved.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+        function saveTbl(){
+            $.ajax({ 
+                url: '/saveTableInfo/',
+                data:{tableType:tabSel,tableName:tabSel, comments:'',var1:$('#var1').val(),var2:$('#var2').val()}, 
+                dataType: 'json',
+                success: function (data) {
+                        if(data.is_taken)
+                        {
+                            alert('Table saved.')
+                        }            
+                }
+            }); 
+        }
+
+        function goNext(){
+            window.location="{% url 'renameCols' %}"
+} 
+    </script>
+{% endblock script %} 

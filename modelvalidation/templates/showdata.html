@@ -1,0 +1,83 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+<div style="margin-left:auto;">  
+    <form method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        
+            
+                {% csrf_token %}
+                <div class="row" style="margin-left:auto;">  
+                    <input type="file" name="myfile" id="myfile" required> 
+                    <button  class="btn btn-primary btn-sm"  type="submit">Upload</button>
+                    <button  class="btn btn-primary btn-sm"  {{isDisabled}}  onclick="goNext()" style="margin-left: 4px;" type="button">Next</button>
+                </div>
+                <div style="height: 15px;"></div> 
+                <div style="height: 25px;"></div>
+                <div class="row">   
+                    <div class="col-lg-12">
+                        <h4 class="title-2 m-b-25">Data from source</h2>
+                            <div class="table-responsive table--no-card m-b-40">
+                            <table id='csvData' class="table table-borderless table-striped table-earning">
+                                <thead>
+                                    <tr> 
+                                        {% for data in dataTypes %}
+                                        <th style='padding-top:10px;padding-bottom:10px;'>
+                                            {{data.colName}}
+                                        </th> 
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for k in df %}
+                                    <tr> 
+                                    {% for key, val in k.items %}
+                                    
+                                        <td style='padding-top:10px;padding-bottom:10px;'>{{ val }}</td>
+                                
+                                    {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>  
+                    </div>
+                </div>
+                <div style="height: 25px;"></div> 
+                
+              </form>
+            </div>
+                        {% endblock content %}
+{%  block script %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' >
+        $(document).ready( function () {  
+            $('#csvData').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 450,
+            scrollX: true,
+            scroller: true,
+            paging:false,
+            info:false
+            }); 
+        } );
+
+        function validateForm(){
+            var fileName = $("#myfile").val();
+
+            if(fileName) { // returns true if the string is not empty
+               // alert(fileName + " was selected");
+            } else { // no file was selected
+                alert("Please select a file.");
+                return false;
+            }
+          }
+
+         function goNext(){
+            window.location="{% url 'dataCleaning' %}"
+         } 
+    </script>
+{% endblock script %} 

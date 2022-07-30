@@ -1,0 +1,177 @@
+{% extends 'base.html' %} 
+{% load static %} 
+<style>
+th{
+    padding: 10px 0px 10px 10px!important;
+ } 
+.button{
+    background-image: url('\static\images\save_white.png') no-repeat;
+    cursor:pointer;
+    border: none;
+} 
+</style>
+{% block content %}
+<form method="post" id="target"  action="{{showSNSChart}}">                  
+    {% csrf_token %}  
+<div class="row" style="margin-left:auto;"> 
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="row form-group" style="margin-bottom: 0px;">
+                    <div class="col col-md-11">
+                        Select Columns For Pair Plots
+                    </div>
+                    <div class="col-12 col-md-1" style="display: flex;justify-content: flex-end;">         
+                         
+                    </div>
+                     
+                </div>                  
+            </div>
+            <div class="card-body card-block">
+                 <!-- <div class="table-responsive table--no-card m-b-40" style="margin-bottom: 0px;">
+                        <table id="dataType" class="table table-borderless table-striped table-earning">
+                        <thead>
+                            <tr>
+                                <th style="padding: 10px 0px 10px 10px;">Column Name</th>
+                                <th style="padding: 10px 0px 10px 10px;"> Select </th> 
+                             </tr>
+                        </thead>  
+                        <tbody>      
+                            {% for data in dataTypes %}
+                            <tr> 
+                                <td>
+                                    {{data.colName}}
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="chk_{{data.chkId}}"/>
+                                </td>   
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div> -->
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" > 
+                        X-Axis Columns  
+                    </div>
+                    <div class="col-12 col-md-4"> 
+                        <select  id="selectXaxis" class="form-control" multiple>     
+                            {% for data in dataTypes %}
+                                <option  value="{{data.colName}}">{{data.colName}}</option>
+                            {% endfor %}        
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <input type="checkbox" id="chkAll" onclick="selectAll()" />&nbsp;Select All
+                    </div>
+                </div>
+
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" > 
+                        Y-Axis Columns  
+                    </div>
+                    <div class="col-12 col-md-4"> 
+                        <select  id="selectYaxis" class="form-control" multiple>     
+                            {% for data in dataTypes %}
+                                <option  value="{{data.colName}}">{{data.colName}}</option>
+                            {% endfor %}        
+                        </select>
+                    </div>
+                </div>
+            </div> 
+            <div class="card-footer">
+                <div class="row" style="display: flex; justify-content: flex-end;width:100%"> 
+                    <div class="row" style="display: flex; justify-content: flex-start;width:30%"> 
+                        
+                    </div>
+                    <div class="row" style="display: flex; justify-content: flex-end;width:75%"> 
+                    
+                        <input type="text" name="selCols" id="selCols" style="display: none;"/>
+                        <input type="text" name="selYCols" id="selYCols" style="display: none;"/>
+                        <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="DropFeatures()" >Show</button>
+                        <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                    </div> 
+                </div> 
+        </div> 
+    </div>     
+                 
+ </div>
+</div>
+</form>          
+                        {% endblock content %}
+{%  block script %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' >
+        var tbldrop;
+        $(document).ready( function () {  
+            /*tbldrop= $('#dataType').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 450,
+            scrollX: true,
+            scroller: true,
+            paging:false,
+            info:false
+            }); */
+        } );
+
+        function DropFeatures()
+        { 
+            var xAxisCols=[]
+            var yAxisCols=[]
+            var idx=1; 
+            arrXaxis=$('#selectXaxis').val() 
+            $.each(arrXaxis, function() { 
+                item = {}
+                item ["column"] =this; 
+                xAxisCols.push(item); 
+            });
+            arrYaxis=$('#selectYaxis').val() 
+            $.each(arrYaxis, function() { 
+                item = {}
+                item ["column"] =this; 
+                yAxisCols.push(item); 
+            });
+              
+            if(xAxisCols.length>0 && yAxisCols.length>0){ 
+                $('#selCols').val(JSON.stringify(xAxisCols));
+                $('#selYCols').val(JSON.stringify(yAxisCols));
+                $("#target").submit();
+            }
+            else{
+                alert('Please select column(s) to proceed.');
+            }
+           /* $.ajax({
+            url: '/ajax/dropFinalColumns/', 
+            data:{ delcolList: JSON.stringify(updatedData)  },
+            dataType: 'json',
+            success: function (data) {
+                if (data.is_taken) {
+                    alert("Variable(s) dropped.");
+                    $("#target").submit();
+                }
+                }
+            }); */
+        }
+
+        function selectAll()
+        { 
+            /* tbldrop.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+                
+                 $('#chk_'+idx).prop('checked',$('#chkAll').prop('checked'));
+                
+                idx=idx+1;
+            } );  */
+            console.log('checkbox clicked');
+            $('#selectXaxis option').prop('selected', $('#chkAll').prop('checked'));
+        }
+
+        function goNext(){
+            window.location="{% url 'showUniVarChartTypes' %}"
+} 
+    </script>
+{% endblock script %} 

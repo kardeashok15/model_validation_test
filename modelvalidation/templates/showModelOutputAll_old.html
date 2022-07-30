@@ -1,0 +1,439 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+<meta id="model-data" data-NT="{{NT_auc_ginin_output}}" data-RS_auc_ginin_output="{{RS_auc_ginin_output}}" data-GS_auc_ginin_output="{{GS_auc_ginin_output}}">
+<form method="POST">
+    {% csrf_token %} 
+    <div id="divMain">  
+        <h4 class="title-2 m-b-25">{{tableHead}}  <a href="{{ pdfFile }}" download> &nbsp;<i class="fa fa-download" style="font-size: 12px;" title="Export to PDF"></i> </a>&nbsp;<a href="#" onclick="showComment()"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a></h2>
+        <nav>
+            <div class="nav nav-tabs nav-justified" id="nav-tab_1" role="tablist">
+                <a class="nav-item nav-link active" id="custom-nav-NT-tab" data-toggle="tab" href="#custom-nav-NT" role="tab" aria-controls="custom-nav-NT"
+                aria-selected="false">No Parameters Tuning</a>  
+                <a class="nav-item nav-link" id="custom-nav-RS-tab" data-toggle="tab" href="#custom-nav-RS" role="tab" aria-controls="custom-nav-RS"
+                aria-selected="false">Random Search</a>  
+                <a class="nav-item nav-link" id="custom-nav-GS-tab" data-toggle="tab" href="#custom-nav-GS" role="tab" aria-controls="custom-nav-GS"
+                aria-selected="false">Grid Search</a> 
+            </div>
+        </nav> 
+        <div class="tab-content pl-3 pt-2">
+            <div class="tab-pane fade show active" id="custom-nav-NT" role="tabpanel" aria-labelledby="custom-nav-NT-tab">
+                <nav>
+                    <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="custom-nav-NT1-tab" data-toggle="tab" href="#custom-nav-NT1" role="tab" aria-controls="custom-nav-NT1"
+                        aria-selected="false">ROC Curve Validation data</a>
+                        <a class="nav-item nav-link" id="custom-nav-NT2-tab" data-toggle="tab" href="#custom-nav-NT2" role="tab" aria-controls="custom-nav-NT2"
+                        aria-selected="true">ROC Curve Training Data</a>
+                        <a class="nav-item navlink" id="custom-nav-NT3-tab" data-toggle="tab" href="#custom-nav-NT3" role="tab" aria-controls="custom-nav-NT3"
+                        aria-selected="true">Confusion Matrix Training Data</a> 
+                        <a class="nav-item nav-link" id="custom-nav-NT4-tab" data-toggle="tab" href="#custom-nav-NT4" role="tab" aria-controls="custom-nav-NT4"
+                        aria-selected="true">Confusion Matrix Validation Data</a> 
+                        <a class="nav-item nav-link" id="custom-nav-NT5-tab" data-toggle="tab" href="#custom-nav-NT5" role="tab" aria-controls="custom-nav-NT5"
+                        aria-selected="true">Perform The Test On Model Performance</a> 
+                    </div>
+                </nav>
+                <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="custom-nav-NT1" role="tabpanel" aria-labelledby="custom-nav-NT1-tab">
+                        <div style="height: 50%;overflow:hidden"> 
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <img id="imgGraph" style="cursor: zoom-in;" src="{{ NT_rocgraphpath1 }}">
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-NT2" role="tabpanel" aria-labelledby="custom-nav-NT2-tab">
+                        <div style="height: 50%;overflow:hidden"> 
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <img id="imgGraph" style="cursor: zoom-in;" src="{{ NT_rocgraphpath2 }}">
+                                </div>
+                            </div> 
+                        </div>
+                    </div> 
+                    <div class="tab-pane fade"  id="custom-nav-NT3" role="tabpanel" aria-labelledby="custom-nav-NT3-tab">
+                        <div style="height: 50%;overflow:hidden"> 
+                            <div class="row">           
+                                <div class="col-lg-12">
+                                    <img id="graphConfMat1" style="cursor: zoom-in;" src="{{ NT_graphConfMat1 }}">
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-NT4" role="tabpanel" aria-labelledby="custom-nav-NT4-tab">
+                        <div style="height: 50%;overflow:hidden"> 
+                            <div class="row">    
+                                <div class="col-lg-12">
+                                    <img id="graphConfMat2" style="cursor: zoom-in;" src="{{ NT_graphConfMat2 }}">
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-NT5" role="tabpanel" aria-labelledby="custom-nav-NT5-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">    
+                                <div class="col-lg-12">
+                                    <table>
+                                        {% for data in NT_auc_ginin_output %}
+                                            {% if  data.testName  == "Classification Report - Validation:" %}
+                                                <tr>
+                                                    <td>{{data.testName}}</td>                                        
+                                                </tr>
+                                                <tr>                                         
+                                                    <td>
+                                                        <table style="border-width: 1px;border-color: black;border-collapse: collapse;width: 100%;"> 
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>precision </th>
+                                                                    <th>recall</th>
+                                                                    <th>f1-score </th>
+                                                                    <th>support</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for key,val in data.testResult_dict.items %}
+                                                                    <tr> 
+                                                                        <td>{{ key }}</td> 
+                                                                        {% for key1, val1 in val.items  %}
+                                                                            <td>{{ val1 }}</td> 
+                                                                        {% endfor %}
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table> 
+                                                    </td>
+                                                </tr> 
+                                            {%elif  data.testName  == "Confusion Matrix - Validation:" %}    
+                                                <tr>  
+                                                    <td>{{data.testName}}</td> 
+                                                </tr>
+                                                <tr>  
+                                                    <td>{{data.testResult}}</td> 
+                                                </tr>
+                                            {%else%}    
+                                                <tr>  
+                                                    <td>{{data.testName}} &nbsp; {{data.testResult}}</td> 
+                                                </tr>
+                                            {% endif %}  
+                                            <tr>  
+                                                <td style="height: 15px;"></td> 
+                                            </tr> 
+                                        {% endfor %}
+                                    </table> 
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="custom-nav-RS" role="tabpanel" aria-labelledby="custom-nav-RS-tab">
+                <nav>
+                    <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="custom-nav-RS1-tab" data-toggle="tab" href="#custom-nav-RS1" role="tab" aria-controls="custom-nav-RS1"
+                        aria-selected="false">ROC Curve Validation data</a>
+                        <a class="nav-item nav-link" id="custom-nav-RS2-tab" data-toggle="tab" href="#custom-nav-RS2" role="tab" aria-controls="custom-nav-RS2"
+                        aria-selected="true">ROC Curve Training Data</a>
+                        <a class="nav-item navlink" id="custom-nav-RS3-tab" data-toggle="tab" href="#custom-nav-RS3" role="tab" aria-controls="custom-nav-RS3"
+                        aria-selected="true">Confusion Matrix Training Data</a> 
+                        <a class="nav-item nav-link" id="custom-nav-RS4-tab" data-toggle="tab" href="#custom-nav-RS4" role="tab" aria-controls="custom-nav-RS4"
+                        aria-selected="true">Confusion Matrix Validation Data</a> 
+                        <a class="nav-item nav-link" id="custom-nav-RS5-tab" data-toggle="tab" href="#custom-nav-RS5" role="tab" aria-controls="custom-nav-RS5"
+                        aria-selected="true">Perform The Test On Model Performance</a> 
+                    </div>
+                </nav>
+                <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="custom-nav-RS1" role="tabpanel" aria-labelledby="custom-nav-RS1-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <img id="imgGraph" style="cursor: zoom-in;" src="{{ RS_rocgraphpath1 }}">
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-RS2" role="tabpanel" aria-labelledby="custom-nav-RS2-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <img id="imgGraph" style="cursor: zoom-in;" src="{{ RS_rocgraphpath2 }}">
+                                </div>
+                            </div> 
+                        </div>
+                    </div> 
+                    <div class="tab-pane fade"  id="custom-nav-RS3" role="tabpanel" aria-labelledby="custom-nav-RS3-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">           
+                                <div class="col-lg-12">
+                                    <img id="graphConfMat1" style="cursor: zoom-in;" src="{{ RS_graphConfMat1 }}">
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-RS4" role="tabpanel" aria-labelledby="custom-nav-RS4-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">    
+                                <div class="col-lg-12">
+                                    <img id="graphConfMat2" style="cursor: zoom-in;" src="{{ RS_graphConfMat2 }}">
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-RS5" role="tabpanel" aria-labelledby="custom-nav-RS5-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">    
+                                <div class="col-lg-12">
+                                    <table>
+                                        {% for data in RS_auc_ginin_output %}
+                                            {% if  data.testName  == "Classification Report - Validation:" %}
+                                                <tr>
+                                                    <td>{{data.testName}}</td>                                        
+                                                </tr>
+                                                <tr>                                         
+                                                    <td>
+                                                        <table style="border-width: 1px;border-color: black;border-collapse: collapse;width: 100%;"> 
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th> precision </th>
+                                                                    <th>recall</th>
+                                                                    <th>f1-score </th>
+                                                                    <th>support</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for key,val in data.testResult_dict.items %}
+                                                                    <tr> 
+                                                                        <td>{{ key }}</td> 
+                                                                        {% for key1, val1 in val.items  %}
+                                                                            <td>{{ val1 }}</td> 
+                                                                        {% endfor %}
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table> 
+                                                    </td>
+                                                </tr> 
+                                            {%elif  data.testName  == "Confusion Matrix - Validation:" %}    
+                                                <tr>  
+                                                    <td>{{data.testName}}</td> 
+                                                </tr>
+                                                <tr>  
+                                                    <td>{{data.testResult}}</td> 
+                                                </tr>
+                                            {%else%}    
+                                                <tr>  
+                                                    <td>{{data.testName}} &nbsp; {{data.testResult}}</td> 
+                                                </tr>
+                                            {% endif %}  
+                                            <tr>  
+                                                <td style="height: 15px;"></td> 
+                                            </tr> 
+                                        {% endfor %}
+                                    </table> 
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                </div>
+            </div> 
+            <div class="tab-pane fade"  id="custom-nav-GS" role="tabpanel" aria-labelledby="custom-nav-GS-tab">
+                <nav>
+                    <div class="nav nav-tabs nav-justified" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="custom-nav-GS1-tab" data-toggle="tab" href="#custom-nav-GS1" role="tab" aria-controls="custom-nav-GS1"
+                        aria-selected="false">ROC Curve Validation data</a>
+                        <a class="nav-item nav-link" id="custom-nav-GS2-tab" data-toggle="tab" href="#custom-nav-GS2" role="tab" aria-controls="custom-nav-GS2"
+                        aria-selected="true">ROC Curve Training Data</a>
+                        <a class="nav-item navlink" id="custom-nav-GS3-tab" data-toggle="tab" href="#custom-nav-GS3" role="tab" aria-controls="custom-nav-GS3"
+                        aria-selected="true">Confusion Matrix Training Data</a> 
+                        <a class="nav-item nav-link" id="custom-nav-GS4-tab" data-toggle="tab" href="#custom-nav-GS4" role="tab" aria-controls="custom-nav-GS4"
+                        aria-selected="true">Confusion Matrix Validation Data</a> 
+                        <a class="nav-item nav-link" id="custom-nav-GS5-tab" data-toggle="tab" href="#custom-nav-GS5" role="tab" aria-controls="custom-nav-GS5"
+                        aria-selected="true">Perform The Test On Model Performance</a> 
+                    </div>
+                </nav>
+                <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="custom-nav-GS1" role="tabpanel" aria-labelledby="custom-nav-GS1-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <img id="imgGraph" style="cursor: zoom-in;" src="{{ GS_rocgraphpath1 }}">
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-GS2" role="tabpanel" aria-labelledby="custom-nav-GS2-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row"> 
+                                <div class="col-lg-12">
+                                    <img id="imgGraph" style="cursor: zoom-in;" src="{{ GS_rocgraphpath2 }}">
+                                </div>
+                            </div> 
+                        </div>
+                    </div> 
+                    <div class="tab-pane fade"  id="custom-nav-GS3" role="tabpanel" aria-labelledby="custom-nav-GS3-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">           
+                                <div class="col-lg-12">
+                                    <img id="graphConfMat1" style="cursor: zoom-in;" src="{{ GS_graphConfMat1 }}">
+                                </div> 
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-GS4" role="tabpanel" aria-labelledby="custom-nav-GS4-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">    
+                                <div class="col-lg-12">
+                                    <img id="graphConfMat2" style="cursor: zoom-in;" src="{{ GS_graphConfMat2 }}">
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                    <div class="tab-pane fade" id="custom-nav-GS5" role="tabpanel" aria-labelledby="custom-nav-GS5-tab">
+                        <div style="height: 50%;overflow:scroll"> 
+                            <div class="row">    
+                                <div class="col-lg-12">
+                                    <table>
+                                        {% for data in GS_auc_ginin_output %}
+                                            {% if  data.testName  == "Classification Report - Validation:" %}
+                                                <tr>
+                                                    <td>{{data.testName}}</td>                                        
+                                                </tr>
+                                                <tr>                                         
+                                                    <td>
+                                                        <table style="border-width: 1px;border-color: black;border-collapse: collapse;width: 100%;"> 
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th> precision </th>
+                                                                    <th>recall</th>
+                                                                    <th>f1-score </th>
+                                                                    <th>support</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {% for key,val in data.testResult_dict.items %}
+                                                                    <tr> 
+                                                                        <td>{{ key }}</td> 
+                                                                        {% for key1, val1 in val.items  %}
+                                                                            <td>{{ val1 }}</td> 
+                                                                        {% endfor %}
+                                                                    </tr>
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table> 
+                                                    </td>
+                                                </tr> 
+                                            {%elif  data.testName  == "Confusion Matrix - Validation:" %}    
+                                                <tr>  
+                                                    <td>{{data.testName}}</td> 
+                                                </tr>
+                                                <tr>  
+                                                    <td>{{data.testResult}}</td> 
+                                                </tr>
+                                            {%else%}    
+                                                <tr>  
+                                                    <td>{{data.testName}} &nbsp; {{data.testResult}}</td> 
+                                                </tr>
+                                            {% endif %}  
+                                            <tr>  
+                                                <td style="height: 15px;"></td> 
+                                            </tr> 
+                                        {% endfor %}
+                                    </table> 
+                                </div>
+                            </div> 
+                        </div> 
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+    <div id="divComment" title="Add comments" style="display: none;width:70%">
+        <div style="width:100%">
+            
+            <textarea id="txtcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" ></textarea>
+       </div> 
+    </div>
+  
+    
+    
+</form>
+
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript'> 
+    $(document).ready(function () { 
+        $("#divComment").dialog("close");
+        $('#liDataV').click(function(){
+            $('#sub_sub_menu').hide();
+        });
+        var zoomin=0;  
+        $('#imgGraph').click(function(){  
+            if(zoomin==0)
+            { 
+                zoomin=1; 
+                $('#imgGraph').css("transform", "scale(2.5)");
+                $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-out'});
+            }
+            else if(zoomin==1)
+            {
+                zoomin=0; 
+               $('#imgGraph').css("transform", "scale(1)");
+               $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-in'});
+            } 
+        }); 
+
+        window.addEventListener("unload", function(event) {console.log('hide model');("#divComment").dialog("close");});
+    });
+
+    function showComment()
+    {  
+        $("#divComment").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        $.ajax({ 
+                            url: '/saveComments/',
+                            data:{ comments: $('#txtcomment').val(),'modelName':'{{tableHead}}',NT_auc_ginin_output:'{{NT_auc_ginin_output|safe}}',
+                            RS_auc_ginin_output:'{{RS_auc_ginin_output}}',
+                            GS_auc_ginin_output:'{{GS_auc_ginin_output}}' },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Comments added to pdf file.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+ 
+</script>
+{% endblock script %}

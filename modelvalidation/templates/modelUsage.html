@@ -1,0 +1,248 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% load static %}  
+{% block content %}
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+     
+  <div class="col-lg-10">
+    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+      {% csrf_token %}  
+      <div class="card">
+          <div class="card-header">
+              Model Usage 
+          </div>
+          <div class="card-body card-block">  
+                <div id="accordion">
+                  <h3>Validator
+                  </h3>
+                  <div> 
+                   
+                    <div class="card-body card-block">
+                      <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;"> 
+                          <div class="col col-md-2">
+                              <label class=" form-control-label">Model Owner </label>
+                          </div>
+                          <div class="col-12 col-md-4">
+                            <select id="optEmail" onchange="getEmail()" class="form-control-sm form-control">
+                              <option value="0">Select Email</option>
+                              {% for emailids in emailLst %}
+                                  <option style="padding: 1px;" value="{{emailids.email}}">{{emailids.firstName}} {{emailids.lastName}} </option>
+                              {% endfor %}
+                              <option value="-1">Other</option>
+                            </select>
+                            <input type="text" style="display:none;border-color: black; height:31px;" id="txtemail" name="text-input" class="form-control-sm form-control">
+                          </div> 
+                      </div>
+                      <div class="row form-group"  style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                        <div class="col col-md-2">
+                            <label class=" form-control-label">Category </label>
+                        </div>
+                        <div class="col-12 col-md-4">
+                          <select id="optCategory"  onchange="getCategory()" class="form-control-sm form-control" multiple>
+                            {% for data in catLst %}
+                              <option value="{{data}}" >{{data}}</option>  
+                            {% endfor %}
+                            <option value="-1">Add New</option>  
+                        </select>
+                        </div> 
+                        <div class="col col-md-5">
+                          <input type="text" style="display:none;border-color: black; height:31px;" id="txtCategory" name="text-input" class="form-control-sm form-control">
+                        </div>
+                        <div class="col-12 col-md-1">
+                          <button type="button" class="btn btn-primary btn-sm" id="btnAdd" style="margin-right: 10px;display:none" onclick="addNewCat()" >Add</button>  
+                        </div>
+                      </div> 
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                        <div class="col col-md-2">
+                          <label class=" form-control-label">Comments
+                          </label>
+                      </div>
+                      </div>
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:10px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col-12 col-md-12">
+                               <textarea id="txtComments" rows="5" style="resize: none; border:1px solid black;width: 100%;font-size: 10pt;" ></textarea>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row" style="display: flex; justify-content: flex-end;"> 
+                          <div class="col-12 col-md-4">
+                            
+                          </div>  
+                          
+                            <button type="button" style="margin-right: 10px;"  class="btn btn-primary btn-sm"  onclick="sendMail()" >Email</button>
+                            <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-right: 10px;" type="button">Next</button>
+                            <!-- &nbsp;&nbsp;<button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;">Save</button> -->
+                            
+                        </div>
+                    </div>
+                  </div> 
+                  <!-- <h3>Model Owner</h3>
+                  <div> 
+                    <div class="card-body card-block"> 
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                        <div class="col col-md-2">
+                          <label class=" form-control-label">Comments
+                          </label>
+                        </div>
+                      </div>
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col-12 col-md-12">
+                               <textarea id="txtReportComments" rows="5" style="resize: none; border:1px solid black;width: 100%;font-size: 10pt;" ></textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <div class="row" style="display: flex; justify-content: flex-end;"> 
+                          <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="saveReportComment()" >Save</button>
+                           
+                      </div>
+                  </div>
+                  </div> -->
+                  
+                </div>
+                <div class="row form-group">
+                  <div class="col col-md-4">
+                     
+                  </div>
+                </div>  
+             
+          </div> 
+      </div> 
+    </form>
+  </div>
+   
+</div>
+
+{% endblock content %}
+{% block style %} 
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+<style>
+  button {
+    background: #007bff;
+    border: 1px solid #ccc;
+    padding: 10px 30px;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  button:active {
+    background: #e5e5e5;
+    -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+       -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+            box-shadow: inset 0px 0px 5px #c1c1c1;
+     outline: none;
+  }
+</style>
+{% endblock style%}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript">   
+    window.onload=function(){
+      $( "#accordion" ).accordion({
+        collapsible: true
+      });  
+      document.getElementById('txtComments').addEventListener('keydown', function(e) {
+        if (e.key == 'Tab') {
+          e.preventDefault();
+          var start = this.selectionStart;
+          var end = this.selectionEnd;
+      
+          // set textarea value to: text before caret + tab + text after caret
+          this.value = this.value.substring(0, start) +
+            "\t" + this.value.substring(end);
+      
+          // put caret at right position again
+          this.selectionStart =
+            this.selectionEnd = start + 1;
+        }
+      });
+    };
+  
+    
+ 
+    function saveReportComment()
+    { 
+      $.ajax({ 
+        url: '/savevalFindingsComment/',
+        data:{'comment':  $("#txtReportComments").val()},
+        dataType: 'json',
+        success: function (data) {
+                if(data.is_taken)
+                { 
+                  alert('Comment saved sucessfully.')             
+                }   
+        }
+        });
+    } 
+
+    function getEmail(){ 
+      $('#txtemail').val(''); 
+      if($('#optEmail').val()!='-1' & $('#optEmail').val()!='0'){
+         $('#txtemail').val($('#optEmail').val());
+      }
+      else{
+          $('#txtemail').show();
+          $('#optEmail').hide();
+      }
+  }
+
+  function getCategory(){
+    //console.log($('#optCategory').val().indexOf('-1'))
+    if($('#optCategory').val().indexOf('-1')!=-1){
+      $('#txtCategory').show();
+      $('#btnAdd').show();
+      console.log('show textbox'); 
+    }
+    else{
+      $('#txtCategory').hide();
+      $('#btnAdd').hide();
+      console.log('hide textbox')
+    }
+  }
+
+  function addNewCat(){
+    arrLst=$('#optCategory').val();
+    $('#optCategory option:last').remove(); 
+    $('#optCategory').append(new Option($('#txtCategory').val(),$('#txtCategory').val()));
+    $('#optCategory').append(new Option("Add New","-1"));
+    arrLst.push($('#txtCategory').val());
+    arrLst.splice(arrLst.indexOf('-1'),1);
+    $('#optCategory').val(arrLst)
+    $("select").scrollTop($("#optCategory").find("option[value=-1]").offset().top);
+    $('#txtCategory').hide();
+    $('#btnAdd').hide();
+  }
+
+  function sendMail(id){ 
+    var selected=[];
+    var i=1;
+    $('#optCategory :selected').each(function(){
+        item = {}
+        item ["column"+i] = $(this).text();
+        selected.push(item)
+        i++;
+        });
+        console.log(selected) 
+    $.ajax({
+        url: '/saveModelUsageReq/', 
+        data:{ email: $("#txtemail").val(),categories:JSON.stringify(selected)  },
+        dataType: 'json',
+        success: function (data) {
+           // alert(data)
+           if(data.is_taken){
+               alert('Mail sent successfully.');
+               $( "#target" ).submit();
+           }
+        }
+    });
+}
+
+function goNext(){
+  window.location="{% url 'valFindings' %}"
+}
+ </script>
+{% endblock script %} 

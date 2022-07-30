@@ -1,0 +1,133 @@
+{% load static %}
+{% url 'home' as home %} 
+{% url 'viewData' as viewData %} 
+{% url 'viewDataType' as viewDataType %} 
+{% url 'viewNumData' as viewNumData %} 
+{% url 'missingData' as missingData %} 
+{% url 'dataCleaning' as dataCleaning %} 
+{% url 'showCatColFreq' as showCatColFreq %} 
+{% url 'showChartTypes' as showChartTypes %} 
+{% url 'showUniVarChartTypes' as showUniVarChartTypes %}
+{% url 'showSNSChart' as showSNSChart %} 
+{% url 'showCatCountPlot' as showCatCountPlot %} 
+{% url 'showDistPlot' as showDistPlot %} 
+{% url 'showBoxPlot' as showBoxPlot  %} 
+{% url 'showPieChart' as showPieChart %}
+{% url 'pairwise_correlation' as pairwise_correlation %}
+{% url 'vehicleclaim' as vehicleclaim %}
+{% url 'scattred3d' as scattred3d %}
+{% url 'bubblePlot3d' as bubblePlot3d %}
+{% url 'plotinsured_occupations' as plotinsured_occupations %}
+{% url 'plotinsoccuvsincstate' as plotinsoccuvsincstate %}
+{% url 'plotinsoccuvsincstatestacked' as plotinsoccuvsincstatestacked %}
+{% url 'vardistbyfraud' as vardistbyfraud %}
+{% url 'vardistbyfraud2' as vardistbyfraud2 %}
+{% url 'stripplot' as stripplot %}
+{% url 'totalclaim_boxplot' as totalclaim_boxplot %}
+{% url 'showcorrelation' as showcorrelation %}
+{% url 'dist_numevari_catvar' as dist_numevari_catvar %}
+{% url 'dummy_vars' as dummy_vars %}
+{% url 'std_features' as std_features %}
+{% url 'test_multicollinearity' as test_multicollinearity %}
+{% url 'dropfeatures' as dropfeatures %}
+{% url 'detect_outliers' as detect_outliers %}
+{% url 'setScheduler' as setScheduler %}
+{% url 'setProfile' as setProfile %}
+{% url 'renameCols' as renameCols %}
+{% url 'tuneParams' as tuneParams %}
+{% url 'updateData' as updateData %}
+{% url 'randomForest' as randomForest %}
+{% url 'xgBoost' as xgBoost %}
+{% url 'MLP' as MLP %}
+{% url 'GBC' as GBC %}
+{% url 'KNN' as KNN %}
+{% url 'SVM' as SVM %}
+{% url 'BC' as BC %}  
+{% url 'confirmSrc' as confirmSrc %}
+{% url 'resample' as resample %}
+{% url 'dataQuality' as dataQuality  %}
+{% url 'Report' as Report %}
+{% url 'processStatus' as processStatus%}
+{% url 'modelValReq' as modelValReq%}
+{% url 'impCtrl' as impCtrl %}
+{% url 'valFindings' as valFindings %}
+{% url 'documentation'  as documentation%}
+{% url 'runModel' as runModel %}
+{% url 'policies'  as policies%}
+{% url 'contacts' as contacts %}
+{% url 'modelUsage' as modelUsage %}
+{%url 'WIP' as WIP %}
+{% url 'conceptualsoundness' as conceptualsoundness %}
+{% url 'viewConcSnd' as viewConcSnd %}
+{% url 'viewModelUsage' as viewModelUsage %}
+{% url 'showPlotnComm' as showPlotnComm %}
+{% url 'replication' as replication %}
+{% url 'viewDI' as viewDI %}
+{% url 'dataIntegrity' as dataInegrity %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>Prescio Model Validation Automation</title>
+ 
+ 
+</head>
+
+<body class="animsition1">
+    <div class="page-wrapper"> 
+ 
+        <!-- PAGE CONTAINER-->
+        <div class="page-container" div="divMainContent">
+           
+            <!-- MAIN CONTENT-->
+            <div class="main-content" >
+                <div style="display: none;margin-left: 5%;margin-top: 25%;width:90%;background-color: inherit" id="divProgress">
+                    <div style="text-align: center;background-color: inherit">Processing request...</div>
+                    <div class="progress mb-3" >                       
+                        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="25"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                
+                
+                <div id="divContainer" class="container-fluid"> 
+                  
+                    {% block style %}
+                    {% endblock style %}
+                    {% block content %}
+                    {% endblock content %}
+                    {% block script %} 
+                        <!-- Jquery JS-->
+                  
+                        
+                    {% endblock script %}
+                </div>
+                 
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+        <div id="divTemplate" title="Report Template" style="display: none;width:70%;height: 70%;">
+            <div class="row form-group"> 
+                <div class="col-12 col-md-12">  
+                    Select a report template to proceed.
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"  type="text/javascript"></script>
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+     
+    
+</body>
+
+</html>
+<!-- end document-->

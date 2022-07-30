@@ -1,0 +1,174 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+<form method="post" action="{{ dist_numevari_catvar }}"> 
+    {% csrf_token %}
+    <div class="row">   
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <div  class="row form-group" style="margin-bottom: 0px;">
+                        <div class="col col-md-11"> {{ divHeader}}  
+                        </div> 
+                        <div class="col-12 col-md-1" style="display: flex;justify-content: flex-end;">         
+                            <div style="border:solid 1px #573dd9;border-radius: 4px; background-color:#6148df; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;"> 
+                               <img src='\static\images\save_white.png' onclick="showFilename()" title="Save" style='cursor:pointer;'/>                                               
+                            </div>  
+                       </div> 
+                    </div>                  
+                </div>
+                <div class="card-body card-block">   
+                    <div class="row">
+                        <div class="col-lg-12"> 
+                            <select name="var2" id="var2">
+                                {% for numcol in numCols %}
+                                    {% if  num_var  == numcol %}
+                                        <option value="{{ numcol }}" selected="selected"> {{ numcol }}</option>                                                    
+                                    {% else %}
+                                        <option value="{{ numcol }}">{{ numcol }}</option>                                                    
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <select name="var1" id="var1">
+                                {% for catcol in catCols %}
+                                    {% if  cat_var  == catcol %}
+                                        <option value="{{ catcol }}" selected="selected"> {{ catcol }}</option>                                                    
+                                    {% else %}
+                                        <option value="{{ catcol }}">{{ catcol }}</option>                                                    
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            
+                            <button type="submit" class="btn btn-primary btn-sm" >Update</button>
+                            <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                        </div>
+                    </div>
+                    <div class="row" style="height: 15;margin-top: 15px;"></div>
+                    <div class="table-responsive table--no-card m-b-40">
+                        <table id='csvData' class="table table-borderless table-striped table-earning">
+                        <thead>
+                            <tr> 
+                                <th style='padding-top:10px;padding-bottom:10px;'> 
+                                    
+                                </th> 
+                                {% for  val in colNames  %}
+                                    <th style='padding-top:10px;padding-bottom:10px;'>
+                                        {{val}}
+                                    </th>
+                                {% endfor %}  
+                            </tr>                                           
+                        </thead>
+                        <tbody>
+                            {% for key, val in df.items  %}
+                            <tr> 
+                                <td>{{ key }}</td> 
+                                {% for key1, val1 in val.items  %}
+                                    <td>{{ val1 }}</td> 
+                                {% endfor %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                    </div>  
+                </div> 
+                <div class="card-footer">
+                    <div class="row" style="display: flex; justify-content: flex-start;"> 
+                        <div class="row" style="width :94%;display: flex;margin-left:1%; justify-content: flex-start;"> 
+                           <span style="color: red;font-weight: bold;"  > {{noData}}</span>
+                        </div>    
+                    </div>
+                </div>                 
+            </div>
+    </div>
+    </div> 
+    <div id="divFilename" title="Save table" style="display: none;width:70%">
+        <div style="width:100%">
+            
+            <div class="row form-group"> 
+
+                <div class="col-12 col-md-2"> 
+                    Table Name : 
+                </div>
+                <div class="col-12 col-md-9"> 
+                    <input type="text" style="border:1px solid black;width:100%;"  id="txtFile"/>
+                </div>
+            </div>
+       </div> 
+    </div>
+</form>
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript' >
+    var myTable;
+    $(document).ready( function () { 
+        $('#liDataV').click(function(){
+            $('#sub_sub_menu').hide();
+        });
+        myTable=$('#csvData').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            fixedColumns: {
+                leftColumns: 1
+                },
+            scrollY: 400, 
+            scroller: true,
+            scrollX: true, 
+            paging:         false,
+            info:false
+        });   
+    } );
+ 
+        
+        function saveTbl(){
+            
+        } 
+
+    function showFilename()
+    {  
+        $("#divFilename").dialog({   
+            width: "50%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveTableInfo/',
+                            data:{tableType:'NumVarDIst',tableName:$("#txtFile").val(), comments:'',var1:$("#var1").val(),var2:$("#var2").val()}, 
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Table saved.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function goNext(){
+        window.location="{% url 'selCols' %}"
+} 
+</script>
+{% endblock script %}

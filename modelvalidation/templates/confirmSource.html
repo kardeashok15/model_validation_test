@@ -1,0 +1,122 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+<div class="row">   
+    <div class="col-lg-12">
+        <div> 
+            <table>
+                <tr>
+                    <td>
+                        <h4 class="title-2 m-b-25">Confirm data source</h4>
+                    </td>
+                    <td>
+                        <div class="m-b-25">&nbsp;(Use this utility to request confirmation of datasources from Data Governance.)</div>
+                    </td>
+                </tr>
+            </table>             
+        </div> 
+        <div class="table-responsive table--no-card m-b-40">
+            <table id="srcCnfrm" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr>
+                        <th style="width: 20%">Datasource</th>
+                        <th style="width: 20%">Column Name</th> 
+                        <th style="width: 20%">Email</th> 
+                        <th style="width: 20%">Response</th>
+                        <th style="width: 20%">Send Mail</th> 
+                    </tr>
+                </thead>  
+                <tbody>
+                {% for data in txtList %}
+                   <tr>
+                       <td><input type="text" id="txt_src_{{data.colName}}" onchange="enableBtn('{{data.colName}}')" style="border:1px solid black;" value="{{data.srcName}}"/></td>
+                       <td width="150px;"  style="width:150px;">{{data.colName}}</td>                       
+                       <td><input type="text" id="txt_email_{{data.colName}}" onchange="enableBtn('{{data.colName}}')"  style="border:1px solid black;" value="{{data.emailId}}"/></td>
+                       <td> 
+                            {% if data.reqResp == "Yes" %}
+                                <input type="radio" id="chk_yes_{{data.reqID}}" checked="checked"  disabled="disabled"/> Yes 
+                                <input type="radio" id="chk_no_{{data.reqID}}"  disabled="disabled" /> No
+                        
+                            {% elif  data.reqResp == "No" %}   
+                                <input type="radio" id="chk_yes_{{data.reqID}}" disabled="disabled"/> Yes 
+                                <input type="radio" id="chk_no_{{data.reqID}}" checked="checked" disabled="disabled" /> No
+                            {% elif  data.reqResp == "-"%}                            
+                                <input type="radio" id="chk_yes_{{data.reqID}}" disabled="disabled"/> Yes
+                                <input type="radio" id="chk_no_{{data.reqID}}"  disabled="disabled"/> No
+                            
+                            {% endif %}  
+                        </td>
+                       <td>
+                            {% if data.reqResp == "Yes" or data.reqResp == "No"  %}
+                                <button type="button" class="btn btn-primary btn-sm" id="btn_{{data.colName}}" disabled="disabled">Send mail</button>
+                            {%else %}
+                                <button type="button" class="btn btn-primary btn-sm" id="btn_{{data.colName}}" disabled="disabled" onclick="sendMail('{{data.colName}}')">Send mail</button> 
+                            {% endif %}
+                        </td>
+                   </tr>
+                {% endfor %}
+                </tbody>
+               </table>
+        </div>
+        
+    </div>
+</div> 
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript' >
+    var myTable;
+    var colDtTbl;
+    $(document).ready( function () { 
+        $('#liDataV').click(function(){
+        $('#sub_sub_menu').hide();
+        });
+        myTable=$('#srcCnfrm').DataTable({
+        sDom: 'lrtip',
+        "ordering": false,
+        scrollY: 400, 
+        scroller: true,
+        paging:         false,
+        info:false,
+        autoWidth: false,
+        "columns": [
+        { "width": "250px" },
+        { "width": "250px" },
+        { "width": "150px" },
+        { "width": "20px" },
+        { "width": "20px" } 
+],
+        });  
+    } ); 
+
+    function sendMail(id){
+        //alert('src is '+ $("#txt_src_"+id).val() + ', email is '+ $("#txt_email_"+id).val()  )
+        $.ajax({
+            url: '/sendCnfrmMail/', 
+            data:{ srcName: $("#txt_src_"+id).val(),emailId: $("#txt_email_"+id).val(),colName:id  },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                   alert('Mail sent successfully.');
+               }
+            }
+        });
+    }
+
+    function enableBtn(id){ 
+        alert($("#txt_email_"+id).val().length  +',' + $("#txt_src_"+id).val().length)
+        if($("#txt_email_"+id).val().trim().length ==0 || $("#txt_src_"+id).val().length ==0){
+            $("#btn_"+id).prop('disabled', true);
+        }
+        else{
+            $("#btn_"+id).prop('disabled', false);
+        }
+    }
+</script>
+{% endblock script %}

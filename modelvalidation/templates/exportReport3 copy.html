@@ -1,0 +1,668 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% load static %} 
+{% block style %} 
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  -->
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+{% endblock style %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;"> 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                Validation Report
+            </div>
+            <div class="card-body card-block" style="padding-bottom: 0;">
+                <div class="row" style="display: flex; justify-content: flex-start;"> 
+                    <div  style="max-width: 4%;padding: 0px">
+                        <a href="#" style="color:black;"> &nbsp;<i class="fa fa-text-width" style="font-size: 16px;"  onclick="showTitles()" title="Add Title"></i> </a>
+                    </div> 
+                    <div  style="max-width: 4%;padding: 0px">
+                        <a href="#" style="color:black;"> &nbsp;<i class="fa fa-edit" style="font-size: 16px;"  onclick="addToReport()" title="Add comment"></i> </a>
+                    </div> 
+                    <div  style="max-width: 4%;padding: 0px">
+                        <a href="#"  style="color:black;" onclick="showImages()" > &nbsp;<i class="fa fa-picture-o" style="font-size: 16px;" title="Insert picture"></i> </a>
+                    </div>  
+                    <div  style="max-width: 4%;padding: 0px">
+                        <a href="#"  style="color:black;" onclick="showRptPrv()"> &nbsp;<i class="fa fa-check-square-o" style="font-size: 16px;" title="Preview"></i> </a>
+                    </div> 
+                    <div  style="max-width: 4%;padding: 0px">
+                        <a href="#"  style="color:black;" onclick="generateReport()"> &nbsp;<i class="fa fa-save" style="font-size: 16px;" title="Save"></i> </a>
+                    </div> 
+                    <div style="max-width: 4%;padding: 0px">
+                        <img src='\static\images\equation.png' title="Equation Editor" style='height: 16px;width:16px;cursor:pointer;'/>
+                    </div>  
+                    <div  style="max-width: 4%;padding: 0px">
+                        <img src='\static\images\symbol.png'  title="Symbols"  style='height: 16px;width:16px;cursor:pointer;'/>
+                    </div>  
+                    <div  style="max-width: 4%;padding: 0px">    
+                        <img src='\static\images\reference.png'  title="References" style='height: 16px;width:16px;cursor:pointer;' onclick="showReferences()"/>
+                    </div>  
+                    <div style="max-width: 4%;padding: 0px">
+                        <a href="{{ pdfFile }}" style="color:black;"  download id="downRpt" target="_blank"> &nbsp;<i class="fa fa-download" style="font-size: 12px;" title="Export to PDF"></i> </a>
+                    </div>
+                    <div  style="max-width: 4%;padding: 0px">    
+                        <img src='\static\images\help.png' title="Help"  style='height: 16px;width:16px;cursor:pointer;'/>
+                    </div>
+                </div>
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-12">
+                            <textarea id="txtComments" rows="15" style="resize: none; border:1px solid black;width: 100%;font-size: 10pt;" ></textarea>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>   
+</div>
+
+<div id="divTitles" title="Add Title\Sub Title\Sub Sub Title" style="display: none;width:70%">
+    <div style="width:100%"> 
+        <div class="row form-group">
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px"> 
+                <select id="selectSecTitle" onchange="getTitle()" class="form-control-sm form-control">
+                    <option value="0">Select Title</option>
+                    <option value="1">Executive Summary</option>
+                    <option value="2">Model Assessment</option>
+                    <option value="3">Model Performance & Testing</option>
+                    <option value="4">Implementation and Controls </option>
+                    <option value="5">Governance and Oversight</option>
+                    <option value="-1">Add New</option>  
+                </select>
+                <input type="text" style="border-color: black;display: none;" id="txtTitle" name="text-input" class="form-control-sm form-control">
+            </div> 
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px">
+                <select id="selectSubTitle" onchange="getSubTitle()" class="form-control-sm form-control">
+                    <option value="0">Select Sub Title</option> 
+                    <option value="-1">Add New</option>
+                </select>  
+                <input type="text" style="border-color: black;display:none;" id="txtSubTitle" name="text-input" class="form-control-sm form-control"> 
+
+            </div>
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px">
+                <select id="selectSubSubTitle" onchange="getSubSubTitle()" class="form-control-sm form-control">
+                    <option value="0">Select Sub Sub Title</option> 
+                    <option value="-1">Add New</option>
+                </select>  
+                <input type="text" style="border-color: black;display:none;" id="txtSubSubTitle" name="text-input" class="form-control-sm form-control"> 
+
+            </div>
+            <!-- <div class="col-12 col-md-1"> 
+                <input type="text" style="border-color: black;" id="txtSubTitle1" name="text-input" class="form-control-sm form-control"> 
+                <button type="button" id="btnAddTitle" onclick="AddSection()" class="btn btn-primary btn-sm">Add</button>
+            </div> -->
+            
+        </div> 
+        
+   </div> 
+</div>
+<div id="divDeleteComment" title="Delete comment" style="display: none;width:70%;height: 70%;">
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12">  
+            Are you sure you want to delete comment?
+        </div>
+    </div>
+</div>
+
+<div id="divReferences" title="Policies" style="display: none;width:70%;height: 70%;">
+    <div class="row form-group"> 
+        <div class="table-responsive table--no-card m-b-40">
+            <table id="policies" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr> 
+                        <th>Policy</th> 
+                        <th>Reference</th> 
+                        <th>Reference</th>    
+                    </tr>
+                </thead>  
+                <tbody>
+                {% for data in policiesLst %} 
+                        <tr>
+                            <!-- <td  style='display: none;'>{{data.policyIdx}}</td>    -->
+                            <td>{{data.policy}}</td>                                                                            
+                            <td>{{data.reference}}</td> 
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" id="btn_{{data.policyIdx}}" onclick="addRefer('{{data.policy}}','{{data.reference}}')">Add</button> 
+                            </td>
+                        </tr> 
+                {% endfor %}
+                </tbody>
+               </table>
+        </div>
+    </div>
+</div>
+
+<div id="divRptPrv" title="Preview comment (Double click to edit text. Right click to delete text.)" style="display: none;width:70%;height: 70%;" >
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12"> 
+
+             <div id="divReportOutput" style="font-size: 12pt;border:1px solid black;width: 100%;height: 500px;white-space: pre-wrap;overflow: scroll;"></div>
+        </div>
+    </div>
+</div>
+<div id="divImg" title="Add image" style="display: none;width:70%">
+    <div style="width:100%"> 
+        <div class="row form-group"> 
+
+            <div class="col-12 col-md-2" style="max-width: 10%;"> 
+                Image <a   href="" download id="downChartRpt" target="_blank"> 
+                    <i class="fa fa-external-link"  style="font-size: 12px;"></i> </a>
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectImg" class="form-control" style="height: 30px;" onchange="getImg()">        
+                    <option value="Select">Select</option> 
+                    {% for data in imgFiles %}
+                        <option  value="{{data.destination}}">{{data.chartType}} - {{data.chartImg}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-2"> 
+                <select  id="selectImgAlign" class="form-control" style="height: 30px;">        
+                    <option value="Select">Align</option>  
+                    <option value="left">Left</option>  
+                    <option value="center">Center</option>  
+                    <option value="right">Right</option>  
+                </select>
+            </div>
+            <div class="col-12 col-md-3" style="max-width: 30%;">
+                <input type="text" style="border:1px solid black;width:100%;" placeholder="Image Title" value="{{imgPDFFile}}"  id="txtImgTitle"/> 
+            </div>
+            <div class="col-12 col-md-2"> 
+                <select  id="selectTitleAlign" class="form-control" style="height: 30px;">        
+                    <option value="Select">Align</option>  
+                    <option value="top">Top</option>  
+                    <option value="bottom">Bottom</option>   
+                </select>
+            </div>
+        </div>
+        <div class="row form-group"> 
+
+            <div class="col-12 col-md-2" style="max-width: 10%;"> 
+                Resize 
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_25" value="0.25" onchange="resizeImg(25)" name="rb_resize"/> 25%  
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_50" value="0.50" onchange="resizeImg(50)" name="rb_resize"/> 50%   
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_75" value="0.75" onchange="resizeImg(75)" name="rb_resize"/> 75%   
+            </div>
+            <div class="col-12 col-md-2"> 
+                <input type="radio" id="chk_100" value="1" onchange="resizeImg(100)" checked="checked" name="rb_resize"/> 100%   
+            </div>
+        </div>
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1"> 
+            </div>
+            <div class="col-12 col-md-10"> 
+                <img id="imgGraph" src="" style="height: 400px;width:100%"> 
+            </div> 
+        </div>
+        
+   </div> 
+</div>
+<div  title="Generating Report"  style="display: none;background-color: inherit" id="divRptProgress">
+    <div style="text-align: center;background-color: inherit">Processing request...</div>
+    <div class="progress mb-3"  >                       
+        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="25"
+         aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+<input type="text" style="display: none;" id="txtreqId"/>
+<input type="text" style="display: none;" id="txtSecId"/>
+<input type="text" style="display: none;" id="txtSubSecId"/>
+</form>   
+                        {% endblock content %}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript"> 
+    let refnum=0;  
+    window.onload=function(){ 
+        $('#txtComments').css("height",($(document).height()*0.60)+"px");
+        //document.addEventListener('contextmenu', event => event.preventDefault());
+
+        document.getElementById('txtComments').addEventListener('keydown', function(e) {
+          if (e.key == 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) +
+              "\t" + this.value.substring(end);
+        
+            // put caret at right position again
+            this.selectionStart =
+              this.selectionEnd = start + 1;
+          }
+        });
+    };
+    
+    function addRefer(pol,ref){
+        refnum=refnum+1;
+        unicodesarr={'1':'\u00b9','2':'\u00b2','3':'\u00b3','0':'\u2070','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079' 	}
+        $.ajax({
+            url: '/addRptRef/', 
+            data:{ policy: pol,reference:ref },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                refnum=data.refNo
+                if(refnum<10){
+                    $("#txtComments").val($("#txtComments").val()+unicodesarr[refnum])
+                }
+                else{
+                    val=refnum/10;
+                    remain=refnum%10;
+                    $("#txtComments").val($("#txtComments").val()+unicodesarr[val]+unicodesarr[remain]) 
+                   // $("#txtComments").val($("#txtComments").val()+'\u00b9\u2070');
+                }
+               }
+            }
+        });
+        
+            //alert((policy+ ' ,' +reference)) 
+        $("#divReferences").dialog("close");
+    }
+
+    function showReferences(){
+        $("#divReferences").dialog({   
+          width: "70%",   
+          modal: true,
+          buttons: [
+              {
+                  text: "Cancel",
+                  "class": 'btn btn-primary btn-sm',
+                  click: function() {
+                      // Save code here
+                      $(this).dialog("close");
+                  }
+              }
+          ],  
+      }); 
+  
+  }
+
+    function generateReport(){  
+        $("#divRptProgress").dialog({   
+            width: "70%",   
+            modal: true, 
+            height:150,
+        });
+        $.ajax({
+            url: '/generateReport/',  
+            data:{ Title:$("#txtTitle").val(),SubTitle1:$("#txtSubTitle1").val(),SubTitle2:$("#txtSubTitle2").val(),SubTitle3:$("#txtSubTitle3").val()},
+            dataType: 'json',
+            success: function (data) {              
+               if(data.is_taken){
+                    console.log(data) 
+                    $("#divReportOutput").empty();
+                    $('#divRptProgress').dialog("close");
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        
+    }
+
+    function addToReport(){ 
+       // $('#downRpt').onclick = function(){ console.log('clicked')};
+       $.ajax({ 
+        url: '/saveReportComment/',
+        data:{'comment': $("#txtComments").val(),'reqId':$("#txtreqId").val(),'titleIdx':$('#selectSecTitle').val(),'title':$('#selectSecTitle').val()+' '+$('#txtTitle').val(),'subtitleIdx':$('#selectSubTitle').val(),'subtitle':$('#selectSubTitle').val()+' '+$('#txtSubTitle').val(),'subsubtitleIdx':$('#selectSubSubTitle').val(),'subsubtitle':$('#selectSubSubTitle').val()+' '+$('#txtSubSubTitle').val()},
+        dataType: 'json',
+        success: function (data) {
+                if(data.is_taken)
+                { 
+                    if($("#txtreqId").val()!=''){
+                        $("#div_"+$("#txtreqId").val()).empty();
+                        $("#div_"+$("#txtreqId").val()).append("<span>"+$("#txtComments").val()+"</span>");
+                    }
+                    else{
+                        $("#divReportOutput").append("<br><div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' ondblclick='editComment(this.id)'><span>"+$("#txtComments").val()+"</span></div>");
+                    }
+                    $("#txtComments").val('');
+                    $("#txtreqId").val('');
+                    alert('Comment text updated.')                    
+                }   
+        }
+        });  
+       
+    }
+
+    function editComment(id){ 
+        $("#txtComments").val('')
+        $("#txtComments").val($("#"+id).text());
+        $("#txtreqId").val(id.split('_')[1]);
+        $("#divRptPrv").dialog("close");
+    }
+
+    function deleteComment(e)
+    {
+        $("#divDeleteComment").dialog({   
+            width: "40%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Yes",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        $.ajax({ 
+                            url: '/deleteReportComment/',
+                            data:{'reqID': e.split('_')[1] },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        $("#"+e).empty();
+                                        alert('Comment updated successfully.')
+                                    }            
+                            }
+                        }); 
+                        
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        });
+        return false;
+        //return false;
+    }
+    function showRptPrv(){
+        $("#divRptPrv").dialog({   
+            width: "70%",   
+            height:650,
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+    
+    function showTitles(){
+          $("#divTitles").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        AddSection(); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    
+    }
+    function showImages()
+    {  
+        $("#divImg").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        var image = $('#imgGraph');
+                        scalev=($("input[name='rb_resize']:checked").val());
+                         
+                        imgHeight=parseFloat(image.css("height"))*scalev+"px;" ;
+                        imgWidth=parseFloat(image.css("width"))*scalev +"px;"; 
+                        
+                        $.ajax({ 
+                            url: '/saveReportImage/',
+                            data:{'ImgTitle': $("#txtImgTitle").val() ,'TitleAlign':$("#selectTitleAlign").val(),'imgHeight':scalev,'imgWidth':scalev,'img':$("#selectImg").val(),'imgAlign': $("#selectImgAlign").val() },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Image added to comment.')
+                                        $("#divReportOutput").append("<div>");
+                                            divTitleContent="<br> <div style='margin-left:auto;display: flex; justify-content:center;'>"+ $("#txtImgTitle").val() + "</div>"
+                                            if($("#selectTitleAlign").val()=="top"){
+                                                $("#divReportOutput").append(divTitleContent);
+                                                $("#divReportOutput").append("<br> <div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' style='margin-left:auto;display: flex; justify-content:"+ $("#selectImgAlign").val() +";'><img src='\\"+ $("#selectImg").val()+"' style='height: "+ imgHeight +";width:"+imgWidth+"'> </div>");
+                                               
+                                            }
+                                            else{
+                                                $("#divReportOutput").append("<br> <div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' style='margin-left:auto;display: flex; justify-content:"+ $("#selectImgAlign").val() +";'><img src='\\"+ $("#selectImg").val()+"' style='height: "+ imgHeight +";width:"+imgWidth+"'> </div>");
+                                                $("#divReportOutput").append(divTitleContent);
+                                            }
+                                            $("#divReportOutput").append("</div>")
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function resizeImg(per){
+        //alert(per)
+        $('#imgGraph').css("transform", "scale("+ (per/100) +")");
+        $('#imgGraph').css('transform-origin','0px 0px');
+    }
+ 
+    function getImg(){
+        $("#imgGraph").attr("src","\\"+ $("#selectImg").val()); 
+        $("#downChartRpt").attr('href', "\\"+ $("#selectImg").val().replace('.png','.pdf'));
+    }
+
+    function getTitle(){ 
+        $('#txtTitle').val('');
+        $('#txtSubTitle').val('');
+        $('#txtSubSubTitle').val('');
+        $('#selectSubTitle option').remove();    
+        $('#selectSubTitle').append(new Option("Select Sub Title","0"));               
+        $('#selectSubTitle').append(new Option("Add New","-1"));
+        if($('#selectSecTitle').val()!='-1' & $('#selectSecTitle').val()!='0'){
+           $('#txtTitle').val($('#selectSecTitle option:selected').text());
+           $.ajax({
+            url: '/getSubTitle/',  
+            data:{ title:$("#selectSecTitle").val()},
+            dataType: 'json',
+            success: function (data) {          
+                $('#selectSubTitle option').remove();    
+                $('#selectSubTitle').append(new Option("Select Sub Title","0"));
+                for(var x in data.subTtl){
+                    console.log(data.subTtl[x])
+                    
+                    subTitleVal=$('#selectSecTitle').val()+'.'+ (parseInt(x)+1);
+                    $('#selectSubTitle').append(new Option(data.subTtl[x],subTitleVal));
+                    
+                }
+                $('#selectSubTitle').append(new Option("Add New","-1"));
+                }
+            });
+        }
+        else  if($('#selectSecTitle').val()=='-1')
+        {
+            $('#selectSecTitle').hide();
+            $('#txtTitle').show();
+        }
+   }
+   
+function getSubTitle(){ 
+    $('#txtSubTitle').val('');
+    $('#txtSubSubTitle').val('');
+    $('#selectSubSubTitle option').remove();    
+    $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));               
+    $('#selectSubSubTitle').append(new Option("Add New","-1"));
+    if($('#selectSubTitle').val()!='-1' & $('#selectSubTitle').val()!='0'){
+       $('#txtSubTitle').val($('#selectSubTitle option:selected').text());
+       $('#txtTitle').val($('#selectSecTitle option:selected').text());
+           $.ajax({
+            url: '/getSubSubTitle/',  
+            data:{ title:$("#selectSubTitle").val()},
+            dataType: 'json',
+            success: function (data) {          
+                $('#selectSubSubTitle option').remove();    
+                $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));
+                for(var x in data.subsubTtl){
+                    subTitleVal=$('#selectSubTitle').val()+'.'+ (parseInt(x)+1);
+                    $('#selectSubSubTitle').append(new Option(data.subsubTtl[x],subTitleVal));
+                    
+                }
+                $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                }
+            });
+    }
+    else if($('#selectSubTitle').val()=='-1')
+    {
+        $('#txtSubTitle').val('');
+        $('#txtSubTitle').show();
+        $('#selectSubTitle').hide();
+    }
+}
+
+function getSubSubTitle(){ 
+    $('#txtSubSubTitle').val('');
+    if($('#selectSubSubTitle').val()!='-1' & $('#selectSubSubTitle').val()!='0'){
+       $('#txtSubSubTitle').val($('#selectSubSubTitle option:selected').text());
+    }
+    else if($('#selectSubSubTitle').val()=='-1')
+    {
+        $('#txtSubSubTitle').val('');
+        $('#txtSubSubTitle').show();
+        $('#selectSubSubTitle').hide();
+    }
+}
+
+
+   function AddSection(){  
+       if($("#txtTitle").val().trim().length>0)
+       {
+            if($("#txtSubSubTitle").val().trim().length>0){ 
+                if($('#selectSubSubTitle').val()=='-1'){
+                    $('#selectSubSubTitle option:last').remove();
+                    subTitleVal=$('#selectSubTitle').val()+'.'+$('select#selectSubSubTitle option').length;
+                    $('#selectSubSubTitle').append(new Option($('#txtSubSubTitle').val(),subTitleVal));
+                    $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                     
+                    $('#selectSubSubTitle').val(subTitleVal);
+                    if($("#txtComments").val().length>0){
+                        $("#txtComments").val($("#txtComments").val()+' \n'+$('#selectSubSubTitle').val()+' '+$('#txtSubSubTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+ $('#selectSubSubTitle').val()+' '+$('#txtSubSubTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+                else{    
+                    if($("#txtComments").val().length>0){            
+                        $("#txtComments").val($("#txtComments").val()+' \n'+$('#selectSubSubTitle').val()+' '+$('#txtSubSubTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+$('#selectSubSubTitle').val()+' '+$('#txtSubSubTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+            }
+           else if($("#txtSubTitle").val().trim().length>0){ 
+                if($('#selectSubTitle').val()=='-1'){
+                    $('#selectSubTitle option:last').remove();
+                    subTitleVal=$('#selectSecTitle').val()+'.'+$('select#selectSubTitle option').length;
+                    $('#selectSubTitle').append(new Option($('#txtSubTitle').val(),subTitleVal));
+                    $('#selectSubTitle').append(new Option("Add New","-1"));
+                    console.log(subTitleVal)
+                    $('#selectSubTitle').val(subTitleVal);
+                    if($("#txtComments").val().length>0){
+                        $("#txtComments").val($("#txtComments").val()+' \n'+$('#selectSubTitle').val()+' '+$('#txtSubTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+ $('#selectSubTitle').val()+' '+$('#txtSubTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+                else{    
+                    if($("#txtComments").val().length>0){            
+                        $("#txtComments").val($("#txtComments").val()+' \n'+$('#selectSubTitle').val()+' '+$('#txtSubTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+$('#selectSubTitle').val()+' '+$('#txtSubTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+           }
+           else{
+                if($('#selectSecTitle').val()=='-1'){
+                    $('#selectSecTitle option:last').remove();
+                    $('#selectSecTitle').append(new Option($('#txtTitle').val(),$('select#selectSecTitle option').length));
+                    $('#selectSecTitle').append(new Option("Add New","-1")); 
+                    $('#selectSecTitle').val($('select#selectSecTitle option').length-2);
+                    if($("#txtComments").val().length>0){
+                        $("#txtComments").val($("#txtComments").val()+' \n'+$('#selectSecTitle').val()+' '+$('#txtTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+$('#selectSecTitle').val()+' '+$('#txtTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+                else{     
+                    if($("#txtComments").val().length>0){           
+                        $("#txtComments").val($("#txtComments").val()+' \n'+$('#selectSecTitle').val()+' '+$('#txtTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+$('#selectSecTitle').val()+' '+$('#txtTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+           }
+       }
+   }
+
+ </script>
+{% endblock script %} 

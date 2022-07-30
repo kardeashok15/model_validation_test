@@ -1,0 +1,246 @@
+{% extends 'base.html' %} 
+{% load static %} 
+<style>
+th{
+    padding: 10px 0px 10px 10px!important;
+ } 
+.button{
+    background-image: url('\static\images\save_white.png') no-repeat;
+    cursor:pointer;
+    border: none;
+} 
+</style>
+{% block content %}
+<div class="row" style="margin-left:auto;"> 
+    <div class="col-lg-1"></div>
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <div class="row form-group" style="margin-bottom: 0px;">
+                    <div class="col col-md-11">
+                        Data Sampling for EDA
+                    </div>
+                    <div class="col-12 col-md-1" style="display: flex;justify-content: flex-end;">         
+                           
+                    </div>
+                     
+                </div>                  
+            </div>
+            <div class="card-body card-block">
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" > 
+                        Sample Data Columns  
+                    </div>
+                    <div class="col-12 col-md-4"> 
+                        <select  id="selectSample" class="form-control" multiple>     
+                            {% for data in dataTypes %}
+                                <option  value="{{data.colName}}">{{data.colName}}</option>
+                            {% endfor %}        
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <input type="checkbox" id="chkAll" onclick="selectAll()" />&nbsp;Select All
+                    </div>
+                </div>
+
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" > 
+                       Date Columns 
+                    </div>
+                    <div class="col-12 col-md-4"> 
+                        <select  id="selectDateCols" class="form-control" onchange="getDateRanges()">     
+                            {% for data in dataTypes %}
+                                <option  value="{{data.colName}}">{{data.colName}}</option>
+                            {% endfor %}        
+                        </select> 
+                    </div>
+                </div>
+
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" style="display: flex; justify-content: flex-end;"> 
+                       
+                     </div>
+                    <div class="col-12 col-md-2" style="display: flex; justify-content: flex-end;">                        
+                        <input type="text" id="minDate" readonly onchange="CheckDagta()"  placeholder="From Date" style="border: 1px solid;width:100px;text-align: right;padding: 2px;"/>
+                    </div>
+                   
+                    <div class="col-12 col-md-2" style="display: flex; justify-content: flex-end;"> 
+                        <input type="text" id="maxDate" readonly onchange="CheckDagta()" placeholder="To Date" style="border: 1px solid;width:100px;text-align: right;padding: 2px;"/>
+                    </div>
+
+                    <div class="col-12 col-md-2" style="display: flex; justify-content: flex-start;"> 
+                       
+                        <!-- <button  class="btn btn-primary btn-sm"    onclick="checkData()" style="margin-left: 10px;" type="button">Check</button> -->
+                    </div>
+                </div>
+
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" > 
+                       Number of Rows in Dataset
+                    </div>
+                    <div class="col-12 col-md-4">                        
+                        <input type="text" id="txtNumRows" style="border: 1px solid;width:100px;text-align: right;padding: 2px;" readonly/> 
+                    </div>
+                </div>
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" > 
+                       Number of Rows For EDA
+                    </div>
+                    <div class="col-12 col-md-2" style="max-width: 13%;" >
+                        <input type="radio" id="rb_Internal" name="Model_Type" value="Frac" onchange="disabletxts(false)"/> Fraction<br>
+                    </div>
+                    <div class="col-12 col-md-2" style="max-width: 11%;" > 
+                        <input type="radio" id="rb_Vendor" name="Model_Type" value="Rows" checked="checked"  onchange="disabletxts(true)"/> Rows 
+                        
+                    </div>
+                    <div class="col-12 col-md-4">                        
+                        <input id="txtNumRowsEDA"  type="number" style="border: 1px solid;width:100px;text-align: right;padding: 2px;"/> 
+                    </div>
+                </div>
+               
+            </div> 
+            <div class="card-footer">
+                <div class="row" style="display: flex; justify-content: flex-end;"> 
+                    <button  class="btn btn-primary btn-sm"    onclick="saveOptions()" style="margin-left: 10px;" type="button">Save</button>
+                    <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                     
+                </div>
+            </div>
+        </div> 
+    </div>     
+                 
+            
+                        {% endblock content %}
+{%  block script %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' >
+        $(document).ready( function () {  
+             
+        } );
+
+        function selectAll()
+        {   
+            $('#selectSample option').prop('selected', $('#chkAll').prop('checked'));
+        }
+        var dateFormat = "mm/dd/yyyy";
+        function getDateRanges()
+        {
+            $.ajax({ 
+                url: '/sampleDateRange/',
+                data:{column:$('#selectDateCols').val()}, 
+                dataType: 'json',
+                success: function (data) {
+                        console.log('data is ',data)
+                        if(data.is_valid)
+                        {  
+                            var f = new Date(data.minDate) 
+                            var t = new Date(data.maxDate) 
+                            /*$("#minDate").val(f.getMonth()+'/'+f.getDate() +'/'+f.getFullYear()   )
+                            $("#maxDate").val(t.getMonth()+'/'+t.getDate() +'/'+t.getFullYear()   ) */
+                            $("#txtNumRows").val(data.rowCnt)
+                           console.log('f is ',f,' t is ',t)
+                            /*$("#minDate").datepicker({ minDate: f,maxDate: t,defaultDate:f, changeMonth: true,
+                                numberOfMonths: 1});
+                            $("#maxDate").datepicker({ minDate: f,maxDate: t,defaultDate:t, changeMonth: true,
+                                numberOfMonths: 1}); */
+
+                                from = $( "#minDate" )
+                                .datepicker({
+                                  minDate: f,maxDate: t,defaultDate:f,
+                                  changeMonth: true,
+                                  numberOfMonths: 1, 
+                                }).on( "change", function() {
+                                  to.datepicker( "option", "minDate", getDate(this) );
+                                });
+                              to = $( "#maxDate" ).datepicker({
+                                minDate: f,maxDate: t,defaultDate:t, 
+                                changeMonth: true,
+                                numberOfMonths: 1, 
+                              }).on( "change", function() {
+                                from.datepicker( "option", "maxDate", getDate(this) );
+                              });
+                         
+                            
+                        }      
+                        else{
+                            alert('Invalid date column.')
+                        }      
+                }
+            }); 
+        }
+
+        function getDate( element ) {
+            var date;
+            try {
+              date = $.datepicker.parseDate( dateFormat, element.value );
+            } catch( error ) {
+              date = element.value ;
+            }
+            //console.log('changed date is ',date)
+            return date;
+          }
+
+        function CheckDagta(){
+            console.log('inside CheckDagta')
+            $("#txtNumRows").val('')
+            $.ajax({ 
+                url: '/CheckDagta/',
+                data:{column:$('#selectDateCols').val(),fromDt:$("#minDate").val(),toDt:$("#maxDate").val()}, 
+                dataType: 'json',
+                success: function (data) {
+                        console.log('data is ',data)
+                        if(data.is_valid)
+                        {  
+                            $("#txtNumRows").val(data.rowCnt)
+                            
+                        }      
+                        else{
+                            //alert('Invalid date column.')
+                        }      
+                }
+            }); 
+        }  
+
+
+        function saveOptions(){
+            var xAxisCols=[]
+            var yAxisCols=[]
+            var idx=1; 
+            arrXaxis=$('#selectSample').val() 
+            $.each(arrXaxis, function() { 
+                item = {}
+                item ["column"] =this; 
+                xAxisCols.push(item); 
+            }); 
+           var fractype=$('input[name="Model_Type"]:checked').val()
+            console.log('arrXaxis '+xAxisCols)  
+            if(xAxisCols.length>0){  
+                $.ajax({ 
+                    url: '/saveEDASampleData/',
+                    data:{column:$('#selectDateCols').val(),columns: JSON.stringify(xAxisCols),fromDt:$("#minDate").val(),toDt:$("#maxDate").val(),sampleType:fractype, numRows:$('#txtNumRowsEDA').val()}, 
+                    dataType: 'json',
+                    success: function (data) {
+                            console.log('data is ',data)
+                            if(data.is_valid)
+                            {  
+                                alert(data.message)
+                                
+                            }      
+                            else{
+                                //alert('Invalid date column.')
+                            }      
+                    }
+                }); 
+            }
+            else{
+                alert('Please select column(s) to proceed.');
+            }
+        }
+    function goNext(){
+        window.location="{% url 'showCatColFreq' %}"
+     } 
+    </script>
+{% endblock script %} 

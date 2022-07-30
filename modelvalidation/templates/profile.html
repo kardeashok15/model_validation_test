@@ -1,0 +1,66 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style %} 
+<link href="{% static 'datepicker/datepicker3.css' %}" rel="stylesheet" media="all">
+{% endblock style %}
+{% block content %}
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+            
+                {% csrf_token %}
+                
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Profile
+                        </div>
+                        <div class="card-body card-block">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label class=" form-control-label">Database Name </label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select name="select" id="select" class="form-control">
+                                            <option value="0">Please select</option>
+                                            <option value="1">DB #1</option>
+                                            <option value="2">DB #2</option>
+                                            <option value="3">DB #3</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label class=" form-control-label">Profile Name </label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select name="select" id="select" class="form-control">
+                                            <option value="0">Please select</option> 
+                                            <option value="2">Profile #1</option>
+                                            <option value="3">Profile #2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="gotohome()">Cancel</button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                 
+            </div>
+                        {% endblock content %}
+{%  block script %}  
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<script src="{% static 'datepicker/bootstrap-datepicker.js' %}"></script> 
+
+<script type="text/javascript">
+    $(document).ready(function () {
+ 
+    });
+ </script>
+{% endblock script %} 

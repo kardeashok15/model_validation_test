@@ -1,0 +1,204 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+{% endblock style %}
+{% block content %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;">   
+        
+            
+                {% csrf_token %}
+               
+                <div class="col-lg-7">
+                    <div class="card">
+                        <div class="card-header">
+                            Schedular 
+                        </div>
+                        <div class="card-body card-block">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Profile Name </label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select name="select" id="select" class="form-control-sm form-control">
+                                            <option value="0">Please select</option>
+                                            <option value="1">New</option>
+                                            <option value="2">Profile #1</option>
+                                            <option value="3">Profile #2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Schedule Time</label>
+                                    </div>
+                                    <div class="col col-md-9">
+                                        <div class="form-check">
+                                            <div class="radio">
+                                                <label for="radio1" class="form-check-label ">
+                                                    <input type="radio" id="radio1" name="radios" value="1" onchange="enableOPtions()" class="form-check-input">Single
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label for="radio2" class="form-check-label ">
+                                                    <input type="radio" id="radio2" name="radios" value="2" onchange="enableOPtions()" class="form-check-input">Weekly
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label for="radio3" class="form-check-label ">
+                                                    <input type="radio" id="radio3" name="radios" value="3" onchange="enableOPtions()" class="form-check-input">Monthly
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label for="radio3" class="form-check-label ">
+                                                    <input type="radio" id="radio3" name="radios" value="4" onchange="enableOPtions()" class="form-check-input">Quarterly
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Inline Radios</label>
+                                    </div>
+                                    <div class="col col-md-9">
+                                        <div class="form-check-inline form-check">
+                                            <label for="inline-radio1" class="form-check-label ">
+                                                <input type="radio" id="inline-radio1" name="inline-radios" value="option1" class="form-check-input">One
+                                            </label>
+                                            <label for="inline-radio2" class="form-check-label ">
+                                                <input type="radio" id="inline-radio2" name="inline-radios" value="option2" class="form-check-input">Two
+                                            </label>
+                                            <label for="inline-radio3" class="form-check-label ">
+                                                <input type="radio" id="inline-radio3" name="inline-radios" value="option3" class="form-check-input">Three
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div> --> 
+                                <!-- <div class="form-group">
+                                    <div class="input-group date">
+                                        <div class="input-group-addon">
+                                            <label class="black">From Date</label>
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" class="form-control pull-right" id="startDate" placeholder="DD/MM/YYYY">
+                                    </div>
+                                </div> -->
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="text-input" class=" form-control-label">Day</label>
+                                    </div>
+                                    <div class="col-12 col-md-4">
+                                        <div class="input-group">                                       
+                                            <select name="dayofweek" id="dayofweek" style="display: none;" class="form-control-sm form-control">
+                                               
+                                                <option value="1">Sunday</option>
+                                                <option value="2">Monday</option>
+                                                <option value="3">Tuesday</option> 
+                                                <option value="3">Wednesday</option>                
+                                                <option value="3">Thursday</option>  
+                                                <option value="3">Friday</option>  
+                                                <option value="3">Saturday</option>  
+                                            </select>
+                                            <select  name="dayofmonth" id="dayofmonth" style="display: none;" class="form-control-sm form-control">
+                                                <option>1</option>  
+                                                <option>2</option>  
+                                                <option>3</option>  
+                                                <option>4</option>  
+                                                <option>5</option>  
+                                                <option>6</option>  
+                                                <option>7</option>  
+                                                <option>8</option>  
+                                                <option>9</option>  
+                                                <option>10</option>  
+                                                <option>11</option>  
+                                                <option>12</option>  
+                                                <option>13</option>  
+                                                <option>14</option>  
+                                                <option>15</option>  
+                                                <option>16</option>  
+                                                <option>17</option>  
+                                                <option>18</option>  
+                                                <option>19</option>  
+                                                <option>20</option>  
+                                                <option>21</option>  
+                                                <option>22</option>  
+                                                <option>23</option>  
+                                                <option>24</option>  
+                                                <option>25</option>  
+                                                <option>26</option>  
+                                                <option>27</option>  
+                                                <option>28</option>  
+                                                <option>29</option>  
+                                                <option>30</option>  
+                                                <option>31</option>  
+                                                  
+                                            </select>
+                                            <input type="text" style="border-color: black;" id="txtDate" name="text-input" class="form-control-sm form-control"><span class="input-group-addon" id="txtDateicon"><i class="fas fa-calendar"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label for="text-input" class=" form-control-label">Time</label>
+                                    </div>
+                                    <div class="col-12 col-md-3" style="max-width: 17%">
+                                        <input type="number" style="border-color: black;" id="txt_Hr" min="0" max="23" step="1"  onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" name="text-input" class="form-control-sm form-control">
+                                       
+                                    </div> Hr
+                                    <div class="col-12 col-md-3" style="max-width: 17%">
+                                        <input type="number" style="border-color: black;" id="txt_Mins" min="00" max="59" step="1"  onchange="if(parseInt(this.value,10)<10)this.value='0'+this.value;" name="text-input" class="form-control-sm form-control">
+                                        
+                                    </div>Min
+                                </div> 
+                                <div class="input-append date" id="dp3" data-date-format="dd-mm-yyyy">
+                                    <input class="span2" size="16" type="text"  readonly><span class="add-on"><i class="icon-th"></i></span>
+                                  </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="gotohome()">Cancel</button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                 
+</div>
+                        {% endblock content %}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript">
+    function enableOPtions()
+    {
+        $('#dayofmonth').hide();
+        $('#dayofweek').hide();
+        $('#txtDate').hide();
+        $('#txtDateicon').hide();
+        if($("input[name='radios']:checked").val()==1){
+            $('#txtDate').show();
+            $('#txtDateicon').show();
+        }
+        else if($("input[name='radios']:checked").val()==2){
+            $('#dayofweek').show();
+        }
+        else if($("input[name='radios']:checked").val()==3){
+            $('#dayofmonth').show();
+        }
+        else if($("input[name='radios']:checked").val()==4){
+            $('#dayofmonth').show();
+        }
+    }
+    
+    $(document).ready(function () {
+        //$( "#datepicker" ).datepicker(); 
+    }); 
+ </script>
+{% endblock script %} 

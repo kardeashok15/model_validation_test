@@ -1,0 +1,121 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style %} 
+<link href="{% static 'datepicker/datepicker3.css' %}" rel="stylesheet" media="all">
+{% endblock style %}
+{% block content %}
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+            
+                {% csrf_token %}
+                
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            Policies 
+                        </div>
+                        <div class="card-body card-block">
+                            <form id="target" action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                {% csrf_token %}
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Policy</label>
+                                    </div>
+                                    <div class="col-12 col-md-6"> 
+                                        <input type="text" style="display:none" id="txtPolicyIdx" class="form-control-sm form-control">
+                                        <input type="text" id="txtPolicy"  onchange="enableSave()" class="form-control-sm form-control">
+                                    </div>
+                                </div> 
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Reference </label>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <input type="text" id="txtReference"  onchange="enableSave()" class="form-control-sm form-control">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" id="btnSave" disabled onclick="updateContact()" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="gotohome()">Cancel</button>
+                            </div>                            
+                        </div>
+                        <div class="row form-group">
+                            <div class="col col-md-12"> 
+                                <div class="table-responsive table--no-card m-b-40">
+                                    <table id="contacts" class="table table-borderless table-striped table-earning">
+                                        <thead>
+                                            <tr>
+                                                <th style='display: none;'>Sr No.</th> 
+                                                <th style='padding-top:10px;padding-bottom:10px;'>Policy</th> 
+                                                <th style='padding-top:10px;padding-bottom:10px;'>Reference</th>    
+                                            </tr>
+                                        </thead>  
+                                        <tbody>
+                                        {% for data in contactLst %} 
+                                                <tr>
+                                                    <td  style='display: none;'>{{data.policyIdx}}</td>   
+                                                    <td style='padding-top:10px;padding-bottom:10px;'>{{data.policy}}</td>                                                                            
+                                                    <td style='padding-top:10px;padding-bottom:10px;'>{{data.reference}}</td> 
+                                                </tr> 
+                                        {% endfor %}
+                                        </tbody>
+                                       </table>
+                                </div>
+                            </div> 
+                        </div>
+                    </div> 
+                </div>
+                 
+            </div>
+                        {% endblock content %}
+{%  block script %}  
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<script src="{% static 'datepicker/bootstrap-datepicker.js' %}"></script> 
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        myTable=$('#contacts').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 250, 
+            scroller: true,
+            paging:         false,
+            info:false, 
+            });  
+
+        $('#contacts tbody').on('dblclick', 'tr', function () {
+            var data = myTable.row( this ).data();
+                $("#txtPolicy").val(data[1] );
+                $("#txtReference").val(data[2] );
+                $("#txtPolicyIdx").val(data[0] );
+            } );
+    });
+
+    function updateContact(){
+        $.ajax({
+            url: '/updatePolicy/', 
+            data:{ policy: $("#txtPolicy").val(),reference:$("#txtReference").val(),policyIdx:$("#txtPolicyIdx").val()   },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                   alert('Policy updated successfully.');
+                   $( "#target" ).submit();
+               }
+            }
+        });
+    }
+
+    function enableSave(){
+        if($('#txtReference').val().trim().length>0 && $('#txtPolicy').val().trim().length>0){
+            $('#btnSave').attr('disabled',false);
+        }
+        else{
+            $('#btnSave').attr('disabled',true);
+        }
+    }
+ </script>
+{% endblock script %} 

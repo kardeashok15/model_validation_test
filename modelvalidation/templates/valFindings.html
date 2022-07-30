@@ -1,0 +1,296 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% load static %} 
+{% block style %} 
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  -->
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+{% endblock style %}
+{% block content %}
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+     
+  <div class="col-lg-10">
+    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+      {% csrf_token %}  
+      <div class="card">
+          <div class="card-header">
+            Validation Findings
+          </div>
+          <div class="card-body card-block">  
+                <div id="accordion">
+                  <h3>Validation
+                  </h3>
+                  <div> 
+                   
+                    <div class="card-body card-block">
+                      <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;"> 
+                          <div class="col col-md-3">
+                              <label class=" form-control-label">Findings </label>
+                          </div>
+                          <div class="col-12 col-md-4">
+                              <select id="optFindings" onchange="getData()"  class="form-control-sm form-control">
+                                  <option value="0">Select</option> 
+                                  {% for data in List %}
+                                    <option value="{{data.val}}" style="color: {{data.color}};  background-color: {{data.bgColor}};">{{data.val}}</option>  
+                                  {% endfor %}
+                                  <option value="-1">Add New</option>  
+                              </select>
+                          </div> 
+                      </div>
+                      <div class="row form-group"  style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                        <div class="col col-md-3">
+                            <label class=" form-control-label">Date </label>
+                        </div>
+                        <div class="col-12 col-md-4">
+                          <input type="text"   readonly value="{{today}}" id="txtDate" name="text-input" class="form-control-sm form-control"> 
+                          <input type="text"   readonly value="{{today}}" id="txttodayDate" name="text-input" style="display: none"> 
+                        </div> 
+                      </div>
+                      <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                          <div class="col col-md-3">
+                              <label class=" form-control-label">Assessment Area</label>
+                          </div>
+                          <div class="col-12 col-md-7"> 
+                              <input type="text"  id="txtAssessment" name="text-input" class="form-control-sm form-control"> 
+                          </div>
+                          
+                      </div> 
+                      <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                        <div class="col col-md-3"> 
+                          Severity 
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <select name="optRisk_Level"   id="optRisk_Level" class="form-control-sm form-control"> 
+                                <option value="High">High</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Low">Low</option>
+                            </select>
+                        </div>
+                      </div> 
+                      <div class="row form-group" style="padding-top:0px;margin-top:0px;padding-bottom:0px;margin-bottom:10px;">
+                        <div class="col col-md-3"> 
+                          Level 
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <select name="optLevel"   id="optLevel" class="form-control-sm form-control"> 
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                      </div> 
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                        <div class="col col-md-2">
+                          <label class=" form-control-label">Description
+                          </label>
+                      </div>
+                      </div>
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:10px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col-12 col-md-12">
+                               <textarea id="txtComments" rows="3" style="resize: none;width: 100%;font-size: 10pt;" class="form-control form-control-sm"></textarea>
+                          </div>
+                      </div>
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                        <div class="col col-md-2">
+                          <label class=" form-control-label">Response
+                          </label>
+                        </div>
+                      </div>
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col-12 col-md-12">
+                               <textarea id="txtResp" rows="3" disabled style="resize: none;width: 100%;font-size: 10pt;" class="form-control form-control-sm"></textarea>
+                          </div>
+                      </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row" style="display: flex; justify-content: flex-end;"> 
+                          <div class="col-12 col-md-4">
+                            <select id="optEmail" onchange="getEmail()" class="form-control-sm form-control">
+                              <option value="0">Select Email</option>
+                              {% for emailids in emailLst %}
+                                  <option value="{{emailids.email}}">{{emailids.firstName}} {{emailids.lastName}} </option>
+                              {% endfor %}
+                              <option value="-1">Other</option>
+                          </select>
+                            <input type="text" style="display:none;" id="txtemail" name="text-input" class="form-control-sm form-control">
+                          </div>  
+                          
+                            <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="sendMail()" >Email</button>
+                            <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="saveFindings()" >Save</button>
+                            <button  class="btn btn-primary btn-sm"    onclick="selectTemplate()" style="margin-right: 10px;" type="button">Next</button>
+                        </div>
+                    </div>
+                  </div> 
+                  <h3>Comments</h3>
+                  <div> 
+                    <div class="card-body card-block"> 
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                        <div class="col col-md-2">
+                          <label class=" form-control-label">Comments
+                          </label>
+                        </div>
+                      </div>
+                      <div class="row form-group" style="padding-bottom:0px;margin-bottom:0px;padding-top:0px;margin-top:0px;"> 
+                          <div class="col-12 col-md-12">
+                               <textarea id="txtReportComments" rows="20" style="resize: none;width: 100%;font-size: 10pt;" class="form-control form-control-sm" ></textarea>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="card-footer">
+                      <div class="row" style="display: flex; justify-content: flex-end;"> 
+                          <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="saveReportComment()" >Save</button>
+                           
+                      </div>
+                  </div>
+                  </div>
+                  
+                </div>
+                <div class="row form-group">
+                  <div class="col col-md-4">
+                     
+                  </div>
+                </div>  
+             
+          </div> 
+      </div> 
+    </form>
+  </div>
+   
+</div>
+
+{% endblock content %}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript">   
+    window.onload=function(){
+      $( "#accordion" ).accordion({
+        collapsible: true
+      });  
+      document.getElementById('txtComments').addEventListener('keydown', function(e) {
+        if (e.key == 'Tab') {
+          e.preventDefault();
+          var start = this.selectionStart;
+          var end = this.selectionEnd;
+      
+          // set textarea value to: text before caret + tab + text after caret
+          this.value = this.value.substring(0, start) +
+            "\t" + this.value.substring(end);
+      
+          // put caret at right position again
+          this.selectionStart =
+            this.selectionEnd = start + 1;
+        }
+      });
+    };
+ 
+    function getData()
+    {
+      $("#txtComments").val('');
+      $("#txtResp").val('');
+      $("#optRisk_Level").val('High');
+      $("#optLevel").val('1');
+      $('#txtAssessment').val('') ; 
+      $("#txtDate").val(''); 
+      if($('#optFindings').val()!="-1" && $('#optFindings').val()!="0")
+      {
+        $('#txtAssessment').attr('disabled',true);
+      }
+      else{
+        $('#txtAssessment').attr('disabled',false);
+        
+      }
+      $("#txtDate").val($("#txttodayDate").val());  
+      $.ajax({ 
+        url: '/getvalFindings/',
+        data:{'findingsId':$('#optFindings').val()},
+        dataType: 'json',
+        success: function (data) {  
+                  if(data.findingData.length>0){
+                    $("#txtComments").val(data.findingData[0].Desc);
+                    $("#optRisk_Level").val(data.findingData[0].Risk_Level);
+                    $('#txtAssessment').val(data.findingData[0].Assessment) ;
+                    $("#txtResp").val(data.findingData[0].Response);    
+                    $("#txtDate").val(data.findingData[0].Date);    
+                    $("#optLevel").val(data.findingData[0].Level);   
+                  }
+        }
+        });
+    }
+
+    function sendMail()
+    {  
+      $.ajax({ 
+        url: '/sendDevloperMail/',
+        data:{'emailId':$('#txtemail').val()},
+        dataType: 'json',
+        success: function (data) {  
+          if(data.is_taken)
+          { 
+            alert('Mail sent sucessfully.') 
+          }            
+                  
+        }
+        });
+    }
+
+    function saveFindings()
+    { 
+      if($('#optFindings').val()=="0" || $("#txtComments").val().length<=0){
+        alert('Please enter all values.');
+      }
+      else{
+        $.ajax({ 
+          url: '/savevalFindings/',
+          data:{'findingsId':$('#optFindings').val(),'Desc': $("#txtComments").val(),'Risk_Level':$("#optRisk_Level").val(),'Assessment':$('#txtAssessment').val(),'Lvl':$("#optLevel").val()},
+          dataType: 'json',
+          success: function (data) {
+                  if(data.is_taken)
+                  { 
+                    $('#optFindings option:last').remove();
+                    
+                      $('#optFindings').append(new Option(data.findingsId,data.findingsId));
+                      $('#optFindings').append(new Option("Add New","-1"));      
+                      $("#txtComments").val('');
+                      $("#txtResp").val('');
+                      $("#optRisk_Level").val('High');
+                      $('#txtAssessment').val('') ; 
+                      $("#txtDate").val('');                     
+                      $('#txtAssessment').attr('disabled',true);                     
+                      $("#txtDate").val($("#txttodayDate").val());  
+                      $("#optLevel").val('1');
+                      alert('Findingds saved.');
+                  }   
+          }
+          });
+      }
+    } 
+    
+    function saveReportComment()
+    { 
+      $.ajax({ 
+        url: '/savevalFindingsComment/',
+        data:{'comment':  $("#txtReportComments").val()},
+        dataType: 'json',
+        success: function (data) {
+                if(data.is_taken)
+                { 
+                  alert('Comment saved sucessfully.')             
+                }   
+        }
+        });
+    } 
+
+    function getEmail(){ 
+      $('#txtemail').val(''); 
+      if($('#optEmail').val()!='-1' & $('#optEmail').val()!='0'){
+         $('#txtemail').val($('#optEmail').val());
+      }
+      else{
+          $('#txtemail').show();
+          $('#optEmail').hide();
+      }
+  }
+ </script>
+{% endblock script %} 

@@ -1,0 +1,107 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+<form method="POST" action="{{skipUpdateData}}?name=resample"> 
+    {% csrf_token %}
+<div class="row">   
+    <div class="col-lg-12"> 
+        <div> 
+            <table>
+                <tr>
+                    <td>
+                        <h4 class="title-2 m-b-25">Rename Column Name</h4>
+                    </td>
+                    <td>
+                        <div class="m-b-25">&nbsp;(Use this utility to rename column name by removing spacial characters if any such as '/, \, (), [] etc'.)</div>
+                    </td>
+                </tr>
+            </table>             
+        </div>
+        <div class="table-responsive table--no-card m-b-40">
+            <table id="missingData" class="table table-borderless table-striped table-earning">
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Rename To</th> 
+                </tr>
+            </thead>  
+            <tbody>      
+                {% for data in dataTypes %}
+                <tr> 
+                    <td>
+                        {{data.colName}}
+                    </td>
+                    <td>
+                        <input type="text" id="txt_{{data.irow}}" style="border:1px solid black"/>
+                    </td>                                            
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div> 
+    </div>
+</div> 
+<div class="row" style="display: flex; justify-content: flex-end"> 
+    <button type="button" class="btn btn-primary btn-sm"  onclick="getMissingvalues()">Update</button>
+    <button type="submit" class="btn btn-primary btn-sm" style="margin-left: 10px;" >Skip</button>
+    <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+</div>
+</form>
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript' >
+    var myTable;
+    var colDtTbl;
+    $(document).ready( function () { 
+        $('#liDataV').click(function(){
+        $('#sub_sub_menu').hide();
+        });
+        myTable=$('#missingData').DataTable({
+        sDom: 'lrtip',
+        "ordering": false,
+        scrollY: 400, 
+        scroller: true,
+        paging:         false,
+        info:false
+        }); 
+    } ); 
+
+
+    function getMissingvalues(){  
+    var updatedData=[];
+    var irow=1;
+    myTable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+        var data = this.data(); // able to fetch the data.
+        var row = this.node(); 
+        if($('#txt_'+irow).val()!=''){      
+            item = {} ;
+            item [data[0]] = $('#txt_'+irow).val();           
+            updatedData.push(item); 
+        }
+        irow++;
+    }); 
+
+    console.log(updatedData) 
+    $.ajax({
+        url: '/ajax/renameColNames/', 
+        data:{colDataLst : JSON.stringify(updatedData)  },
+        dataType: 'json',
+        success: function (data) {
+           
+            if (data.is_taken) {
+            alert("Column(s) renamed successfully.");
+            }
+        }
+    }); 
+    }
+
+    function goNext(){
+        window.location="{% url 'resample' %}"
+} 
+</script>
+{% endblock script %}

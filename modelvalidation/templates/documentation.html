@@ -1,0 +1,123 @@
+{% extends 'base.html' %}  
+{% load static %} 
+{% block content %}
+<div class="row"  style="margin: auto;display: flex; justify-content:center;">
+    <form method="POST">
+    {% csrf_token %}  
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                     Documentation 
+                </div>
+                <div class="card-body card-block">
+                    <div class="table-responsive table--no-card m-b-40">
+                        <table id='csvData' class="table table-borderless table-striped table-earning">
+                            
+                            <tbody> 
+                                <tr> 
+                                    <td>Model Development Document</td>  
+                                    <td><input type="checkbox" id="chk_1"></td>  
+                                    <td><input type="text" id="txt_1"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                                <tr> 
+                                    <td>Operating Procedures Documentation
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_2"></td>  
+                                    <td><input type="text" id="txt_2"  style="border-color: black;border-style: solid;border-width: 1px; "></td> 
+                                </tr>
+                                <tr> 
+                                    <td>Technical Manual
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_3"></td>  
+                                    <td><input type="text" id="txt_3"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                                <tr> 
+                                    <td>User Manual
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_4"></td>  
+                                    <td><input type="text" id="txt_4"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                                <tr> 
+                                    <td>Validation Documentation
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_5"></td>  
+                                    <td><input type="text" id="txt_5"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                                <tr> 
+                                    <td>Production Policy
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_6"></td>  
+                                    <td><input type="text" id="txt_6"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                                <tr> 
+                                    <td>Security Policy
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_7"></td>  
+                                    <td><input type="text" id="txt_7"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                                <tr> 
+                                    <td>Change Control Policy
+                                    </td>  
+                                    <td><input type="checkbox" id="chk_8"></td>  
+                                    <td><input type="text" id="txt_8"  style="border-color: black;border-style: solid;border-width: 1px;" ></td> 
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                </div>
+                <div class="card-footer">     
+    
+                    <div class="row" style="display: flex; justify-content: flex-end"> 
+                        <button type="button" class="btn btn-primary btn-sm" onclick="save();" >Show</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form> 
+</div>
+                        {% endblock content %}
+                        {%  block script %}
+                        <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' > 
+     
+
+    function save(){ 
+        var jsonData="{{Documentation|safe}}";  
+      jsonData=jsonData.replaceAll("'",'"');
+      jsonData=jsonData.replaceAll("\\","\\\\");
+      jsonData=jsonData.replaceAll('None','"-"'); 
+      jsonData=$.parseJSON(jsonData)
+      console.log(jsonData)
+      docs=jsonData
+        arrDocs=['Model Development Document','Operating Procedures Documentation','Technical Manual','User Manual','Validation Documentation','Production Policy','Security Policy','Change Control Policy'];
+        var updatedData = []
+        for(irow=1;irow<9;irow++)
+        {
+            if($('#chk_'+irow).prop('checked')){
+                item = {}
+                item ["doc_type"] =arrDocs[irow-1]; 
+                item ["doc_file"] =$('#txt_'+irow).val() ; 
+                updatedData.push(item); 
+                
+            }       
+
+        }
+        $.ajax({
+            url: '/saveDocumentationData/',  
+            data:{ doc_type:JSON.stringify(updatedData)},
+            dataType: 'json',
+            success: function (data) {              
+               if(data.is_taken){
+                    console.log(data) 
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        /**/        
+    }
+     
+    </script>
+{% endblock script %}

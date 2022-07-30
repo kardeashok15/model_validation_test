@@ -1,0 +1,733 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% url 'openFile' as openFile %} 
+{% load static %} 
+{% block style %} 
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  -->
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+<style>
+    .fullCircleBullet
+{
+  width: 5px;
+  height:5px;
+  bordeR: 1px solid;
+  border-radius: 50%;
+  border-color:black;
+  background-color: black;
+  margin-left: 5px;
+  }
+
+.fullCircleRed
+{
+  width: 20px;
+  height:20px;
+  bordeR: 1px solid;
+  border-radius: 50%;
+  border-color:red;
+  background-color: red;
+  margin-left: 5px;
+  }
+  
+  .blob {
+	background: orange;
+	border-radius: 50%;
+	margin: 7px 0px 0px 0px;
+	height: 15px;
+	width: 15px;
+
+	box-shadow: 0 0 0 0 rgb(228, 100, 15);
+	transform: scale(1);
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 165,0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 165,0, 0);
+	}
+}
+
+/* Speech bubble with a border */
+
+.bubble {
+	position: absolute;
+	background: #292b37;;
+	border: 1px solid #292b37;
+    color: white;
+    padding: 5px;
+}
+.bubble:after, .bubble:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.bubble:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-right-color: #292b37;
+	border-width: 10px;
+	margin-top: -10px;
+}
+.bubble:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-right-color: #292b37;
+	border-width:11px;
+	margin-top: -11px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;"> 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                Replication
+            </div>
+            <div class="card-body card-block" style="padding-bottom: 0;">
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" style="display: flex; justify-content: flex-start; margin-left:1px; margin-bottom:5px;"> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:0px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addcomment.png" onclick="enableEdit()" title="Edit script" style="cursor:pointer;">
+                            <!-- <a href="#" style="color:black;"> &nbsp;<i class="fa fa-text-width" style="font-size: 12px;"  onclick="showTitles()" title="Add Title"></i> </a> -->
+                        </div> 
+                        
+                          
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:21px;">
+                            <img src="\static\images\cmt.png" title="Replication Comments" onclick="showReplicationComments()" style="cursor:pointer;">
+                        </div>  
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:21px;">
+                            <img src="\static\images\codeR.png" title="Code Review Comments" onclick="showCRComments()"  style="cursor:pointer;">
+                        </div> 
+                    </div>
+                    <div class="col-12 col-md-4"   style="display: flex; justify-content:center; margin-left:1px; margin-bottom:5px;"> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\save.png" onclick="addToReport()" title="Save" style="cursor:pointer;">
+                            
+                        </div> 
+                        <input type="text" style="border-color: black;display: none;" id="txtCodeFile" value="{{scriptFile}}"  class="form-control-sm form-control">
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\play.png'  title="Run" style='cursor:pointer;' onclick="runReplication()"/>
+                        </div>   
+                        <!-- <div  style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\reference.png'  title="References" style='cursor:pointer;' onclick="showReferences()"/>
+                        </div>     -->
+                    </div>
+                    <div class="col-12 col-md-4"   style="max-width: 33%;display: flex; justify-content: flex-end; margin-left:1px; margin-bottom:5px;"> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\error.png" title="Errors" style="cursor:pointer;">
+                        </div>
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addimage.png" onclick="showImages()" title="Output" style="cursor:pointer;">
+                            <!-- <a href="#"  style="color:black;" onclick="showImages()" > &nbsp;<i class="fa fa-picture-o" style="font-size: 12px;" title="Insert picture"></i> </a> -->
+                        </div>
+                        <div style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\previewcomment.png' onclick="showRptPrv()" title="Preview" style='cursor:pointer;'/>
+                            <!-- <a href="#"  style="color:black;" onclick="showRptPrv()"> &nbsp;<i class="fa fa-check-square-o" style="font-size: 12px;" title="Preview"></i> </a> -->
+                        </div> 
+                        <!-- <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\save.png' onclick="generateReport()" title="Save" style='cursor:pointer;'/>
+                            to be commented <a href="#"  style="color:black;" onclick="generateReport()"> &nbsp;<i class="fa fa-save" style="font-size: 12px;" title="Save"></i> </a> 
+                        </div>   -->
+                        <div  style="display:none;border:solid 1px #b0acab; width: 24x;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <a href="{{ pdfFile }}" style="color:black;width:20px"  download id="downRpt" target="_blank"> <img src='\static\images\download.png'  title="Export to pdf" style='cursor:pointer;' /> </a>
+                        </div>
+                        <div  style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">   
+                            <img src='\static\images\processstatus.png' onclick="showProcess()" title="Process status"  style='cursor:pointer;'/>
+                        </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">   
+                            <img src='\static\images\help.png' title="Help"  style='cursor:pointer;'/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group">  
+                    <div class="col-12 col-md-12">
+                            <textarea id="txtComments" rows="15" spellcheck="false" style="resize: none;width: 100%;font-size: 11pt;padding: 0px 20px;" disabled class="form-control form-control-sm">{{data}}</textarea>
+                    </div>
+                </div>
+            </div>  
+            <div class="card-footer">  
+                <div class="row" style="display: flex; justify-content: flex-end">  
+                    <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>   
+</div>  
+ 
+<div id="divImg" title="Script Output" style="display: none;width:70%">
+    <div style="width:100%"> 
+            
+        <div class="row form-group" style="display: none;"> <!-- to be uncommented -->
+            <div class="col-12 col-md-2" style="max-width: 10%;padding-right: 0px;"> 
+                Image <a   href="" download id="downChartRpt" target="_blank" style="display: none;color: Red; margin-left:10px"> 
+                    <i class="fa fa-external-link"  style="font-size: 12px;"></i> </a>
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectImg" class="form-control" style="height: 30px;" onchange="getImg()">        
+                    <option value="Select">Select</option> 
+                    {% for data in imgFiles %}
+                        <option  value="\static\replicationoutput\{{data}}">{{data}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row form-group"> 
+            <div class="col-12 col-md-2" style="max-width: 10%;padding-right: 0px;"> 
+                Chart  
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectChart" class="form-control" style="height: 30px;" onchange="disableY()">        
+                    <option value="Select">Select</option> 
+                    <option value="Data">Data</option>
+                    <option value="Hist">Histogram</option> 
+                    <option value="Scattered">Scatter</option>  
+                </select>
+            </div> 
+        </div>
+        <div class="row form-group"> 
+            <div class="col-12 col-md-2" style="max-width: 10%;padding-right: 0px;"> 
+                X-axis 
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectCols" class="form-control" style="height: 30px;">        
+                    <option value="Select">Select</option> 
+                    {% for data in cols %}
+                        <option  value="{{data.colName}}">{{data.colName}}</option>
+                    {% endfor %}
+                </select>
+            </div> 
+            <div class="col-12 col-md-2" style="max-width: 10%;padding-right: 0px;"> 
+                Y-axis  
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectCols2" class="form-control" style="height: 30px;">        
+                    <option value="Select">Select</option> 
+                    {% for data in cols %}
+                        <option  value="{{data.colName}}">{{data.colName}}</option>
+                    {% endfor %}
+                </select>
+            </div> 
+            <div class="col-12 col-md-2" style="max-width: 10%;padding-right: 0px;"> 
+                <button type="button" class="btn btn-primary btn-sm"  onclick="getQDHist()">Show</button>
+            </div>
+
+        </div>
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1"> 
+            </div>
+            <div class="col-12 col-md-10"> 
+                <div class="table-responsive table--no-card m-b-40" style="height: 400px;display: none;" id="csvDatadiv"> 
+                    <table id='csvData' style="height: 400px;" class="table table-borderless table-striped table-earning">
+                        <thead><tr> <th>service_class_code</th><th>sender_company_name</th><th>sender_company_description</th><th>standard_entry_class</th><th>transaction_type</th><th>merchant_address_city</th><th>merchant_address_street_address</th><th>dd_label</th></tr></thead>
+                        <tbody> 
+                            <tr> <td>service_class_code</td><td>sender_company_name</td><td>sender_company_description</td><td>standard_entry_class</td><td>transaction_type</td><td>merchant_address_city</td><td>merchant_address_street_address</td><td>dd_label</td></tr>
+                        </tbody>
+                    </table>
+                    </div>  
+                <img id="imgGraph" src="" style="height: 400px;width:100%;display:none;"> 
+            </div> 
+        </div>
+        
+   </div> 
+</div>
+<div  title="Running Script File"  style="display: none;background-color: inherit" id="divRptProgress">
+    <div style="text-align: center;background-color: inherit">Processing request...</div>
+    <div class="progress mb-3"  >                       
+        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="25"
+         aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+<div id="divReplicationComment" title="Add Comments - Replication" style="display: none;width:70%">
+    <div style="width:100%">
+        
+        <textarea id="txtReplicationcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" class="form-control form-control-sm">{{userComments}}</textarea>
+   </div> 
+</div>
+<div id="divCRComment" title="Add Comments - Code Review" style="display: none;width:70%">
+    <div style="width:100%"> 
+            
+        <div class="row form-group"> 
+             
+            <div class="col-12 col-md-4"> 
+                <select  id="selectCROpt" class="form-control" style="height: 30px;" onchange="getsavedCRComm()">        
+                    <option value="Select">Select</option>                     
+                    <option  value="1">Comments</option>
+                    <option  value="2">Consistency</option>
+                    <option  value="3">Design</option>
+                    <option  value="4">Error and Warning Handling</option>
+                    <option  value="5">Functionality</option>
+                    <option  value="6">Hard Coding</option> 
+                    <option  value="7">Repeated Codes</option>
+                    <option  value="8">Run-time Algorithms</option>
+                    <option  value="9">Safe Parallel Programming</option>
+
+
+                     
+                </select>
+            </div>
+            <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;margin-top:4px;text-align:center;line-height:20px;">   
+                <img src='\static\images\help.png' title="Help" onclick="showCRHelp()"  style='cursor:pointer;'/>
+            </div>
+            <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;margin-top:4px;text-align:center;line-height:20px;">   
+                <img src='\static\images\previewcomment.png' title="Help" onclick="getAllCRComments()"  style='cursor:pointer;'/>
+            </div>
+        </div>
+        <div style="width:100%">        
+            <textarea id="txtCRcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" class="form-control form-control-sm" ></textarea>
+       </div>
+        
+   </div> 
+</div>
+<div id="divCRHelp" title="Help - Code Review" style="display: none;width:70%">
+    <div style="height: 500px;overflow:auto" id="divCRHelpData"> 
+    
+        
+   </div> 
+</div>
+
+<div id="divCRAllComments" title="Comments - Code Review" style="display: none;width:70%">
+    <div style="height: 500px;overflow:auto" id="divCRAllCommentsData"> 
+    
+        
+   </div> 
+</div>
+<input type="text" style="display: none;" id="txtreqId"/>
+<input type="text" style="display: none;" id="txtSecId"/>
+<input type="text" style="display: none;" id="txtSubSecId"/>
+</form>   
+{% endblock content %}   
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript"> 
+    let refnum=0;  
+    window.onload=function(){ 
+        $('#txtComments').css("height",($(document).height()*0.50)+"px");
+       //document.addEventListener('contextmenu', event => event.preventDefault());
+       divId='nodiv'
+        $('.blob').click(function(e){  
+            screenY=e.pageY;
+            screenX= e.pageX;  
+            $("#divDocComments").css({top:screenY-25, left:screenX+20   , position:'absolute'});      
+           });
+        $('#tblDocs').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 280, 
+            scroller: true,
+            paging:         false,
+            info:false
+            });
+        document.getElementById('txtComments').addEventListener('keydown', function(e) {
+          if (e.key == 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) +
+              "\t" + this.value.substring(end);
+        
+            // put caret at right position again
+            this.selectionStart =
+              this.selectionEnd = start + 1;
+          }
+        });
+    };
+
+    function enableEdit(){
+        $("#txtComments").prop('disabled', false);
+    }
+    
+    function runReplication(pol,ref){
+        refnum=refnum+1;
+        $("#divRptProgress").dialog({   
+            width: "70%",   
+            modal: true, 
+            height:150,
+        });
+       
+        $.ajax({
+            url: '/runReplicationFile/', 
+            data:{ replicationFile: $('#txtCodeFile').val() },
+            dataType: 'json',
+            success: function (data) {
+                $('#divRptProgress').dialog("close")
+                console.log('data is ',data)
+                if(data.is_taken)
+                { 
+                    $('#selectImg option').remove();    
+                    $('#selectImg').append(new Option("Select Image","0")); 
+                    for(var x in data.imgFiles){ 
+                        $('#selectImg').append(new Option(data.imgFiles[x],'\\static\\replicationoutput\\'+data.imgFiles[x]));                        
+                    }  
+
+                    $('#selectCols option').remove();    
+                    $('#selectCols').append(new Option("Select Column","0")); 
+                    for(var x in data.cols){ 
+                        $('#selectCols').append(new Option(data.cols[x].colName,data.cols[x].colName));                        
+                    }  
+
+                    $('#selectCols2 option').remove();    
+                    $('#selectCols2').append(new Option("Select Column","0")); 
+                    for(var x in data.cols){ 
+                        $('#selectCols2').append(new Option(data.cols[x].colName,data.cols[x].colName));                        
+                    }  
+
+                    alert('Script file executed.')                    
+                }  
+                else{
+                    alert(data.error)
+                }  
+            }
+        });
+        
+            //alert((policy+ ' ,' +reference)) 
+        $("#divReferences").dialog("close");
+    }
+ 
+    function addToReport(){ 
+       // $('#downRpt').onclick = function(){ console.log('clicked')};
+       if($("#txtComments").val().trim().length>0){
+            
+             
+            varComment =$("#txtComments").val() 
+            /*$.ajax({ 
+            url: '/saveReplicationData/',
+            data:{'comment': varComment},
+            dataType: 'json',
+            success: function (data) {
+                    if(data.is_taken)
+                    { 
+                        
+                        alert('Comment saved successfully.')                    
+                    }   
+            }
+            }); */
+            comment = encodeURIComponent(varComment);
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val(); 
+            var x = new XMLHttpRequest();
+            x.open("POST","/saveReplicationData/",true);
+            x.setRequestHeader("Content-Type", 'text/plain'); 
+            x.setRequestHeader( "X-CSRFToken",csrftoken);  
+            var data = JSON.stringify({"comment":varComment});
+            //x.send('{"comment":"'+comment+'"}');
+            x.onreadystatechange = function () { 
+                if (x.readyState == 4 && x.status == 200) {
+                    var json = JSON.parse(x.responseText);
+                    console.log(json.is_taken + ", " + json.codeFile)
+                    if(json.is_taken)
+                    {
+                        $('#txtCodeFile').val(json.codeFile);
+                        alert('Code file saved.')
+                    }
+                        
+                }
+            }
+            x.send(data)
+            
+        }
+        else{
+            alert('Please enter text.')
+        }
+       
+    }  
+
+    function showImages()
+    {  
+        $("#divImg").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function resizeImg(per){
+        //alert(per)
+        $('#imgGraph').css("transform", "scale("+ (per/100) +")");
+        $('#imgGraph').css('transform-origin','0px 0px');
+    }
+ 
+    function getImg(){
+        $("#imgGraph").attr("src",$("#selectImg").val()); 
+        //$("#downChartRpt").attr('href', "\\"+ $("#selectImg").val().replace('.png','.pdf'));
+        
+    }
+
+    function getQDHist(){
+       console.log('$("#selectCols").val()  '+$("#selectCols").val() )
+       $.ajax({ 
+        url: '/TestHIST/',
+        data:{'selCol':$("#selectCols").val() ,'selCol2':$("#selectCols2").val(),'chartType':$("#selectChart").val() },
+        dataType: 'json',
+        success: function (data) {
+            console.log('data is ',data)
+                if(data.is_taken)
+                {
+                    if($("#selectChart").val()=="Data"){
+                        getColVals(data.csvdata);
+                        $('#csvDatadiv').show();
+                        $('#imgGraph').hide(); 
+                    }
+                    else{
+                        $("#imgGraph").attr("src",data.graphpath);
+                        $('#imgGraph').show(); 
+                        $('#csvDatadiv').hide();
+                    }   
+                }            
+        }
+    });  
+    }
+
+    function getsavedCRComm(){
+        $('#txtCRcomment').val('');
+       $.ajax({ 
+        url: '/getCRComments/',
+        data:{section:$("#selectCROpt").val()  },
+        dataType: 'json',
+        success: function (data) {
+                if(data.is_taken)
+                {
+                    $('#txtCRcomment').val(data.comment)
+                }            
+        }
+    });  
+    }
+
+    function getAllCRComments(){
+        $('#divCRAllCommentsData').empty();  
+       $.ajax({ 
+        url: '/getAllCRComments/',
+        data:{section:$("#selectCROpt").val()  },
+        dataType: 'json',
+        success: function (data) {
+                if(data.is_taken)
+                {
+                    $.each(data.comment,function(key,val){
+                        console.log(val.header+' , '+val.comments);
+                        appendBodyData= '<div class="row"><div class="col-lg-12">';
+                            appendBodyData+='<b> '+val.header+':</b> <br>'+ val.comments+''
+                            appendBodyData+='</div> </div><div style="height:15px"></div>';  
+                            $('#divCRAllCommentsData').append(appendBodyData)  
+                    });
+                }            
+        }
+
+        });
+        $("#divCRAllComments").dialog({   
+            width: "70%",   
+           // modal: true,
+            buttons: [
+                
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        });   
+    }
+
+    
+
+    function showReplicationComments(){
+        $("#divReplicationComment").dialog({   
+            width: "70%",   
+            modal: true, 
+            buttons: [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveReplicationComments/',
+                            data:{ comments: $('#txtReplicationcomment').val()  },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Comments saved.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function showCRComments(){
+        $("#divCRComment").dialog({   
+            width: "70%",   
+            modal: true, 
+            buttons: [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveCRComments/',
+                            data:{ comments: $('#txtCRcomment').val(),section:$("#selectCROpt").val()  },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Comments saved.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function showCRHelp(){
+        $('#divCRHelpData').empty()
+        $.ajax({ 
+            url: '/getCRHelpData/',
+            data:{    },
+            dataType: 'json',
+            success: function (data) {
+                    if(data.is_taken)
+                    {
+                        $.each(data.CRHelpData,function(key,val){ 
+                            appendBodyData= '<div class="row"><div class="col-lg-12">';
+                            appendBodyData+='<b> '+val.Title+':</b> '+ val.Desc+''
+                            appendBodyData+='</div> </div><div style="height:15px"></div>';  
+                            $('#divCRHelpData').append(appendBodyData)              
+                        });
+                    }            
+            }
+        });  
+        $("#divCRHelp").dialog({   
+            width: "70%",   
+           // modal: true,
+            buttons: [
+                
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function disableY(){
+        if($("#selectChart").val()=='Hist'){
+            $("#selectCols2").prop('disabled',true)
+            $("#selectCols").prop('disabled',false) 
+        }
+        else if($("#selectChart").val()=='Data'){
+            $("#selectCols2").prop('disabled',true)
+            $("#selectCols").prop('disabled',true) 
+        }
+        else {
+            $("#selectCols2").prop('disabled',false);
+            $("#selectCols").prop('disabled',false) 
+        }
+    }
+
+    function getColVals(data)
+    {
+       // alert(id.split('chk_')[1]);
+       // $('#csvData').DataTable().destroy();
+        $("#csvData").empty();
+        console.log(data);    
+        var appendHeaderData1='';
+        var appendBodyData='',
+        appendHeaderData1='<thead><tr> '; 
+        appendBodyData='<tbody>'
+        var irow=0;   
+        
+       
+        $.each(data,function(key,val){ 
+            appendBodyData=appendBodyData+'<tr>'; 
+            $.each(val,function(key2,val2){ 
+                if(irow==0)
+                    appendHeaderData1=appendHeaderData1+'<th  style="padding-top:10px;padding-bottom:10px;">'+key2+'</th>'; 
+                appendBodyData=appendBodyData+'<td  style="padding-top:10px;padding-bottom:10px;">'+val2+'</td>'; 
+                
+           
+            });
+            appendBodyData=appendBodyData+'</tr>';
+            irow++;             
+        });
+        appendBodyData=appendBodyData+'</tbody>';   
+        appendHeaderData1=appendHeaderData1 + '</tr></thead>';
+        console.log('appendHeaderData1 ',appendHeaderData1)
+        $('#csvData').append(appendHeaderData1+appendBodyData); 
+        /*colDtTbl=$('#csvData').DataTable({
+            sDom: 'lrtip', 
+            "ordering": false,
+            scrollY: 450,
+            scrollX: true,
+            scroller: true,
+            paging:false,
+            info:false
+            });*/
+    }
+
+    function goNext(){
+        window.location="{% url 'importScnData' %}"
+} 
+</script>
+{% endblock script %} 

@@ -1,0 +1,125 @@
+section,title,titleIdx,subtitle,subtitleIdx,subsubtitle,subsubtitleIdx,reqID,comment,img,imgWidth,imgHeight,imgAlign,ImgTitle,TitleAlign
+Comment,Executive Summary,1,Model Purpose and Use,1.1,,0,1,"The ECAR model is used by BSA compliance to quantify customer risk. The model calculates for each customer a score of 1 to 5.  These scores are then translated to a risk category (i.e. Minimal, Low, Moderate, Elevated, or High risk) which determines whether enhanced due diligence (“EDD”) or additional monitoring of customer activities is required. If a customer is assigned a rating of Elevated or High risk (score of 4 or 5), then the customer will be subject to EDD and additional monitoring of activity. 
+
+This model supports the bank’s efforts to comply with regulatory expectations surrounding Know Your Customer and assessment of customers’ money laundering and terrorist financing risk.  Varo Bank, N.A. (Varo) is committed to conducting its business in a prudent, safe, and sound manner, and in full compliance with the laws, regulations, and policies as outlined in Bank Secrecy Act (BSA)/Anti-Money Laundering (AML) and Sanctions Policy (collectively the “Policy”). Varo Bank is required to determine the inherent AML risk of customers via information provided by the customer at the onboarding stage. This will enable the bank to carry out the Customer Due Diligence (CDD) for all the customers as well as Enhanced Due Diligence (EDD) for high-risk customers. The Varo Bank has built the Enterprise Customer AML Rating (ECAR) model/program to quantify such risk.
+",-,-,-,-,-,-
+Comment,Executive Summary,1,Model Description,1.2,,0,2,"The ECAR model takes risk factor scores derived from information collected at onboarding and calculates an overall risk score from the weighted average of the risk factors. The following risk factors are considered in the risk score calculation:
+Customer Citizenship
+Address Provided
+Residency Status
+Politically Exposed Person
+Products and Services Offered
+Login Locations
+
+To estimate the weights for each risk factor, the model developer used a Sequential Least Squares Programming (“SLSQP”) approach that incorporates constraints on the weights based on feedback from subject matter experts. As the model developer does not yet have actual customer data on which to develop and test the model, the model developer leveraged synthetic data consisting of 128 combinations of risk factors for the independent variables and an observed ECAR score provided by a subject matter expert for the dependent variable. 
+
+The calculated risk score is then translated into a risk category based on thresholds selected by the model development team.  Cutoffs for each risk category have been set such that all customers with an ECAR score of “4” or “5” based on subject matter expert judgement would be assigned a risk rating of “Elevated” or “High”. The overall risk score is mapped to a risk category as follows:
+
+
+
+As noted above, the risk level indicated by the model is used to determine whether a customer requires EDD or additional monitoring.",-,-,-,-,-,-
+Comment,Executive Summary,1,Model Risk Tier,1.3,,0,3,,-,-,-,-,-,-
+Comment,Executive Summary,1,Validation Scope and Approach,1.4,,0,4,"
+Since the ECAR model had not yet been implemented for customer risk rating at the time of this assessment, the validation team conducted a pre-implementation validation for which the scope was limited to a review of relevant documentation and interviews with the model owner and model developer. The validation team assessed the following:
+The objective and design of the model as well as the model assumptions and limitations;
+Documentation related to the development data and the flows and transformations of the proposed data; 
+The functionality of the model, that is, whether the model produced the expected results;
+Model performance, that is, whether the model outcomes aligned with actual outcomes; and 
+Governance and sustainability of the model including policies and procedures related to change management, weights tuning, and ongoing monitoring of the model.",-,-,-,-,-,-
+Comment,Executive Summary,1,Validation Outcome,1.5,,0,5,"Based on the available documentation and discussions with the model owner and model developer, the model appears to be satisfactory in design to assess the BSA risk of the bank’s customers. The validation findings are reflective of gaps in the documentation wherein sufficient detail was not provided regarding the development of the model. Through discussions with the model owner and model developer, the validator was able to obtain some clarity on the gaps within the documentation. Given that this is a pre-implementation validation, no significant deficiencies were identified with respect to the model design, and the model will be re-assessed once actual customer data is available, the overall model validation outcome is classified as Conditional Approval. ",-,-,-,-,-,-
+Comment,Model Assessment,2,Development Overview,2.1,,0,6,"The ECAR model takes risk factor scores derived from information collected at onboarding and calculates an overall risk score from the weighted average of the risk factors. The following risk factors are considered in the risk score calculation:
+Customer Citizenship
+Address Provided
+Residency Status
+Politically Exposed Person
+Products and Services Offered
+Login Locations
+
+While the model documentation outlines the risk areas the model is intended to cover, and maps each risk factor to a risk area, the documentation does not provide detail regarding variable selection including a discussion of all factors considered, the rationale for the final selection of risk factors and scoring scales, and any limitations inherent in the risk factors. [See DD1].
+
+Each risk factor is assigned a scoring scale aligning with the potential responses. For example, for the PEP status risk factor, customers are assigned either a score of 0 if not a PEP or 1 if a PEP. For the address provided risk factor, customers are assigned a score of 0 to 2 based on the country in which they live, if not US, or the zip code in which they live, if US. To generate the overall risk score, a weighted average of the risk factor scores is calculated. 
+
+While the model will ultimately leverage data collected at customer onboarding or from third party resources (e.g., LexisNexis for PEP and Iovation for Login) for each risk factor, the initial iteration of the model was developed using synthetic data. Specifically, model developers generated a dataset covering 128 combinations of risk factors for the independent variables. For the dependent variable – the customer risk rating or ECAR score – model developers leveraged the BSA/AML team’s judgment to provide a rating for each combination.
+
+To estimate the weights for each risk factor, the model developer used a SLSQP approach and a set of constraints imposed by the model developer and the BSA/AML officer. In addition to the final constraints selected, the model developer considered two other constraint approaches. Based on the model documentation, it is not clear how the final constraints and weights were selected or the rationale for those selections [See DD3].
+
+In addition to the model selected, the model developer considered rules based and decision-tree approaches but selected the convex weighted function approach due to its interpretability (with respect to weights for each factor), flexibility to adjust once actual customer data is available and ease of implementation and tracking. The model developer does note that given the lack of actual client data, the ability to evaluate different models was limited.
+
+As discussed, the model will leverage data collected at onboarding or from Lexis Nexis or Iovation. It is not clear if the model output will impact any downstream models aside from triggering EDD if the overall score is impacted by changing risk factors.
+
+The model is deployed inside the AWS environment using the AWS SageMaker service. AWS SageMaker is a fully managed service that allows for creation, deployment and monitoring of models. ",-,-,-,-,-,-
+Comment,Model Assessment,2,Development Documentation,2.2,,0,7,"As this is a pre-implementation validation, the validator relied on the documentation and training data provided by the model developer as well as interviews with the model owner and model developer. While the documentation allowed the validator to understand the objective and general design of the model, the model documentation was lacking in detail in the following areas:
+Selection of risk factors and scoring scales [DD1];
+Handling of missing risk factors in the calculation of the overall risk score [DD2];
+Model specification and estimation including the process by which subject matter expert judgment was incorporated into the modeling process, how model error rates were assessed for candidate models (e.g., how the model developers interpret the error histogram in assessing model performance) and the process by which initial constraints and weights were set [DD3];
+Contingency plan for vendor services/applications/data [DD4];
+Mapping for model data from source to target systems [DD5];
+Functional testing of model, specifically detail around how the tests were conducted, the results of those tests and any limitations of the tests [DD6];
+Failover and security testing [DD7];
+Model assumptions regarding inherent risk of PEPs [DD8]; and
+Governance and maintenance of reference tables [DD9].",-,-,-,-,-,-
+Comment,Model Assessment,2,Input and Data Integrity,2.3,,0,8,"As no actual customer data was available for model development, the model developer constructed a dataset comprising 128 combinations of the six risk factors, and a dependent variable generated using subject matter judgement for model development. Therefore, input and data integrity were not assessed.",-,-,-,-,-,-
+Comment,Model Assessment,2,Conceptual Soundness,2.4,,0,9,"The ECAR model generates the customer risk score using the following equation:
+
+
+
+Where	A: Customer Citizenship
+	B: Address Provided
+	C: Residency Status
+	D: Politically Exposed Person
+	E: Products & Services Offered
+	F: Login Locations
+
+Per the model documentation, if a risk factor is missing for a given customer, that risk factor is dropped from the equation to calculate the ECAR score. The model documentation does not provide information on how this is handled practically (i.e. is the factor dropped from both the numerator and denominator) or the potential impacts on the integrity of the ECAR score depending on which factor is missing. When the validator raised this with the model developer, the model developer indicated that missing values are actually being defaulted to the highest risk level for that risk factor for the risk rating calculation. The model developer should update its model documentation with the relevant details related to the handling of missing values in the ECAR model [See DD2].
+
+The weights applied to each risk factor were estimated using the training data set and a Sequential Least Squares Programming approach. The objective of this approach is to minimize the error between the customer risk score and the ECAR value (i.e. the value assigned to the risk factor combination by the subject matter expert) subject to a series of constraints as follows: 
+
+2
+
+subject to the following constraints:
+
+
+
+
+This methodology appears reasonable in that it aims to minimize the error between the ECAR score, constructed using subject matter expert judgement, and the model output. The model assumes a linear relationship between risk factors and risk rating which seems like a reasonable assumption for the current model. There are two areas of the model specification and estimation that are not described in sufficient detail:
+The model documentation does not provide sufficient detail on how the dependent variable – the ECAR score – was constructed [See DD3]; and
+The model documentation does not describe how the model constraints were determined, how the final constraints compared with the two other constraint sets tested or the underlying rationale for the final constraints [See DD3].
+",-,-,-,-,-,-
+Comment,Model Performance & Testing,3,Model Diagnostic Testing,3.1,,0,10,"As outlined in Section 8.1.6.3 ‘Functional Testing’ of the ECAR model document Model Developers performed functional testing for all variables used in the ECAR model. The model developers appear to have tested sample values for each of the six model variables and provided the expected outcome of each test case. However, the documentation does not provide sufficient details of functional testing and results. The Model Developers provided images of the testing results demonstrating that the testing was completed, but additional details are required on how the tests were conducted, including how the test cases outlined in the MDD align with the test cases that were executed as part of functional testing. Additionally, we also note that the expected value for ‘Zip=95616’ listed in the model documentation has a typological error (i.e. the model document has the expected score of 2 versus the spreadsheet where the score is 0). The model developers should update its document for functional testing [See DD6].
+
+The validator manually performed a risk rating calculation for samples listed in the model document and the ECAR score and corresponding risk rating appears to match with the model document.     
+",-,-,-,-,-,-
+Comment,Model Performance & Testing,3,Model Diagnostic Testing,3.1,,0,11,"As outlined in Section 8.1.6.3 ‘Functional Testing’ of the ECAR model document Model Developers performed functional testing for all variables used in the ECAR model. The model developers appear to have tested sample values for each of the six model variables and provided the expected outcome of each test case. However, the documentation does not provide sufficient details of functional testing and results. The Model Developers provided images of the testing results demonstrating that the testing was completed, but additional details are required on how the tests were conducted, including how the test cases outlined in the MDD align with the test cases that were executed as part of functional testing. Additionally, we also note that the expected value for ‘Zip=95616’ listed in the model documentation has a typological error (i.e. the model document has the expected score of 2 versus the spreadsheet where the score is 0). The model developers should update its document for functional testing [See DD6].
+
+The validator manually performed a risk rating calculation for samples listed in the model document and the ECAR score and corresponding risk rating appears to match with the model document.     
+",-,-,-,-,-,-
+Comment,Model Performance & Testing,3,Outcome Analysis / Back-testing,3.2,,0,12,"
+The validator assessed the distribution of ECAR ratings for all 128 samples from the Training tab of ECAR_Data spreadsheet to assess if the ECAR risk rating is in line given the individual weights assigned to each of the six variables used for risk rating. The validator observed that out of the 86 samples that had a PEP score of 1 (customer is PEP), 15 were assigned a rating of 3 in the ECAR model and thus those profiles do not appear to require EDD. Given that the PEP risk factor has been given the greatest weight, it appears that there is an undocumented assumption that a PEP is not inherently risky or should be automatically subject to further EDD. Per discussions with the model developer it was not the intention of the ECAR model to identify all PEPs as subject to EDD as there is a process in place to review and assess the risk of all PEPs periodically. The model developers should update the documentation to address any assumptions or controls relevant to the rating of PEPs by the ECAR model [See DD8].
+",-,-,-,-,-,-
+Image,Model Performance & Testing,3,Outcome Analysis / Back-testing,3.2,,0,13,-,static\replicationoutput\BagCls GS ROC 1.png,0.50,0.50,Select,Backtesting Analysis,Select
+Image,Model Performance & Testing,3,Benchmarking,3.3,,0,14,-,static\replicationoutput\BagCls RS Confusion Matrix Training.png,0.50,0.50,Select,Confusion matrix Training,Select
+Comment,Model Performance & Testing,3,Benchmarking,3.3,,0,15,"We completed some challenger models and compared the model to validation models.
+",-,-,-,-,-,-
+Image,Model Performance & Testing,3,Benchmarking,3.3,,0,16,-,static\replicationoutput\BagCls RS Confusion Matrix Validation.png,0.50,0.50,Select,Confusion matrix Validation,Select
+Comment,Model Performance & Testing,3,"Sensitivity, Stability, and Robustness",3.4,,0,17,"Varo looked at the various confusion matrices to determine multiple metrics.
+",-,-,-,-,-,-
+Image,Model Performance & Testing,3,"Sensitivity, Stability, and Robustness",3.4,,0,18,-,static\media\user1Chartimgs\device vs status.png,0.50,0.50,center,Status vs device,top
+Comment,Implementation and Controls ,4,,0.0,,0,19,"The model implementation plan is appropriate for the AWS environment. Given that the model will be fully automated when deployed, the potential for human error is slim. Additionally, an alert will be put in place for scenarios in which a system error occurs and an ECAR score is not generated for a customer. As this was a pre-implementation validation, a detailed assessment of the production platform, data and code implementation was out of scope.",-,-,-,-,-,-
+Comment,Implementation and Controls ,4,"Production Platform, Data, and Code",4.1,,0,20,"The model implementation plan is appropriate for the AWS environment. Given that the model will be fully automated when deployed, the potential for human error is slim. Additionally, an alert will be put in place for scenarios in which a system error occurs and an ECAR score is not generated for a customer. As this was a pre-implementation validation, a detailed assessment of the production platform, data and code implementation was out of scope.",-,-,-,-,-,-
+Comment,Implementation and Controls ,4,Implementation Plan,4.2,,0,21,"Per the ECAR model document, the model is implemented using Python with the Pandas and Numpy libraries. The implementation is then containerized in a Docker container using the Amazon SageMaker Containers Library. This allows the model to be deployed inside the AWS environment using the AWS SageMaker service. AWS SageMaker is a fully managed service that allows for creation, deployment and monitoring of models. 
+
+The model developers will be performing multiple types of testing for implementation and throughout the lifecycle of the model, including for Data and DB integrity, functional testing, performance testing, failover testing, security testing, integration testing, and user acceptance testing. However, as per information provided by the model developers, security and integration testing is still being finalized for the ECAR model [See DD7].
+
+Once deployed, the model will be fully automated. As such, the model does not require user level controls or checks to be put in place. 
+
+For access controls, all access controls are through AWS Accounts and AWS Identity and Access Management (IAM). Each environment involved with the ECAR model is in a separate AWS account with separate IAM roles needed for each possible action.  The internally developed tables are also kept in an AWS Aurora Database.
+
+Advisor has one observation for the implementation plan see findings table in section 1.6.",-,-,-,-,-,-
+Comment,Governance and Oversight,5,Performance and Risk Monitoring,5.1,,0,22,"The validator read the  ECAR model document to understand the model developer’s approach to ongoing monitoring of the model outputs. As noted in section 9.2 ‘Ongoing Performance and Risk Monitoring Plan’ of the model document, the model developers plan on using the Population Stability Index and sensitivity analysis to understand the shift, if any, in the risk rating distribution of the ECAR model. However, it is unclear from the model document who will produce these metrics and who will ultimately review them, how often such key metrics are produced, and what action will be taken if upper or lower bounds of performance thresholds are breached without an explanation from expert judgement. The model owner should formally define a robust framework for ongoing monitoring including monitoring of key metrics, thresholds to assess performance metrics and sign off protocols [GV1]. ",-,-,-,-,-,-
+Comment,Governance and Oversight,5,Change Management,5.2,,0,23,"The validator read the ECAR model document to assess the  change management process governing changes to the ECAR model once the model is implemented in production. Section 9 ‘Governance’ of the model document briefly describes the change management process where model changes are summarized by the Financial Crime Analytics Lead and are subject to the approval from the BSA/AML officer. The model document should describe in detail the governance process for model changes including a detailed process for documenting business requirements for the change, approval of requirements, evidence of testing, approval for go-live, and changes related to the model’s ETL process. Strong governance around model changes can help prevent unauthorized changes to the model and its components [GV2].",-,-,-,-,-,-
+Comment,Governance and Oversight,5,Tuning and Calibration,5.3,,0,24,"
+As described in section 5.2 ‘Appropriateness of Approach and Alternatives’, the model developers relied on the expert judgement of subject matter experts to assess the training sample data for 128 different combinations of variable values and provide their feedback for a judgmental risk rating to each of the samples assessed. Model weights were optimized by assessing the SME feedback and reducing the error rate of the training data set.   
+
+The validator understands that due to the lack of customer data during the model development, a limited number of distinct combinations for attributes were used to define the risk factor weights. However, there does not appear to be a detailed approach defined in the model document for tuning once the customer data will be available to the Bank post implementation. The document should clearly define a tuning methodology that will be used to calibrate weights, including any cadence to tuning to ensure a robust system of classifying customers into categories of risk, based on their risk factors and characteristics [GV3].",-,-,-,-,-,-
+Comment,Governance and Oversight,5,Model Reference Tables,5.4,,0,25,"
+As described in the model document, ECAR model uses multiple reference data tables, which also includes score scales, to calculate customer risk ratings. For instance, the BASEL list is used for country risk which is further customized by using expert judgement from subject matter experts to override the existing country risk ratings or assign a rating if the country is missing from the BASEL list, as per the defined criteria. The model document, however, does not describe the governance process for list management should the BASEL list updates, or if changes are made by vendors or third parties. Per the model developers, the countries and zip codes are reviewed annually, and products are updated as any new products are created or modified. The model document should clearly define the governance process to update reference data tables for the ECAR model in case of any changes internal or external [See DD9].",-,-,-,-,-,-

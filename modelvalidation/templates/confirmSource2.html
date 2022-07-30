@@ -1,0 +1,145 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+            
+               
+                
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Confirm data source &nbsp;(Use this utility to request confirmation of datasources from Data Governance.)
+                        </div>
+                        <div class="card-body card-block">
+                            <form  id="target" action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                {% csrf_token %}
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="max-width: 10%; margin: 0;padding: 0;">
+                                        <label class=" form-control-label">Datasource</label>
+                                    </div>
+                                    <div class="col col-md-3" style="max-width: 20%;margin: 0;padding: 0;">
+                                        <input type="text" id="txt_src" onchange="enableBtn()" style="border:1px solid black;max-width: 100%;" value=""/>
+                                         
+                                    </div>
+                                    <div class="col col-md-3" style="max-width: 7%;margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Column</label>
+                                    </div>
+                                    <div class="col col-md-3" style="max-width: 22%;margin: 0;padding: 0;">
+                                        <select name="selectCols" id="selectCols" class="form-control" multiple>
+                                            {% for data in txtList %}
+                                                <option value="{{data.colName}}">{{data.colName}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col col-md-3" style="max-width: 5%;margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Email</label>
+                                    </div>
+                                    <div class="col col-md-3" style="max-width: 25%;margin: 0;padding: 0;">
+                                        <input type="text" id="txt_email" onchange="enableBtn()"  style="border:1px solid black;max-width: 100%;" value=""/>                                         
+                                    </div>
+                                    <div class="col col-md-3" style="max-width: 7%;margin-left: 10px;padding: 0;">
+                                        <button type="button" class="btn btn-primary btn-sm" id="btn_mail" disabled="disabled" onclick="sendMail()">Send mail</button> 
+                                    </div>
+                                    
+                                </div>  
+                                <div class="row form-group">
+                                    <div class="table-responsive table--no-card m-b-40">
+                                        <table id="srcCnfrm" class="table table-borderless table-striped table-earning">
+                                            <thead>
+                                                <tr>
+                                                    <th>Datasource</th>
+                                                    <th>Column Name</th> 
+                                                    <th>Email</th> 
+                                                    <th>Response</th> 
+                                                </tr>
+                                            </thead>  
+                                            <tbody>
+                                            {% for data in txtList %}
+                                                {% if  data.reqResp != "_"%} 
+                                                    <tr>
+                                                        <td>{{data.srcName}}</td>
+                                                        <td>{{data.colName}}</td>                       
+                                                        <td>{{data.emailId}}</td>
+                                                        <td>{{data.reqResp }} </td> 
+                                                    </tr>
+                                               {% endif %}
+                                            {% endfor %}
+                                            </tbody>
+                                           </table>
+                                    </div>
+                                </div>
+                                
+                            </form>
+                        </div>
+                        <!-- <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" >Cancel</button>
+                            </div>
+                        </div> -->
+                    </div> 
+                </div>
+                 
+            </div> 
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript' >
+    var myTable;
+    var colDtTbl;
+    $(document).ready( function () { 
+        $('#liDataV').click(function(){
+        $('#sub_sub_menu').hide();
+        });
+        myTable=$('#srcCnfrm').DataTable({
+        sDom: 'lrtip',
+        "ordering": false,
+        scrollY: 280, 
+        scroller: true,
+        paging:         false,
+        info:false, 
+        });  
+    } ); 
+
+    function sendMail(id){
+        //alert('src is '+ $("#txt_src").val() + ', email is '+ $("#txt_email").val() +' , cols are '+ $("#selectCols").val() )
+        var selected=[];
+        var i=1;
+        $('#selectCols :selected').each(function(){
+            item = {}
+            item ["column"+i] = $(this).text();
+            selected.push(item)
+            i++;
+            });
+            console.log(selected) 
+        $.ajax({
+            url: '/sendCnfrmMail/', 
+            data:{ srcName: $("#txt_src").val(),emailId: $("#txt_email").val(),colName:JSON.stringify(selected)  },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                   alert('Mail sent successfully.');
+                   $( "#target" ).submit();
+               }
+            }
+        });
+    }
+
+    function enableBtn(id){ 
+        //alert($("#txt_email").val().length  +',' + $("#txt_src").val().length)
+        if($("#txt_email").val().trim().length ==0 || $("#txt_src").val().trim().length ==0){
+            $("#btn_mail").prop('disabled', true);
+        }
+        else{
+            $("#btn_mail").prop('disabled', false);
+        }
+    }
+</script>
+{% endblock script %}

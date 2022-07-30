@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="https://latex.codecogs.com/css/equation-embed.css"/>
+<script src="https://latex.codecogs.com/js/eq_config.js"></script>
+<script src="https://latex.codecogs.com/js/eq_editor-lite-19.js"></script>
+<div id="editor"></div>
+<br/>
+<label for="textbox1">Input 1:</label> 
+<textarea id="testbox1" rows="3" cols="40"></textarea>
+<img id="equation1"/>
+<br/>
+<label for="export1">Export 1:</label>
+<span id="export1"></span>
+<br/><br/> 
+<p> 
+    <input id="copybutton2" type="button" class="greybutton" value="Export Button 2" />
+</p>
+<script type="text/javascript">
+    EqEditor.embed('editor','');
+    var a=new EqTextArea('equation1', 'testbox1');
+    EqEditor.add(a,false);
+    a.addExportArea('export1','url');
+    EqnExport=function(text) { alert(text); };
+    EqEditor.ExportButton.add(a, 'copybutton2', EqnExport, 'html');
+</script>

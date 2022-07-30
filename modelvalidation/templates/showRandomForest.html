@@ -1,0 +1,66 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+<form method="POST" action="{{postAct}}">
+    {% csrf_token %}  
+    <div style="height: 50%;overflow:scroll"> 
+        <div class="row"> 
+            <div class="col-lg-12">
+                <img id="imgGraph" style="cursor: zoom-in;" src="{{ graphpath }}">
+            </div>
+        </div> 
+    </div> 
+    <div style="height: 50%;overflow:scroll"> 
+        <div class="row">           
+            <div class="col-lg-12">
+                <img id="graphConfMat1" style="cursor: zoom-in;" src="{{ graphConfMat1 }}">
+            </div> 
+        </div> 
+    </div> 
+    <div style="height: 50%;overflow:scroll"> 
+        <div class="row">    
+            <div class="col-lg-12">
+                <img id="graphConfMat2" style="cursor: zoom-in;" src="{{ graphConfMat2 }}">
+            </div>
+        </div> 
+    </div> 
+</form>
+
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript'> 
+    $(document).ready(function () {
+        $('#liDataV').click(function(){
+            $('#sub_sub_menu').hide();
+        });
+        var zoomin=0;  
+        $('#imgGraph').click(function(){  
+            if(zoomin==0)
+            { 
+                zoomin=1; 
+                $('#imgGraph').css("transform", "scale(2.5)");
+                $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-out'});
+            }
+            else if(zoomin==1)
+            {
+                zoomin=0; 
+               $('#imgGraph').css("transform", "scale(1)");
+               $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-in'});
+            } 
+        }); 
+    });
+
+    function  goBack()
+    {
+        window.location="{% url 'showChartTypes' %}"
+    }
+</script>
+{% endblock script %}

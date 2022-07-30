@@ -1,0 +1,40 @@
+reqID,section,title,titleIdx,subtitle,subtitleIdx,subsubtitle,subsubtitleIdx,comment,img,imgWidth,imgHeight,imgAlign,ImgTitle,TitleAlign
+,Comment,Executive Summary,1,,0.0,,0,"This note describes the independent technical validation of the US Installment Loan (USIL)
+Model V1 that Money Mart requested from Prescio Consulting. The scope of this exercise is 
+limited to only the technical aspect of the modeling and excludes raw data sources, data 
+preparation, exploratory data analysis, results, usage, controls and all regulatory and 
+governance related independent model validation requirements.
+This first iteration of the USIL model is developed by MM for its Centz subsidiary and addresses 
+the credit risk of the installment loan portfolio associated with the customers in the US states of
+Alabama, Delaware, Idaho, Missouri, New Mexico, South Carolina, Utah, and Wisconsin. The 
+USIL portfolio is expected to grow to USD 22 MM with the intent of generating 14MM revenue in 
+2022. Prescio notes that while a significant effort and technical knowledge was expended in 
+applying industry standard ML modeling methodologies, the predictive power of this first 
+iteration of the analysis may be severely hampered by multiple modeling data constraints, 
+product inhomogeneity and, mismatch between statistical modeling population and the 
+prediction population. Given the identical clean input features and data, the models’ AUC (Area 
+Under Curve) and Accuracy statistics were close to Prescio’s internal model on a like-to-like 
+basis. 
+Prescio understands that the predictive scores of this first iteration USIL model would be applied 
+as an indicative tool rather than a decision tool, along with TransUnion scores. Prescio is also 
+given to understand that additional customer behavioral data, internal data, and different 
+external data, along with Centz’s data (when available), will be used in future iterations of the 
+USIL model. ",-,-,-,-,-,-
+,Comment,Executive Summary,1,Model Purpose and Use,1.1,,0,"The unsecured installment product offered by Aspen had different terms (5-52 months), fixed 
+interest rates (100% and 300%), and sizes (USD 0.8K - 5K). Payment terms were weekly, biweekly, semi-monthly and monthly. Aspen had two different product types, new loans and 
+refinance loans with no pre-payment penalties. The products were distributed through traditional 
+channels (Aspen’s brick and mortar stores) and digital channels (Aspen’s website). Centz will be 
+marketing the product with terms ranging from 18-24 months, fixed interest rates (99-139%) and 
+loan sizes between USD 2.5 K to USD 5K. Payment terms will be bi-weekly, semi-monthly and 
+monthly. Centz will be distributing the products through traditional channels (Centz and MM 
+brick and mortar stores) and digitally through its website. Centz is expected to have only one 
+product type, new loan with no prepayment penalty. 
+Finding 1: As noted, the product marketed by Aspen is different than the product planned to be 
+marketed by Centz. Additionally, Centz’s product does not have a refinance option as Aspen’s 
+product did.
+Finding 2: Prescio finds that the Aspen’s loan data are not homogeneous in terms of size, rates 
+and duration. 
+MM is aware of the differences but does not have sufficient Centz data for the current modeling 
+exercise. Prescio understands that MM does not plan to have a refinance option for this product
+in the future",-,-,-,-,-,-
+,Comment,Executive Summary,1,Model Risk Tier,1.2,,0,,-,-,-,-,-,-

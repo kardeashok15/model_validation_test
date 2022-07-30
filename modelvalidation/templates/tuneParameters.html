@@ -1,0 +1,162 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style %} 
+<link href="{% static 'datepicker/datepicker3.css' %}" rel="stylesheet" media="all">
+{% endblock style %}
+{% block content %}
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+            
+                {% csrf_token %}
+                
+                <div class="col-lg-10">
+                    <div class="card">
+                        <div class="card-header">
+                            Set Tune Parameters
+                        </div>
+                        <div class="card-body card-block">
+                            <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label class=" form-control-label">Model</label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select id="ddlModel" id="select" class="form-control" onchange="getParams()">
+                                            <option value="0">Please select</option>
+                                            <option value="Random_Forest">Random Forest</option>
+                                            <option value="XGBoost">XGBoost</option>
+                                            <option value="MLP">Multi-Layer Perceptron</option>
+                                            <option value="Gradient_Boosting">Gradient Boosting</option>
+                                            <option value="KNN">K Nearest Neighbors</option>
+                                            <option value="SVM">Support Machine Vector</option>
+                                            <option value="Bagging_Classifier"> Bagging Classifier</option>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label class=" form-control-label">Tune method </label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select id="ddlMethod" id="select" class="form-control" onchange="getParams()">
+                                            <option value="0">Please select</option> 
+                                            <option value="RS">Random Search</option>
+                                            <option value="GS">Grid Search</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label class=" form-control-label">Parameter name </label>
+                                    </div>
+                                    <div class="col-12 col-md-5">
+                                        <select id="ddlParams" id="select" class="form-control" onchange="clearParamtxt()"> 
+                                            <option value="0">Please select</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-4">
+                                        <label class=" form-control-label">Parameter value </label>
+                                    </div>
+                                    <div class="col-12 col-md-8">
+                                         <textarea id="txtParamVals" rows="4" style="resize: none; border:1px solid black;width: 95%;" ></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="updateParam()" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="goNext()">Next</button>
+                            </div>
+                        </div>
+                        <div class="card-body card-block"> <div class="row form-group">
+                                     
+                                    <div class="col-12 col-md-12">
+                                         <textarea id="txtAllParamVals" readonly="readonly" rows="4"  style="font-size: 15px; resize: none; border:1px solid black;width: 100%;" ></textarea>
+                                    </div>
+                                </div> 
+                        </div>
+                    </div> 
+                </div>
+                 
+            </div>
+                        {% endblock content %}
+{%  block script %}  
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<script src="{% static 'datepicker/bootstrap-datepicker.js' %}"></script> 
+
+<script type="text/javascript">
+
+    let paramVals='';
+    $(document).ready(function () {
+ 
+    });
+
+    function goNext(){
+        window.location="{% url 'runModel' %}"
+}
+
+    function clearParamtxt()
+    { 
+        var cleartxt='';
+        $('#txtParamVals').val(cleartxt); 
+        $.each(paramVals,function(key,val){ 
+           if($('#ddlParams').val()== val.paramName){
+            $('#txtParamVals').val( val.paramValue);
+           }  
+        });
+    }
+
+    function getParams(){ 
+        $('#txtAllParamVals').text('') ;
+        $('#txtParamVals').val('') ;
+        paramVals=''
+        if($('#ddlModel').val()!="0" && $('#ddlMethod').val()!=0){ 
+            $('#ddlParams').empty().append('<option value="0">Please select</option>');        
+            $.ajax({
+                url: '/ajax/getParamName/', 
+                data:{ modelName: $('#ddlModel').val(),tuneMethod :$('#ddlMethod').val()  },
+                dataType: 'json',
+                success: function (data) {                    
+                    $.each(data.params,function(key,val){ 
+                        $('#ddlParams').append( '<option value="'+val+'">'+val+'</option>' );
+                    });
+                    varallparamsval ='';
+                    //console.log(data.paramVals)
+                    paramVals=data.paramVals;
+                    $.each(data.paramVals,function(key,val){ 
+                        //console.log(key + ' , ' + val.paramName);
+                        varallparamsval += "'" + val.paramName + "' : " + val.paramValue + ",\n ";
+                    });
+                    
+                    $('#txtAllParamVals').text(varallparamsval);
+                    //console.log(varallparamsval)
+                }
+            }); 
+        }
+    }
+
+    function updateParam(){
+        if($('#ddlModel').val()!="0" && $('#ddlMethod').val()!=0 &&  $('#ddlParams').val()!=0 && $('#txtParamVals').val() != '' ){ 
+              
+            $.ajax({
+                url: '/ajax/setParamName/', 
+                data:{ modelName: $('#ddlModel').val(),tuneMethod :$('#ddlMethod').val(),paramName: $('#ddlParams').val(),paramValue : $('#txtParamVals').val()  },
+                dataType: 'json',
+                success: function (data) {
+                    varallparamsval ='';
+                   // console.log(data.paramVals)
+                    $.each(data.paramVals,function(key,val){ 
+                        //console.log(key + ' , ' + val.paramName);
+                        varallparamsval += "'" + val.paramName + "' : " + val.paramValue + ",\n ";
+                    });
+                    
+                    $('#txtAllParamVals').text(varallparamsval);                    
+                }
+            }); 
+        }
+    }
+ </script>
+{% endblock script %} 

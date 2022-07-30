@@ -1,0 +1,101 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+{% endblock style %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;">   
+        
+  
+               
+                <div class="col-lg-11">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Conceptual Soundness</strong> 
+                        </div>
+                        <div class="card-body card-block">                           
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <select name="selectTitle" id="selectTitle" onchange="getTitle()" class="form-control-sm form-control">
+                                            <option value="0">Title</option>
+                                            <option value="1">Executive Summary</option>
+                                            <option value="2">Conceptual Soundness</option>  
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <input type="text" style="border-color: black;" id="txtTitle" name="text-input" class="form-control-sm form-control">
+                                    </div> 
+                                    <div class="col col-md-3"> 
+                                            <select name="selectSubTitle" id="selectSubTitle" onchange="getSubTitle()" class="form-control-sm form-control">
+                                                <option value="0">Sub Title</option> 
+                                            </select> 
+                                    </div>
+                                    <div class="col-12 col-md-3">
+                                        <input type="text" style="border-color: black;" id="txtSubTitle1" name="text-input" class="form-control-sm form-control">
+                                    </div>
+                                </div>
+                                 
+                                <div class="row form-group"> 
+                                    <div class="col-12 col-md-12">
+                                         <textarea id="txtComments" rows="20" style="resize: none; border:1px solid black;width: 100%;font-size: 10pt;" ></textarea>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;">  
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="generateReport()" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="downRptclick()" >Cancel</button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+   
+</div>
+</form>   
+                        {% endblock content %}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript">   
+
+    function generateReport(){ 
+        $.ajax({
+            url: '/saveSummaryData/',  
+            data:{ title:$("#txtTitle").val(),subTitle:$("#txtSubTitle1").val(),comments:$("#txtComments").val() },
+            dataType: 'json',
+            success: function (data) {              
+               if(data.is_taken){
+                    console.log(data) 
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        
+    }
+
+    function downRptclick(){ 
+       // $('#downRpt').onclick = function(){ console.log('clicked')};
+    }
+
+    function getTitle(){ 
+         $('#txtTitle').val('');
+         if($('#selectTitle').val()!='3' & $('#selectTitle').val()!='0'){
+            $('#txtTitle').val($('#selectTitle option:selected').text());
+         }
+    }
+
+    function getSubTitle(){ 
+        $('#txtSubTitle').val('');
+        if($('#selectSubTitle').val()!='1' & $('#selectSubTitle').val()!='0'){
+           $('#txtSubTitle').val($('#selectSubTitle option:selected').text());
+        }
+   }
+ </script>
+{% endblock script %} 

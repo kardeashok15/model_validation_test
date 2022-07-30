@@ -1,0 +1,217 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+{% url 'home' as home %} 
+{% url 'missingData' as missingDataurl %} 
+{% url 'dataCleaning' as dataCleaning %} 
+{% url 'showCatColFreq' as showCatColFreq %} 
+{% url 'showSNSChart' as showSNSChart %} 
+{% url 'showCatCountPlot' as showCatCountPlot %} 
+{% url 'showDistPlot' as showDistPlot %} 
+{% url 'showBoxPlot' as showBoxPlot  %} 
+{% url 'showPieChart' as showPieChart %}
+{% url 'pairwise_correlation' as pairwise_correlation %}
+{% url 'vehicleclaim' as vehicleclaim %}
+{% url 'scattred3d' as scattred3d %}
+{% url 'bubblePlot3d' as bubblePlot3d %}
+{% url 'plotinsured_occupations' as plotinsured_occupations %}
+{% url 'plotinsoccuvsincstate' as plotinsoccuvsincstate %}
+{% url 'plotinsoccuvsincstatestacked' as plotinsoccuvsincstatestacked %}
+{% url 'vardistbyfraud' as vardistbyfraud %}
+{% url 'vardistbyfraud2' as vardistbyfraud2 %}
+{% url 'stripplot' as stripplot %}
+{% url 'totalclaim_boxplot' as totalclaim_boxplot %} 
+{% block content %}
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="row form-group" style="margin-bottom: 0px;">
+                <div class="col col-md-10">
+                    Correlation on independent variables 
+                </div>
+                <div class="col-lg-2" style="display: flex;justify-content: end;">        
+                    <a href="{{ pdfFile }}" download><i class="fa fa-download" style="font-size: 12px;margin-right: 5px;" title="Export to PDF"></i> </a>
+                    <a href="#" onclick="showComment()"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a></h2> 
+                    
+                </div>
+            </div>                  
+        </div>
+ 
+        <div class="card-body card-block">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="custom-nav-profile-tab" data-toggle="tab" href="#custom-nav-profile" role="tab" aria-controls="custom-nav-profile"
+                    aria-selected="false">Data</a>
+                    <a class="nav-item nav-link" id="custom-nav-home-tab" data-toggle="tab" href="#custom-nav-home" role="tab" aria-controls="custom-nav-home"
+                    aria-selected="true">Heat Map </a>
+                    
+                </div>
+            </nav>
+            <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                <div class="tab-pane fade" id="custom-nav-home" role="tabpanel" aria-labelledby="custom-nav-home-tab">
+                    <div style="height: 80%;overflow:auto"> 
+                        <div class="row">
+                            <div class="col-lg-12">                                    
+                                <img id="imgGraph" style="cursor: zoom-in;" src="{{ graphpath }}"> 
+                            </div>
+                        </div> 
+                    </div> 
+                </div>
+                <div class="tab-pane fade show active" id="custom-nav-profile" role="tabpanel" aria-labelledby="custom-nav-profile-tab">
+                    <div  style="height: 80%;overflow:auto" class="table-responsive table--no-card m-b-40">
+                        <table id='csvData' class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'> 
+                                    </th> 
+                                    {% for data in ColNames %}
+                                    <th style='padding-top:10px;padding-bottom:10px;'>
+                                        {{data}}
+                                    </th> 
+                                    {% endfor %}
+                                </tr> 
+                            </thead>
+                            <tbody>
+                                {% for key, val in df.items  %}
+                                <tr> 
+                                    <td style='padding-top:10px;padding-bottom:10px;'>{{ key }}</td> 
+                                    {% for key1, val1 in val.items  %}
+                                        <td style='padding-top:10px;padding-bottom:10px;'>{{ val1 }}</td> 
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table> 
+                    </div>
+                </div> 
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                 
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divComment" title="Add comments" style="display: none;width:70%">
+    <div style="width:100%">
+        <input type="text" value="{{chartType}}" id="txtchartType" style="display: none;"/>
+        <textarea id="txtcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" ></textarea>
+   </div> 
+</div>
+{% endblock content %}
+{% block script %}
+
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<!-- -->
+<script type='text/javascript' >
+var myTable;
+$(document).ready( function () { 
+$('#liDataV').click(function(){
+$('#sub_sub_menu').hide();
+});
+myTable=$('#csvData').DataTable({
+sDom: 'lrtip',
+fixedColumns: {
+leftColumns: 1
+},
+"ordering": false,
+scrollY: 500, 
+scrollX: true,
+scroller: true,
+paging:false,
+info:false
+}); 
+
+var zoomin=0;  
+        $('#imgGraph').click(function(){  
+            if(zoomin==0)
+            { 
+                zoomin=1; 
+                $('#imgGraph').css("transform", "scale(2.5)");
+                $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-out'});
+            }
+            else if(zoomin==1)
+            {
+                zoomin=0; 
+               $('#imgGraph').css("transform", "scale(1)");
+               $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-in'});
+            } 
+        }); 
+
+} );
+
+function getMissingvalues(){ 
+var updatedData=[]
+myTable.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+var data = this.data(); // able to fetch the data.
+var row = this.node();
+item = {}
+item ["column"] = data[0];
+item ["value"] = $('#missingData_'+data[0]).val();
+updatedData.push(item); 
+} ); 
+
+$.ajax({
+url: '/ajax/validate_username/', 
+data:{ user_name: JSON.stringify(updatedData)  },
+dataType: 'json',
+success: function (data) {
+if (data.is_taken) {
+alert("Updated Successfully.");
+}
+}
+});
+}
+
+function showComment()
+    {  
+        $("#divComment").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/saveChartComments/',
+                            data:{ comments: $('#txtcomment').val(),'chartType':'Heatmap'}, 
+                            dataType: 'json',
+                            success: function (data) {
+                                console.log(data)
+                                    if(data.is_taken)
+                                    {
+                                        alert('Comments added to pdf file.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function goNext(){
+        window.location="{% url 'dist_numevari_catvar' %}"
+     } 
+</script>
+{% endblock script%}

@@ -1,0 +1,487 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% load static %} 
+{% block style %} 
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  -->
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+{% endblock style %}
+{% block content %}
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+     
+  <div class="col-lg-10">
+    <form action="" id="target" method="post" enctype="multipart/form-data" class="form-horizontal" onsubmit="return validateForm()">
+      {% csrf_token %}  
+      <div class="card">
+          <div class="card-header">
+             Request For Model Validation 
+          </div>
+          <div class="card-body card-block">  
+                <div id="accordion">
+                  <h3>Model Information</h3>
+                  <div> 
+                   
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Model Name <span style="color: red;">*</span>
+                      </div>
+                      <div class="coldata-12 col-md-8">
+                          <input type="text" id="txtModelNm" name="txtModelNm" class="form-control-sm form-control" value="{{modelInfo.0.ModelNm}}" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div> 
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                          Model Version <span style="color: red;">*</span>
+                      </div>
+                      <div class="col-12 col-md-8">
+                          <input type="text" id="txtModelVersion" name="txtModelVersion" class="form-control-sm form-control"  value="{{modelInfo.0.ModelVersion}}" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                          Model ID <span style="color: red;">*</span>
+                      </div>
+                      <div class="col-12 col-md-8">
+                          <input type="text" id="txtModelID" name="txtModelID" class="form-control-sm form-control" value="{{modelInfo.0.ModelID}}" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Version Description <span style="color: red;">*</span>
+                      </div>
+                      <div class="col-12 col-md-8">
+                          <input type="text" id="txtModelDesc" name="txtModelDesc" class="form-control-sm form-control" value="{{modelInfo.0.ModelDesc}}"  style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Date <span style="color: red;">*</span>
+                      </div>
+                      <div class="col-12 col-md-8">
+                          <input type="text" id="txtModelDate" name="txtModelDate" class="form-control-sm form-control"  value="{{modelInfo.0.ModelDate}}" disable  style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4"> 
+                        Model Developer/Vendor <span style="color: red;">*</span>
+                      </div> 
+                      <div class="col col-md-3" style="max-width: 20%;">
+                       {% if  modelInfo.0.Model_Type == "Internal" %}
+                          <input type="radio" id="rb_Internal" name="Model_Type" value="Internal" checked="checked" onchange="disabletxts(false)"/> Internal <br>
+                          <input type="radio" id="rb_Vendor" name="Model_Type" value="Vendor" onchange="disabletxts(true)"/> Vendor  
+                        {%else%}
+                        <input type="radio" id="rb_Internal" name="Model_Type" value="Internal" onchange="disabletxts(false)"/> Internal<br>
+                          <input type="radio" id="rb_Vendor" name="Model_Type" value="Vendor" checked="checked"  onchange="disabletxts(true)"/> Vendor 
+                        {% endif %} 
+                        
+                      </div> 
+                      <div class="col-12 col-md-5" style="margin-top: 8px;">
+                          <input type="text" id="txtModelDev" name="txtModelDev" class="form-control-sm form-control"  value="{{modelInfo.0.ModelDev}}"  style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Business Unit/Department <span style="color: red;">*</span>
+                      </div>
+                      <div class="col-12 col-md-8">
+                          <input type="text" id="txtModelDept" name="txtModelDept"   class="form-control-sm form-control" value="{{modelInfo.0.ModelDept}}"  style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div>
+                    <div class="row form-group" style="margin-bottom: 0px;">
+                      <div class="col col-md-4">
+                        Model Owner/s (Position) <span style="color: red;">*</span>
+                      </div>
+                      <div class="col-12 col-md-8">
+                          <input type="text" id="txtModelOwner" name="txtModelOwner" class="form-control-sm form-control" value="{{modelInfo.0.ModelOwner}}"  style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;" required/>
+                      </div>
+                    </div> 
+                  </div>
+                  <h3>Documents</h3>
+                  <div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Model Development
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_MD" name="rbTarget_MD" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_MD" name="rbTarget_MD"  value="file" onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_MD" id="fl_MD" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_MD" id="txt_MD" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('MD')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_MD_Comment" id="txt_MD_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div> 
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        User Manual
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_UM" name="rbTarget_UM" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_UM" name="rbTarget_UM" value="file" onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_UM" id="fl_UM" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_UM" id="txt_UM" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('UM')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_UM_Comment" id="txt_UM_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Model Data
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_MDT" name="rbTarget_MDT" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_MDT" name="rbTarget_MDT" value="file"  onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_MDT" id="fl_MDT" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_MDT" id="txt_MDT" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('MDT')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_MDT_Comment" id="txt_MDT_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Model Code
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_MCD" name="rbTarget_MCD" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_MCD" name="rbTarget_MCD"  value="file"  onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_MCD" id="fl_MCD" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_MCD" id="txt_MCD" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('MCD')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_MCD_Comment" id="txt_MCD_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        User Acceptance Testing
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_UT" name="rbTarget_UT" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_UT" name="rbTarget_UT" value="file" onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_UT" id="fl_UT" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_UT" id="txt_UT" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('UT')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_UT_Comment" id="txt_UT_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Technical Manual
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_TM" name="rbTarget_TM" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_TM" name="rbTarget_TM"  value="file"  onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_TM" id="fl_TM" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_TM" id="txt_TM" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('TM')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_TM_Comment" id="txt_TM_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col col-md-4">
+                        Onboarding Documents
+                      </div>
+                      <div class="col col-md-2" style="margin: 0;padding: 0;">
+                        <input type="radio" id="rb_link_OD" name="rbTarget_OD" value="link" checked="checked" onchange="showfileortxt(this.id)"/> Link 
+                        <input type="radio" id="rb_file_OD" name="rbTarget_OD"  value="file"  onchange="showfileortxt(this.id)"/> File
+                  
+                      </div>
+                      <div class="col-12 col-md-5" style="margin: 0;padding: 0;">
+                        <input type="file" name="fl_OD" id="fl_OD" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;display: none;">
+                        <input type="text" name="txt_OD" id="txt_OD" class="form-control-sm form-control" style="padding: 1px 5px;resize: none; width: 100%;font-size: 12pt;"/>
+                      </div>
+                      <div class="col-12 col-md-1">
+                        <a href="#" onclick="showComment('OD')"> <i class="fa fa-comment" style="font-size: 12px;" title="Add comments"></i></a>
+                        <input type="text" name="txt_OD_Comment" id="txt_OD_Comment" class="form-control-sm form-control" style="display: none;"/>
+                      </div>
+                    </div> 
+                  </div>
+                  <h3>Model Risk </h3>
+                  <div>
+                    <div class="row form-group">
+                      <div class="col col-md-4"> 
+                        Materiality   
+                      </div>
+                      <div class="col-12 col-md-3">
+                          <select name="optMateriality" id="optMateriality" class="form-control"> 
+                              <option value="1">High</option>
+                              <option value="2">Medium</option>
+                              <option value="3">Low</option>
+                          </select>
+                      </div>
+                    </div> 
+                    <div class="row form-group">
+                      <div class="col col-md-4"> 
+                        Reliance  
+                      </div>
+                      <div class="col-12 col-md-3">
+                          <select name="optReliance" id="optReliance" class="form-control"> 
+                              <option value="1">High</option>
+                              <option value="2">Medium</option>
+                              <option value="3">Low</option>
+                          </select>
+                      </div>
+                    </div> 
+                    <div class="row form-group">
+                      <div class="col col-md-4"> 
+                        Intrinsic Risk  
+                      </div>
+                      <div class="col-12 col-md-3">
+                          <select name="optIntrinsic_Risk" id="optIntrinsic_Risk" class="form-control"> 
+                              <option value="1">High</option>
+                              <option value="2">Medium</option>
+                              <option value="3">Low</option>
+                          </select>
+                      </div>
+                    </div> 
+                  </div>
+                  
+                </div>
+                <div class="row form-group">
+                  <div class="col col-md-4">
+                     
+                  </div>
+                </div>  
+             
+          </div>
+          <div class="card-footer">
+              <div class="row" style="display: flex; justify-content: flex-end;"> 
+                <button  class="btn btn-primary btn-sm" style="margin-right:10px ;" onclick="newReq()"  type="button">New</button> 
+                  <button  class="btn btn-primary btn-sm" style="margin-right:10px ;"  type="submit">Save</button> 
+                  <button  class="btn btn-primary btn-sm" {{isDisabled}}    onclick="goNext()" style="margin-right: 10px;" type="button">Next</button>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="gotohome()">Cancel</button>
+              </div>
+          </div>
+      </div> 
+    </form>
+  </div>
+   
+</div>
+<div id="divComment" title="Add comments" style="display: none;width:70%">
+  <div style="width:100%">
+      
+      <textarea id="txtcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" ></textarea>
+ </div> 
+</div>
+
+<div id="divNewReq" title="Model Validation Data" style="display: none;width:70%;height: 70%;">
+  <div class="row form-group"> 
+      <div class="col-12 col-md-12">  
+          Please confirm whether you want to "Save" the current files or "Delete" everythin.
+      </div>
+  </div>
+</div> 
+{% endblock content %}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript">   
+    window.onload=function(){
+      $( "#accordion" ).accordion({
+        collapsible: true
+      });  
+      var jsonData="{{Documentation|safe}}";  
+      jsonData=jsonData.replaceAll("'",'"');
+      jsonData=jsonData.replaceAll("\\","\\\\");
+      jsonData=jsonData.replaceAll('None','"-"'); 
+      jsonData=$.parseJSON(jsonData) 
+      docs=jsonData
+      filarr={'Model Development':'MD','User Manual':'UM','Model Data':'MDT','Model Code':'MCD','User Acceptance Testing':'UT','Technical Manual':'TM','Onboarding Documents':'OD'}
+      for(var x in docs){         
+        if(docs[x].doc_type=='file')
+        {
+          $('#rb_link_'+filarr[docs[x].doc]).attr('checked',false)
+          $('#rb_file_'+filarr[docs[x].doc]).attr('checked',true)
+        }
+        else{
+          $('#rb_link_'+filarr[docs[x].doc]).attr('checked',true)
+          $('#rb_file_'+filarr[docs[x].doc]).attr('checked',false)
+        }
+        $('#txt_'+filarr[docs[x].doc]).val(docs[x].doc_file) 
+      }
+      
+      var RiskInfodata=JSON.parse("{{RiskInfo|escapejs}}"); 
+      RiskInfoarr=JSON.parse(RiskInfodata);
+       
+      for(var x in RiskInfoarr){ 
+        $('#opt'+RiskInfoarr[x].risk_type.trim()).val(RiskInfoarr[x].risk_val)
+      }
+    };
+ 
+    function showfileortxt(id)
+    {
+      if(id.split('_')[1]=='file'){
+        $('#fl_'+id.split('_')[2]).show();
+        $('#txt_'+id.split('_')[2]).hide()
+      }
+      else{
+        $('#fl_'+id.split('_')[2]).hide();
+        $('#txt_'+id.split('_')[2]).show()
+      }
+    }
+
+    function disabletxts(val){
+      $('#rb_link_MD').attr('disabled',val)
+      $('#rb_file_MD').attr('disabled',val)
+      $('#rb_link_MCD').attr('disabled',val)
+      $('#rb_file_MCD').attr('disabled',val)
+      $('#txt_MCD').attr('disabled',val) 
+      $('#fl_MCD').attr('disabled',val)
+      $('#txt_MD').attr('disabled',val) 
+      $('#fl_MD').attr('disabled',val)
+    }
+     
+    function showComment(id)
+    {  
+        $("#divComment").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        $("#txt_"+id+ "_Comment").val($("#txtcomment").val()) 
+                        $("#txtcomment").val('')
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+ 
+    function validateForm(){
+      if($('#txtModelNm').val().trim().length<=0){
+        alert('Please enter all fields');
+        return false;
+      }
+    }
+
+    function goNext(){
+      window.location="{% url 'home' %}"
+} 
+
+function clrCtrls(){
+  $('#txtModelNm').val('')
+  $('#txtModelVersion').val('')
+$('#txtModelID').val('')
+$('#txtModelID').val('')
+$('#txtModelDesc').val('')
+$('#txtModelDate').val('')
+$('#txtModelDev').val('')
+$('#txtModelDept').val('')
+
+$('#txt_MD').val('')
+$('#txt_UM').val('')
+$('#txt_MDT').val('')
+$('#txt_MCD').val('')
+$('#txt_UT').val('')
+$('#txt_TM').val('')
+$('#txt_OD').val('')
+}
+
+function newReq()
+    {
+        $("#divNewReq").dialog({   
+            width: "40%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                      $.ajax({
+                        url: '/copyModelData/', 
+                        data:{  },
+                        dataType: 'json',
+                        success: function (data) {
+                          console.log(data.is_taken)
+                          if(data.is_taken){
+                            clrCtrls()
+                            alert('Data copied successfully.')
+                          
+                          }
+                        }
+                      }); 
+                        $(this).dialog("close");
+                         
+                    }
+                },
+                {
+                    text: "Delete",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here 
+                        $.ajax({
+                          url: '/deleteModelData/', 
+                          data:{  },
+                          dataType: 'json',
+                          success: function (data) {
+                            //  alert(data)
+                            if(data.is_taken){
+                              clrCtrls()
+                              alert('Data deleted successfully.')
+                              clrCtrls()
+                            }
+                          }
+                        }); 
+                        $(this).dialog("close"); 
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close"); 
+                    }
+                }
+            ],  
+        });
+        return false;
+        //return false;
+    }
+ </script>
+{% endblock script %} 

@@ -1,0 +1,52 @@
+{% extends 'base.html' %} 
+
+{% load static %}
+{% url 'home' as home %} 
+{% url 'missingData' as missingData %} 
+{% url 'dataCleaning' as dataCleaning %} 
+{% url 'showCatColFreq' as showCatColFreq %} 
+{% url 'showSNSChart' as showSNSChart %} 
+{% url 'showCatCountPlot' as showCatCountPlot %} 
+{% url 'showDistPlot' as showDistPlot %} 
+{% url 'showBoxPlot' as showBoxPlot  %} 
+{% url 'showPieChart' as showPieChart %}
+{%  block content %}
+<div style="height: 80%;overflow:auto"> 
+    <div class="row">
+        <div class="col-lg-12">                                    
+            <img id="imgGraph" style="cursor: zoom-in;" src="{{ graphpath }}"> 
+        </div>
+    </div> 
+</div> 
+{% endblock content%}
+{% block script   %}
+<script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script> 
+<script type='text/javascript'>
+    var myTable;
+    $(document).ready(function () {
+        $('#liDataV').click(function(){
+            $('#sub_sub_menu').hide();
+        });
+        var zoomin=0;  
+        $('#imgGraph').click(function(){  
+            if(zoomin==0)
+            { 
+                zoomin=1; 
+                $('#imgGraph').css("transform", "scale(2.5)");
+                $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-out'});
+            }
+            else if(zoomin==1)
+            {
+                zoomin=0; 
+               $('#imgGraph').css("transform", "scale(1)");
+               $('#imgGraph').css('transform-origin','0px 0px'),
+                $('#imgGraph').css({'cursor':'zoom-in'});
+            } 
+        }); 
+    }); 
+</script>
+{% endblock script %}

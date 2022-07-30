@@ -1,0 +1,269 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+            
+               
+                
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Implementation and Controls 
+                        </div>
+                        <div class="card-body card-block"> 
+                                
+                                <div class="row form-group"> 
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Section</label>
+                                    </div>
+                                    <div class="col col-md-4" style="margin: 0;padding: 0;">
+                                        <select id="selectSection" id="selectCols" class="form-control form-control-sm" onchange="getResp()">        
+                                            <option value="Select">Select</option> 
+                                            {% for data in arrSection %}
+                                                <option style=" color: {{data.color}};  background-color: {{data.bgColor}};" value="{{data.secName}}">{{data.secName}}</option>
+                                            {% endfor %}
+                                        </select>
+
+                                        
+                                    </div> 
+                                    <div class="col col-md-1" style="margin: 0;padding: 0;">
+                                        <div  style="border:solid 1px #b0acab; width: 30px;height:30px; margin-left:4px;text-align:center;line-height:24px;">
+                                            <img src='\static\images\documents.png'  title="Documents" style='cursor:pointer;' onclick="showDocs()"/>
+                                        </div>  
+                                    </div>
+                                    
+                                </div> 
+                                <div class="row form-group">                                     
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Email</label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                        <select id="optEmail" onchange="getEmail()" style="max-width: 50%;" class="form-control-sm form-control">
+                                            <option value="0">Select Email</option>
+                                            {% for emailids in emailLst %}
+                                                <option value="{{emailids.email}}">{{emailids.firstName}} {{emailids.lastName}} </option>
+                                            {% endfor %}
+                                            <option value="-1">Other</option>
+                                        </select>
+                                        <input type="text" id="txt_email" onchange="enableBtn()"  style="display:none;border:1px solid black;max-width: 100%;" value=""/>                                         
+                                    </div>                                     
+                                </div> 
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;margin-top:35px;">
+                                        <label class=" form-control-label">Comments </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                         <textarea id="txtvalidatorComment" rows="3" style="resize: none;width: 100%;" class="form-control form-control-sm"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Response </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                        <input type="radio" id="chk_yes" disabled="disabled"/> Yes
+                                        <input type="radio" id="chk_no"  disabled="disabled"/> No
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;margin-top:35px;">
+                                        <label class=" form-control-label">Recipient's Comments </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                         <textarea id="txtrecipientComment" rows="3" disabled="disabled"  style="resize: none;width: 100%;" class="form-control form-control-sm"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;margin-top:35px;">
+                                        <label class=" form-control-label">Report Comments </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                        {% if enableReportBtn == "False" %}
+                                            <textarea id="txtreportComment" rows="3" disabled="disabled" style="resize: none;width: 100%;" class="form-control form-control-sm" ></textarea>
+                                        {% else %}
+                                        <textarea id="txtreportComment" rows="3" style="resize: none;width: 100%;" class="form-control form-control-sm" ></textarea>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                        {% if enableReportBtn == "False" %}
+                                            <button type="button" class="btn btn-primary btn-sm" id="btn_report" disabled="disabled" onclick="saveReportComment()">Save</button> 
+                                        {% else %}
+                                        <button type="button" class="btn btn-primary btn-sm" id="btn_report" onclick="saveReportComment()">Save</button> 
+                                        {% endif %}
+                                        <button type="button" class="btn btn-primary btn-sm" style="margin-left: 10px;" id="btn_mail" disabled="disabled" onclick="sendMail()">Send mail</button> 
+                                        <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                                    </div>
+                                </div> 
+                        </div>
+                        <!-- <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" >Cancel</button>
+                            </div>
+                        </div> -->
+                    </div> 
+                </div>
+                 
+            </div>
+            <div id="divDocs" title="Documents" style="display: none;width:70%;"  onclick="hideComment()">
+                <div class="row form-group"> 
+                    <div class="table-responsive table--no-card m-b-40"> 
+                        <table id="tbldocs" class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr> 
+                                    <th style="padding: 10px 0px 10px 10px;">Document Type</th> 
+                                    <th style="padding: 10px 0px 10px 10px;">Document Name</th>  
+                                </tr>
+                            </thead>  
+                            <tbody>
+                            {% for data in modelDocs %} 
+                                    <tr>
+                                        {% if data.docref == None %} 
+                                            <td>{{data.doc}}</td>   
+                                        {%else%} 
+                                            <td><div style="display: flex;">
+                                                    <div style="margin-right: 10px;">{{data.doc}}</div>   
+                                                    <div class="blob" id="div_{{data.docIdx}}" title="View Comments" onclick="showdocCom(this.id,'{{data.docref}}')"></div>
+                                                </div>
+                                            </td>    
+                                        {%endif%}          
+                                        <td><a href="\static\document_files\{{data.doc_file}}"  target="_blank">{{data.doc_file}}</a></td>                                                                                             
+                                        <!-- <td><a href="\static\document_files\{{data.doc_file}}" target="_blank">{{data.doc_file}}</a></td>                           -->
+                                    </tr> 
+                             {% endfor %}
+                            <!--{% if modelUsage%}
+                            <tr>
+                                <td>Model Usage</td>                                                                            
+                                <td><a href="{{modelUsageFile}}" target="_blank">Model Owner's Comments</a></td>                          
+                            </tr> 
+                            {% endif %} -->
+                            </tbody>
+                           </table>
+                    </div>
+                </div>
+            </div> 
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript' >
+    var myTable;
+    var colDtTbl;
+    $(document).ready( function () { 
+        $('#liDataV').click(function(){
+        $('#sub_sub_menu').hide();
+        });
+        
+    } ); 
+
+    function getResp()
+    {  
+        $("#btn_mail").prop('disabled', true);      
+        $.ajax({
+            url: '/getSecResp/', 
+            data:{section:$('#selectSection').val()  },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                $("#chk_no").prop("checked", false);
+                $("#chk_yes").prop("checked", false);
+                if(data.resp=="Yes"){                    
+                    $("#chk_yes").prop("checked", true);
+                }
+                else if(data.resp=="No"){                    
+                    $("#chk_no").prop("checked", true);
+                }
+                $("#txtvalidatorComment").val(data.validatorComment);
+                $("#txt_email").val(data.email);
+                $("#txtrecipientComment").val(data.recpComment);
+            }
+        });
+    }
+
+    function sendMail(){
+        //alert('src is '+ $("#txt_src").val() + ', email is '+ $("#txt_email").val() +' , cols are '+ $("#selectCols").val() )
+        console.log('clicked '+ $('#selectSection').val() )
+        $.ajax({
+            url: '/sendImpCtrlCnfrmMail/', 
+            data:{ validatorComment: $("#txtvalidatorComment").val(),emailId: $("#txt_email").val(),section:$('#selectSection').val()  },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                alert('Mail sent successfully.'); 
+                   
+               }
+            }
+        });
+        
+    }
+
+    function saveReportComment(){
+        //alert('src is '+ $("#txt_src").val() + ', email is '+ $("#txt_email").val() +' , cols are '+ $("#selectCols").val() )
+        console.log('clicked '+ $('#selectSection').val() )
+        $.ajax({
+            url: '/updateImpCtrlReportComment/', 
+            data:{reportComment: $("#txtreportComment").val(),reqId:'1'   },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                alert('Comment saved successfully.'); 
+               }
+            }
+        });
+        
+    }
+
+    function enableBtn(id){ 
+        //alert($("#txt_email").val().length  +',' + $("#txt_src").val().length)
+        if($("#txt_email").val().trim().length ==0){
+            $("#btn_mail").prop('disabled', true);
+        }
+        else{
+            $("#btn_mail").prop('disabled', false);
+        }
+    }
+
+    function getEmail(){ 
+        $('#txt_email').val(''); 
+        if($('#optEmail').val()!='-1' & $('#optEmail').val()!='0'){
+           $('#txt_email').val($('#optEmail').val());
+        }
+        else{
+            $('#txt_email').show();
+            $('#optEmail').hide();
+        }
+        enableBtn();
+    }
+
+    function showDocs(){
+        $("#divDocs").dialog({   
+          width: "50%", 
+          modal: true,
+          buttons: [
+              {
+                  text: "Cancel",
+                  "class": 'btn btn-primary btn-sm',
+                  click: function() {
+                      // Save code here
+                      $('#divDocComments').hide() 
+                      $(this).dialog("close");
+                  }
+              }
+          ],  
+      });   
+    }
+
+    function goNext(){
+        window.location="{% url 'modelUsage' %}"
+} 
+</script>
+{% endblock script %}

@@ -1,0 +1,222 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block style%}
+<style>
+    .fixTableHead {
+        overflow-y: auto;
+        height: 550px;
+      }
+      .fixTableHead thead th {
+        position: sticky;
+        top: 0;
+      }
+      .fixTableHead table {
+        border-collapse: collapse;        
+        width: 100%;
+      }
+      .fixTableHead th,
+      td {
+        padding: 8px 15px;
+        border: 2px solid #529432;
+      }
+      .fixTableHead th {
+        background: #ABDD93;
+      }
+</style>
+{% endblock style %}
+{% block content %}  
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="row form-group" style="margin-bottom: 0px;">
+                <div class="col col-md-11">
+                    Data Statistics of Numerical Variables
+                </div>
+                <div class="col-12 col-md-1" style="display: flex;justify-content: flex-end;">         
+                    <div style="border:solid 1px #573dd9;border-radius: 4px; background-color:#6148df; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;"> 
+                       <img src='\static\images\save_white.png' onclick="saveTbl()" title="Save" style='cursor:pointer;'/>
+                                       
+                    </div>  
+               </div> 
+            </div>                  
+        </div>
+        <div class="card-body card-block">                             
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="custom-nav-numtype-tab" onclick="setType('DataDesc')" data-toggle="tab" href="#custom-nav-numtype" role="tab" aria-controls="custom-nav-numtype"
+                        aria-selected="false">Describe All the Numeric Variables</a>
+                    <a class="nav-item nav-link" id="custom-nav-mean_ad-tab" onclick="setType('DataMean')" data-toggle="tab" href="#custom-nav-mean_ad" role="tab" aria-controls="custom-nav-mean_ad"
+                        aria-selected="true">Mean Absolute Deviation</a>
+                    <a class="nav-item nav-link" id="custom-nav-median_ad-tab" onclick="setType('DataMedian')" data-toggle="tab" href="#custom-nav-median_ad" role="tab" aria-controls="custom-nav-median_ad"
+                        aria-selected="true">Median Absolute Deviation</a> 
+                        
+                </div>
+            </nav>
+            <div class="tab-content pl-3 pt-2" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="custom-nav-numtype" role="tabpanel" aria-labelledby="custom-nav-numtype-tab">
+                    <div class="table-responsive table--no-card m-b-40">
+                        <table id='descData' class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr>                
+                                    <th style='padding-top:10px;padding-bottom:10px;'></th> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>count</th> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>min</th> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>max</th> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>mean</th> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>std</th>  
+                                    <th style='padding-top:10px;padding-bottom:10px;'>25%</th>
+                                    <th style='padding-top:10px;padding-bottom:10px;'>50%</th>
+                                    <th style='padding-top:10px;padding-bottom:10px;'>75%</th>
+                                </tr>
+                            </thead>
+                            <tbody>           
+                                {% for val in desc %}  
+                                <tr>           
+                                    <td>{{ val.colName }}</td> 
+                                    <td>{{ val.count_val }}</td> 
+                                    <td>{{ val.min_val }}</td> 
+                                    <td>{{ val.max_val }}</td> 
+                                    <td>{{ val.mean_val }}</td> 
+                                    <td>{{ val.std_val }}</td> 
+                                    <td>{{ val.per25_val }}</td> 
+                                    <td>{{ val.per50_val }}</td> 
+                                    <td>{{ val.per75_val }}</td> 
+                                </tr>            
+                                {% endfor %}           
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="custom-nav-mean_ad" role="tabpanel" aria-labelledby="custom-nav-mean_ad-tab">
+                    <div class="fixTableHead table-responsive table--no-card m-b-40">
+                        <table id='mean_adData' class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>
+                                            Column
+                                    </th style='padding-top:10px;padding-bottom:10px;'>
+                                    <th>
+                                            Value
+                                    </th> 
+                                </tr>                                           
+                            </thead>
+                            <tbody>
+                                {% for key, val in mean_adresult.items  %}
+                                <tr> 
+                                    <td>{{ key }}</td>  
+                                    <td>{{ val }}</td>  
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>                                  
+                <div class="tab-pane fade" id="custom-nav-median_ad" role="tabpanel" aria-labelledby="custom-nav-median_ad-tab">
+                    <div class="fixTableHead table-responsive table--no-card m-b-40">
+                        <table id='median_adData' class="table table-borderless table-striped table-earning">
+                            <thead>
+                                <tr> 
+                                    <th style='padding-top:10px;padding-bottom:10px;'>
+                                            Column
+                                    </th>
+                                    <th style='padding-top:10px;padding-bottom:10px;'>
+                                            Value
+                                    </th> 
+                                </tr>                                           
+                            </thead>
+                            <tbody>
+                                {% for key, val in median_adresult.items  %}
+                                <tr> 
+                                    <td>{{ key }}</td>  
+                                    <td>{{ val }}</td>  
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                 
+            </div>
+        </div>
+    </div>    
+</div>
+              
+                
+                        {% endblock content %}
+{%  block script %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' >
+        let tabSel='DataDesc'
+        $(document).ready( function () {  
+            $('#descData').DataTable({
+                sDom: 'lrtip',
+                "ordering": false,
+                fixedColumns: {
+                    leftColumns: 1
+                    },
+                scrollY: 400,
+                scrollX: true,
+                scroller: true,
+                paging:false,
+                info:false
+                }); 
+
+            
+            $('#mean_adData11').DataTable({
+                sDom: 'lrtip',
+                "ordering": false,
+                fixedColumns: {
+                    leftColumns: 1
+                    },
+                scrollY: 500,
+                scrollX: true,
+                scroller: true,
+                paging:false,
+                info:false
+                }); 
+
+                
+                $('#median_adData11').DataTable({
+                    sDom: 'lrtip',
+                    "ordering": false,
+                    fixedColumns: {
+                        leftColumns: 1
+                        },
+                    scrollY: 500,
+                    scrollX: true,
+                    scroller: true,
+                    paging:false,
+                    info:false
+                    });
+        } );
+    
+        function setType(tab){
+            tabSel=tab
+        }
+        function saveTbl(){
+            $.ajax({ 
+                url: '/saveTableInfo/',
+                data:{tableType:tabSel,tableName:'Data types and cnt', comments:'',var1:'',var2:''}, 
+                dataType: 'json',
+                success: function (data) {
+                        if(data.is_taken)
+                        {
+                            alert('Table saved.')
+                        }            
+                }
+            }); 
+        }
+
+        function goNext(){
+            window.location="{% url 'showcorrelation' %}"
+         } 
+    </script>
+{% endblock script %} 

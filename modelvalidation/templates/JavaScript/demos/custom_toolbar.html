@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" style="display:flex;height:100%;flex-direction:column;">
+<head>
+	<meta charset="utf-8" />
+	<title>Custom Toolbar</title>
+	<base href='../' />
+	<link rel="stylesheet" href="res/style.css" />
+	<style>
+		.rte_command_pmoveup{
+			display: none;
+		}
+	</style>
+</head>
+<body style="padding-bottom:3px;align-items:center">
+	 >
+		
+
+		<link rel="stylesheet" href="richtexteditor/rte_theme_default.css" />
+		<script type="text/javascript" src="richtexteditor/rte.js"></script>
+		<script>RTE_DefaultConfig.url_base='richtexteditor'</script>
+		<script type="text/javascript" src='richtexteditor/plugins/all_plugins.js'></script>
+ 
+		<textarea id="div_editor1" >
+			&lt;p&gt;Initial Document Content&lt;/p&gt; 
+		   </textarea> 
+
+		<script> 
+				 
+			
+		
+			var editor1cfg = {}
+			editor1cfg.toolbar = "mytoolbar";
+			editor1cfg.toolbar_mytoolbar = "{bold,italic}|{fontname,fontsize}|{forecolor,backcolor}|removeformat|justifyleft|justifycenter|justifyright|justifyfull|indent|outdent|insertblockquote|insertorderedlist|insertunorderedlist"
+				+ "#{undo,redo,fullscreenenter,fullscreenexit}";
+			editor1cfg.showFloatTextToolBar =false;
+			var editor1 = new RichTextEditor("#div_editor1", editor1cfg);
+			$('.rte_command_pmoveup').hide() 
+		</script>
+
+		 
+</body>
+</html>

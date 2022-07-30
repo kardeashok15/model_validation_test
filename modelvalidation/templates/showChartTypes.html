@@ -1,0 +1,100 @@
+{% extends 'base.html' %}  
+{% load static %} 
+{% block content %}
+<div class="row"  style="margin: auto;display: flex; justify-content:center;">
+    <form method="POST" action="{% url 'showChartTypes' as showChartTypes %}">
+    {% csrf_token %}  
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    Select Chart Type
+                </div>
+                <div class="card-body card-block">
+                    <div class="table-responsive table--no-card m-b-40">
+                        <table id='csvData' class="table table-borderless table-striped table-earning">
+                            
+                            <tbody> 
+                                <tr> 
+                                    <td>Bar chart</td>  
+                                    <td><input type="radio" value="barchart" name="rdoChart" checked="checked"></td>  
+                                </tr>
+                                <tr> 
+                                    <td>Stacked Bar chart</td>  
+                                    <td><input type="radio" value="stackedbarchart"  name="rdoChart"></td>  
+                                </tr>
+                                <tr> 
+                                    <td>Strip Plot</td>  
+                                    <td><input type="radio" value="stripplot"  name="rdoChart"></td>  
+                                </tr>
+                                <tr> 
+                                    <td>Distribution</td>  
+                                    <td><input type="radio" value="distChart"  name="rdoChart"></td>  
+                                </tr>
+                                <tr> 
+                                    <td>Box Plot</td>  
+                                    <td><input type="radio" value="boxChart"  name="rdoChart"></td>  
+                                </tr>
+                                <tr> 
+                                    <td>Box Plot 3D</td>  
+                                    <td><input type="radio" value="box3dChart"  name="rdoChart"></td>  
+                                </tr>
+                                <tr> 
+                                    <td>Scattered 3D</td>  
+                                    <td><input type="radio" value="scatteredChart"  name="rdoChart"></td>  
+                                </tr>
+                                <!-- <tr> 
+                                    <td>Bubble Plot</td>  
+                                    <td><input type="radio" value="bubbleChart"  name="rdoChart"></td>  
+                                </tr> -->
+                            </tbody>
+                        </table>
+                        </div>
+                </div>
+                <div class="card-footer">     
+    
+                    <div class="row" style="display: flex; justify-content: flex-end"> 
+                        <button type="submit" class="btn btn-primary btn-sm" >Show</button>
+                        <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form> 
+</div>
+                        {% endblock content %}
+                        {%  block script %}
+                        <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' > 
+    $(document).ready( function () {  
+        
+
+    
+    } );
+
+    
+    function getMissingvalues(){  
+        
+        updatedData=[];
+        item = {}
+        item ["chartType"] = $("input[name='rdoChart']:checked").val(); 
+        updatedData.push(item); 
+        $.ajax({
+        url: '/ajax/showCharts/', 
+        data:{ chartType: JSON.stringify(updatedData)  },
+        dataType: 'json',
+        success: function (data) {
+         
+        }
+        });  
+        }
+
+
+        function goNext(){
+            window.location="{% url 'missingData' %}"
+} 
+     
+    </script>
+{% endblock script %}

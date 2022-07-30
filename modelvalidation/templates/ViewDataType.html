@@ -1,0 +1,150 @@
+{% extends 'base.html' %} 
+{% load static %} 
+<style>
+th{
+    padding: 10px 0px 10px 10px!important;
+ } 
+.button{
+    background-image: url('\static\images\save_white.png') no-repeat;
+    cursor:pointer;
+    border: none;
+} 
+</style>
+{% block content %}
+<div class="row" style="margin-left:auto;"> 
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="row form-group" style="margin-bottom: 0px;">
+                    <div class="col col-md-11">
+                        Data Columns and Data Type
+                    </div>
+                    <div class="col-12 col-md-1" style="display: flex;justify-content: flex-end;">         
+                         <div style="border:solid 1px #573dd9;border-radius: 4px; background-color:#6148df; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;"> 
+                            <img src='\static\images\save_white.png' onclick="saveTbl()" title="Save" style='cursor:pointer;'/>
+                                            
+                         </div>  
+                    </div>
+                     
+                </div>                  
+            </div>
+            <div class="card-body card-block">
+                 <div class="table-responsive table--no-card m-b-40">
+                        <table id="dataType" class="table table-borderless table-striped table-earning">
+                        <thead>
+                            <tr>
+                                <th style="padding: 10px 0px 10px 10px;">Column Name</th>
+                                <th style="padding: 10px 0px 10px 10px;">Not-Null Count</th>
+                                <th style="padding: 10px 0px 10px 10px;">Column Data type &nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            </tr>
+                        </thead>  
+                        <tbody>      
+                            {% for data in dataTypes %}
+                            <tr> 
+                                <td>
+                                    {{data.colName}}
+                                </td>
+                                <td>
+                                    {{data.notnull}} non-null
+                                </td>
+                                <td>
+                                    {{data.dataType}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div> 
+            <div class="card-footer">
+                <div class="row" style="display: flex; justify-content: flex-end;"> 
+                    <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                     
+                </div>
+            </div>
+        </div> 
+    </div>     
+                <div id="divComment" title="Add comments" style="display: none;width:70%">
+                    <div style="width:100%">
+                        <input type="text" value="{{chartType}}" id="txtchartType" style="display: none;"/>
+                        <textarea id="txtcomment" rows="5" style="resize: none; border:1px solid black;width:100%;" ></textarea>
+                   </div> 
+                </div> 
+            
+                        {% endblock content %}
+{%  block script %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    <!-- Jquery JS-->
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'dataTables.min.js' %}"></script><script type='text/javascript' >
+        $(document).ready( function () {  
+            $('#dataType').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 400,
+            scrollX: true,
+            scroller: true,
+            paging:false,
+            info:false
+            }); 
+        } );
+
+    function showComment()
+    {  
+        $("#divComment").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Save",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $.ajax({ 
+                            url: '/DatatypeComments/',
+                            data:{ comments: $('#txtcomment').val()}, 
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Comments added to pdf file.')
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+ 
+    function saveTbl(){
+        $.ajax({ 
+            url: '/saveTableInfo/',
+            data:{tableType:'DataTypenCnt',tableName:'Data types and cnt', comments:'',var1:'',var2:''}, 
+            dataType: 'json',
+            success: function (data) {
+                    if(data.is_taken)
+                    {
+                        alert('Table saved.')
+                    }            
+            }
+        }); 
+    }
+
+    function goNext(){
+        window.location="{% url 'showCatColFreq' %}"
+     } 
+    </script>
+{% endblock script %} 

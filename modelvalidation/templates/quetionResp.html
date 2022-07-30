@@ -1,0 +1,332 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %}
+<div style="margin-left:auto;display: flex; justify-content:center;">  
+    <div class="col-lg-12">
+    <form method="post" id="target" enctype="multipart/form-data">      
+            
+                {% csrf_token %}    
+               
+                
+                   
+                        <div class="card">
+                            <div class="card-header">
+                                Question Log
+                            </div>
+                            <div class="card-body card-block">  
+                                    <div class="table-responsive table--no-card m-b-40"> 
+                                      <table id='csvData' class="table table-borderless table-striped table-earning">
+                                            <thead>
+                                                <tr> 
+                                                    <th style='padding-top:10px;padding-bottom:10px;width:7%;' >
+                                                        RFI #
+                                                    </th>
+                                                    {% for data in headers %}
+                                                    <th style='padding-top:10px;padding-bottom:10px;width:7%;' >
+                                                        {{data}}
+                                                    </th> 
+                                                    {% endfor %}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                
+                                                   
+
+                                                    {% for k in result %} 
+                                                    <tr> 
+                                                    <td style="border: 1px solid black;padding:5px;width:7%;text-align: center;"> 
+                                                        {{k.idx}}
+                                                    </td> 
+                                                    {% for key, val in k.items %}
+                                                        
+                                                        {%if key == "question"%}
+                                                            <td  ondblclick="showQues('{{k.reqID}}')" style="border: 1px solid black;padding:5px;width:7%;text-align: center;vertical-align: middle;"> 
+                                                                <textarea cols="50" rows="{{k.txtrows}}" style="height: {{k.rowH}}px; resize: none;" readonly   > {{ val }}</textarea>  
+                                                            
+                                                            </td>
+                                                        {%else%} 
+                                                            {%if not key == "txtrows" and not key == "rowH" and not key == "idx" and not key == "reqID"%}
+                                                                <td style="border: 1px solid black;padding:5px;width:7%;text-align: center;vertical-align: middle;"> 
+                                                                    {{ val }}   
+                                                                </td>
+                                                            {%endif%}
+                                                        {%endif%}
+                                                    {% endfor %} 
+                                                     </tr>
+                                                    {% endfor %}
+                                               
+                                            </tbody>
+                                        </table> 
+                                        </div>  
+
+                            </div>
+                            <!-- <div class="card-footer">
+                                <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                    <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" >Save</button>
+                                    <button type="button" class="btn btn-primary btn-sm" >Cancel</button>
+                                </div>
+                            </div>  
+                        </div> -->
+                   
+                    <!-- <div class="col-lg-12">
+                        <h4 class="title-2 m-b-25">Data from source</h2>
+                            <div class="table-responsive table--no-card m-b-40">
+                            <table id='csvData' class="table table-borderless table-striped table-earning">
+                                <thead>
+                                    <tr> 
+                                        <th style='padding-top:10px;padding-bottom:10px;width:7%;' >
+                                            RFI #
+                                        </th>
+                                        {% for data in headers %}
+                                        <th style='padding-top:10px;padding-bottom:10px;width:7%;' >
+                                            {{data}}
+                                        </th> 
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr> 
+                                        <td style="border: 1px solid black;padding:5px;width:7%;text-align: center;"> 
+                                            {{rowNum}}
+                                              
+                                        </td> 
+                                        {% for data in headers %}
+                                        <td style="border: 1px solid black;padding:5px;width:7%;"> 
+                                            <textarea row="1" id="txtContent_{{data}}" onkeydown="getkeypressed()" style="resize: none;height: 25px;" ></textarea>
+                                        </td> 
+                                        {% endfor %}
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>  
+                    </div>                  -->
+                    <div id="divQtnResp" title="Add Comments/Notes">
+                        <div class="row form-group"> 
+                            <div class="col col-md-12" style="margin: 0;padding: 0;">
+                                 <textarea id="txtQuestion" rows="3" disabled style="resize: none;width: 100%;" class="form-control form-control-sm"></textarea>
+                            </div>
+                        </div> 
+                        <div class="row form-group"> 
+                            <div class="col col-md-12" style="margin: 0;padding: 0;">
+                                 <textarea id="txtComments" rows="7" style="resize: none;width: 100%;" class="form-control form-control-sm"></textarea>
+                            </div>
+                        </div> 
+                    </div>
+              </form>
+            </div> 
+            </div>
+                        {% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+    <script type='text/javascript' >
+        var rowCnt=2;
+        $(document).ready( function () {  
+            $('#csvData').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 450,
+            scrollX: true,
+            scroller: true,
+            paging:false,
+            info:false,
+            autoWidth: false
+
+            });  
+            MergeGridCells('csvData',[2])
+        } );
+
+
+
+        $("textarea").on("keydown", function(e){
+            
+            /*if(e.which == 13){   
+                rowCnt +=1;
+                $("#txtContent").attr('rows', rowCnt);   
+                rowH=25*rowCnt;
+                $("#txtContent").css("height",  rowH)
+            }*/ 
+                // on enter
+                if (e.which === 13){
+                    var $this = $(this);
+                    rows = $(this).val().split('\n').length;// parseInt($this.attr('rows'));
+                   
+                    if(rows>=rowCnt-1){
+                        $this.attr('rows', rows + 1);
+                        rowCnt +=1;
+                        rowH=25*(rowCnt);
+                    
+                        $this.css("height",  rowH)
+                    }
+                    else{
+                        $this.attr('rows', rows + 1); 
+                        rows += 2;
+                        rowH=25*(rows);    
+                        console.log('(rows<rowCnt) ' ,rows,rowCnt);                
+                        $this.css("height",  rowH)
+                    }
+                }
+                
+                // on backspace -- THIS IS THE PROBLEM
+                if ((e.which === 8 || e.which === 46) && rows !== 2) {
+                    var $this = $(this);
+                    rows = parseInt($this.attr('rows'));
+                    console.log( ' rows' ,rows );
+                    var lines;
+                    lines = $(this).val().split('\n')
+                   // console.log(lines); 
+                    $.each( lines, function( key, value ) { 
+                        if( value.trim().length <1) {
+                            $this.attr('rows', rows - 1);
+                            console.log('rowCnt ',rowCnt)
+                            rowCnt -=1;
+                            rowH=25*(rowCnt);
+                            $this.css("height",  rowH)
+                        }
+                      });
+                    
+                }
+           });
+
+        function MergeGridCells(TableID,rCols) {
+            var dimension_cells = new Array();
+            var dimension_col = null; 
+            for(Col in rCols) {
+              dimension_col=2;//rCols[Col];
+              // first_instance holds the first instance of identical td
+              var first_Hash="";
+              var first_instance = null;
+              var rowspan = 1;
+              // iterate through rows
+              $("#"+TableID+"> tbody > tr").children("td").attr('hidden', false);
+              $("#"+TableID+"> tbody > tr").children("td").attr('rowspan', 1);
+              $("#"+TableID).find('tr').each(function () {
+                // find the td of the correct column (determined by the dimension_col set above)
+                var dimension_td = $(this).find('td:nth-child(' + dimension_col + ')');
+                //console.log('dimension_td is ',dimension_td)
+                var dim_Hash="";
+                for(x=1;x<dimension_col;x++){
+                  dim_Hash+=$(this).find('td:nth-child(' + x + ')').text();
+                }
+                
+                if (first_instance === null) {
+                    // must be the first row
+                    first_instance = dimension_td;
+                 //   console.log('0' + dimension_td.text() +', '+ first_instance.text())
+                } else if (dimension_td.text() === first_instance.text()) {
+                    // the current td is identical to the previous AND the Hashes are as well
+                    // remove the current td
+                    // dimension_td.remove();
+                    dimension_td.attr('hidden', true);
+                    ++rowspan;
+                    // increment the rowspan attribute of the first instance
+                    first_instance.attr('rowspan', rowspan);
+                   // console.log('1' + dimension_td.text() +', '+ first_instance.text())
+                } else {
+                    // this cell is different from the last
+                    first_instance = dimension_td;
+                    first_Hash = dim_Hash;
+                    rowspan = 1;
+                  //  console.log('2' +dimension_td.text() +', '+ first_instance.text())
+                }
+              });
+            }
+          }  
+          
+           //saveQuestion
+        function saveQuestion(){
+            //alert('src is '+ $("#txt_src").val() + ', email is '+ $("#txt_email").val() +' , cols are '+ $("#selectCols").val() )
+           
+            $.ajax({
+                url: '/saveQuestion/', 
+                data:{'question': $("#txtQuestion").val(),'section':$('#selctAsmnt').val(),'emailId': $("#txt_email").val(),
+                    'MDDRef':$("#txt_MDDRef").val(),'ReqDocNm':$("#txt_ReqDocNm").val(),'RespPt':$("#txt_RespPt").val(),'optStatus':$("#optStatus").val()   },
+                dataType: 'json',
+                success: function (data) {
+                   // alert(data)
+                   if(data.is_taken){
+                    alert('Question saved successfully.');  
+                   }
+                }
+            });            
+        }
+
+        function sendMail(){
+            $.ajax({
+                url: '/sendQuestionLog/', 
+                data:{},
+                dataType: 'json',
+                success: function (data) {
+                   // alert(data)
+                   if(data.is_taken){
+                    alert('Mail sent successfully.');  
+                   }
+                }
+            });      
+        }
+
+        function getEmail(){ 
+            $('#txt_email').val(''); 
+            if($('#optEmail').val()!='-1' & $('#optEmail').val()!='0'){
+               $('#txt_email').val($('#optEmail').val());
+            }
+            else{
+                $('#txt_email').show();
+                $('#optEmail').hide();
+            }
+            enableBtn();
+        }
+
+        function showQues(id){
+            $('#txtQuestion').val('')
+            $.ajax({
+                url: '/getQtnTxt/', 
+                data:{'reqID': id },
+                dataType: 'json',
+                success: function (data) { 
+                    console.log(data.data[0].Notes_Comments_from_Varo_MO)
+                    $('#txtQuestion').val(data.data[0].question);
+                    $('#txtComments').val(data.data[0].Notes_Comments_from_Varo_MO)
+                    $("#divQtnResp").dialog({   
+                        width: "50%",   
+                        modal: true, 
+                        buttons:             /* Save: function() {
+                            $(this).dialog("close");
+                            } */ [
+                            {
+                                text: "Save",
+                                "class": 'btn btn-primary btn-sm',
+                                click: function() {  
+                                    $.ajax({
+                                        url: '/saveQtnResp/', 
+                                        data:{'reqID': id ,'comment':$('#txtComments').val()},
+                                        success: function (data) {
+                                           // alert(data)
+                                           if(data.is_taken){
+                                            alert('Question saved successfully.');  
+                                           }
+                                        }
+                                    });   
+                                    $(this).dialog("close");
+                                }
+                            },
+                            {
+                                text: "Cancel",
+                                "class": 'btn btn-primary btn-sm',
+                                click: function() {
+                                    // Save code here
+                                    $(this).dialog("close");
+                                }
+                            }
+                        ],  
+                    }); 
+                }
+            });  
+        }
+
+        
+    </script>
+{% endblock script %} 

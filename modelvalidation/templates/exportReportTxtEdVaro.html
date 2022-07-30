@@ -1,0 +1,2040 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% url 'openFile' as openFile %}  
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+<link   rel="stylesheet"  href="{% static 'richtexteditor/richtexteditor_content.css' %}" media="all" />
+<link rel="stylesheet" href="{% static 'richtexteditor/rte_theme_default.css' %}" media="all" />
+<link rel="stylesheet" href="{% static 'richtexteditor/res/style.css' %}"/>
+<link rel="stylesheet" href="https://latex.codecogs.com/css/equation-embed.css"/>
+
+<style>
+    table, td, th {
+        border: 1px solid black;
+      }
+    table{
+        border-collapse: collapse;
+    }  
+    .fullCircleGreen
+{
+  width: 20px;
+  height:20px;
+  bordeR: 1px solid;
+  border-radius: 50%;
+  border-color:green;
+  background-color: green;
+  margin-left: 5px;
+  }
+
+.fullCircleRed
+{
+  width: 20px;
+  height:20px;
+  bordeR: 1px solid;
+  border-radius: 50%;
+  border-color:red;
+  background-color: red;
+  margin-left: 5px;
+  }
+
+  .blob {
+	background: orange;
+	border-radius: 50%;
+	margin: 7px 0px 0px 0px;
+	height: 12px;
+	width: 12px;
+
+	box-shadow: 0 0 0 0 rgb(228, 100, 15);
+	transform: scale(1);
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 165,0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 165,0, 0);
+	}
+}
+
+/* Speech bubble with a border */
+
+.bubble {
+	position: absolute;
+	background: #292b37;;
+	border: 1px solid #292b37;
+    color: white;
+    padding: 5px;
+}
+.bubble:after, .bubble:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.bubble:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-right-color: #292b37;
+	border-width: 10px;
+	margin-top: -10px;
+}
+.bubble:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-right-color: #292b37;
+	border-width:11px;
+	margin-top: -11px;
+}
+.rte-absolute{
+    display: none;
+}
+.rte-toggleborder{
+    overflow: hidden;
+}
+body .rte-toggleborder{
+     overflow: hidden;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;"> 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                Validation Report
+            </div>
+            <div class="card-body card-block" style="padding-bottom: 0;">
+                
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" style="display: flex; justify-content: flex-start; margin-left:1px; margin-bottom:5px;"> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:0px;text-align:center;line-height:20px;">
+                            <a href="\static\reportTemplates\Model Validation Report Template.docx" target="_blank"> <img src='\static\images\previewcomment.png'  title="Preview Report Template" style='cursor:pointer;'/></a>
+                             <!-- <a href="#"  style="color:black;" onclick="showRptPrv()"> &nbsp;<i class="fa fa-check-square-o" style="font-size: 12px;" title="Preview"></i> </a> -->
+                         </div>
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addtitle.png" onclick="showTitles()" title="Add Title" style="cursor:pointer;">
+                            <!-- <a href="#" style="color:black;"> &nbsp;<i class="fa fa-text-width" style="font-size: 12px;"  onclick="showTitles()" title="Add Title"></i> </a> -->
+                        </div> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addcomment.png" onclick="addToReport()" title="Add Text" style="cursor:pointer;">
+                            <!-- <a href="#" style="color:black;"> &nbsp;<i class="fa fa-edit" style="font-size: 12px;"  onclick="addToReport()" title="Add comment"></i> </a> -->
+                        </div> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <!-- <img src="\static\images\addcomment.png" onclick="deleteComment()" title="Delete Text" style="cursor:pointer;"> -->
+                            <a href="#" style="color:black;"> &nbsp;<i class="fa fa-eraser" style="font-size: 12px;"  onclick="deleteComment()" disabled title="Delete comment"></i> </a> 
+                        </div> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addimage.png" onclick="showImages()" title="Insert Figures/Tables" style="cursor:pointer;">
+                            <!-- <a href="#"  style="color:black;" onclick="showImages()" > &nbsp;<i class="fa fa-picture-o" style="font-size: 12px;" title="Insert picture"></i> </a> -->
+                        </div>  
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:21px;">
+                            <img src="\static\images\equation.png" title="Equation Editor" onclick="showEqEdtr()" style="cursor:pointer;">
+                        </div>  
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\table.png" title="Add Table" onclick="showTables()" style="cursor:pointer;">
+                        </div>
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\preview.png" title="Preview Report" onclick="previewReport()" style="cursor:pointer;">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4"   style="display: flex; justify-content:center; margin-left:1px; margin-bottom:5px;"> 
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <a href="{{viewDI}}" target="_blank">    <img src='\static\images\dataIntegrity.png'  title="Data Integrity" style='cursor:pointer;'/></a> 
+                           </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                         <a href="{{viewConcSnd}}" target="_blank">    <img src='\static\images\conceptualsoundness.png'  title="Conceptual Soundness" style='cursor:pointer;'/></a> 
+                        </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;" disabled>
+                            <a href="{{viewModelUsage}}" target="_blank"   disabled ><img src='\static\images\modelusage.png'  title="Model Usage" disabled="{{ismodelUsage}}" style='cursor:pointer;'/></a>
+                        </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\documents.png'  title="Documents" style='cursor:pointer;' onclick="showDocs()"/>
+                        </div>   
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\reference.png'  title="References" style='cursor:pointer;' onclick="showReferences()"/>
+                        </div>  .
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:0px;text-align:center;line-height:20px;">
+                            <img src="\static\images\codeR.png" title="Code Review Comments" onclick="getAllCRComments()"  style="cursor:pointer;">
+                        </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:22px;">
+                            <!-- <img src="\static\images\codeR.png" title="Question Log" onclick="showQtnLog()"  style="cursor:pointer;"> -->
+
+                            <a href="#" style="color:black;"> &nbsp;<i class="fa fa-hospital-o" style="font-size: 14px;"  onclick="showQtnLog()"  title="Question Log" ></i> </a> 
+                        </div>
+                        
+                    </div>
+                    <div class="col-12 col-md-4"   style="max-width: 33%;display: flex; justify-content: flex-end; margin-left:1px; margin-bottom:5px;"> 
+                         
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\save.png' onclick="generateReport()" title="Save" style='cursor:pointer;'/>
+                            <!-- <a href="#"  style="color:black;" onclick="generateReport()"> &nbsp;<i class="fa fa-save" style="font-size: 12px;" title="Save"></i> </a> -->
+                        </div>  
+                        <div  style="border:solid 1px #b0acab; width: 24x;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                           
+                            <a href="{{ pdfFile }}" style="color:black;width:20px"  id="downRpt" target="_blank"> <img src='\static\images\download.png'  title="Export to pdf" style='cursor:pointer;' /> </a>
+                        </div>
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\email.png'  title="Email report" style='cursor:pointer;'  onclick="showEmail()"/>
+                             <!-- <a href="#"  style="color:black;" onclick="showRptPrv()"> &nbsp;<i class="fa fa-check-square-o" style="font-size: 12px;" title="Preview"></i> </a> -->
+                         </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">   
+                            <img src='\static\images\processstatus.png' onclick="showProcess()" title="Process status"  style='cursor:pointer;'/>
+                        </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">   
+                            <img src='\static\images\help.png' title="Help"  style='cursor:pointer;'/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-12">
+                            <div id="divComments" style="overflow: auto;display:none;"> Please view Model Validation Template <img src='\static\images\previewcomment.png'  title="Preview Report Template" style='cursor:pointer;'/> for help in writing validation report.</div>
+                            <div id="divRTE">
+                                <textarea id="txtComments" rows="15" style="display: none;resize: none;width: 100%;font-size: 12pt;" class="form-control form-control-sm">{{savedReportData}}</textarea>
+                            </div>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>   
+</div>
+
+<div id="divEmail" title="Mail Report" style="display: none;width:70%">
+    <div class="row form-group">
+        <div class="col col-md-2">
+            <label class=" form-control-label">Email id</label>
+        </div>
+        <div class="col-12 col-md-10"> 
+            <input type="text" style="display:none" id="txtPolicyIdx" class="form-control-sm form-control">
+            <input type="text" id="txtemail"  onchange="enableSend()" placeholder="Add multiple email addressed separated by comma (',')" class="form-control-sm form-control">
+        </div>
+    </div> 
+    <div class="row form-group">
+        <div class="col col-md-2">
+            <label class=" form-control-label">Subject </label>
+        </div>
+        <div class="col-12 col-md-10">
+            <input type="text" id="txtsubject"  onchange="enableSend()" class="form-control-sm form-control">
+        </div>
+    </div>
+    <div  class="row form-group">        
+        <textarea id="txtemailcomment" rows="5" style="resize: none;width:100%;"  class="form-control-sm form-control"></textarea>
+   </div> 
+</div>
+
+<div id="divTitles" title="Add Title\Sub Title\Sub Sub Title" style="display: none;width:70%">
+    <div style="width:100%"> 
+        <div class="row form-group">
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px"> 
+                <select id="selectSecTitle" onchange="getTitle()" class="form-control-sm form-control">
+                    <option value="0">Select Title</option>
+                    <option value="1">Executive Summary</option>
+                    <option value="2">Model Assessment</option>
+                    <option value="3">Model Performance & Testing</option>
+                    <option value="4">Implementation and Controls </option>
+                    <option value="5">Governance and Oversight</option>
+                    {% for data in newTitles %}
+                        <option  value="{{data}}">{{data}}</option>
+                    {% endfor %}
+                    <option value="-1">Add New</option>  
+                </select>
+                <input type="text" style="border-color: black;display: none;" id="txtTitle"  class="form-control-sm form-control">
+                <input type="text" style="border-color: black;display: none;" id="txtTitleCnt" value="0"  class="form-control-sm form-control">
+                 
+            </div> 
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px">
+                <select id="selectSubTitle" onchange="getSubTitle()" disabled class="form-control-sm form-control">
+                    <option value="0">Select Sub Title</option> 
+                    <option value="-1">Add New</option>
+                </select>  
+                <input type="text" style="border-color: black;display:none;" id="txtSubTitle" class="form-control-sm form-control"> 
+                <input type="text" style="border-color: black;display:none;" id="txtSubTitleCnt"  value="0" class="form-control-sm form-control">
+            </div>
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px">
+                <select id="selectSubSubTitle" onchange="getSubSubTitle()" disabled class="form-control-sm form-control">
+                    <option value="0">Select Sub Sub Title</option> 
+                    <option value="-1">Add New</option>
+                </select>  
+                <input type="text" style="border-color: black;display:none;" id="txtSubSubTitle"  class="form-control-sm form-control"> 
+                <input type="text" style="border-color: black;display:none;" id="txtSubSubTitleCnt"  value="0" class="form-control-sm form-control"> 
+
+            </div>
+            <!-- <div class="col-12 col-md-1"> 
+                <input type="text" style="border-color: black;" id="txtSubTitle1" name="text-input" class="form-control-sm form-control"> 
+                <button type="button" id="btnAddTitle" onclick="AddSection()" class="btn btn-primary btn-sm">Add</button>
+            </div> -->
+            
+        </div> 
+        
+   </div> 
+</div>
+<div id="divDeleteComment" title="Delete" style="display: none;width:70%;height: 70%;">
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12">  
+            Are you sure you want to delete this item?
+        </div>
+    </div>
+</div>
+
+<div id="divReferences" title="Policies" style="display: none;width:70%;height: 70%;">
+    <div class="row form-group"> 
+        <div class="table-responsive table--no-card m-b-40">
+            <table id="policies" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr> 
+                        <th style="padding: 10px 0px 10px 10px;">Policy</th> 
+                        <th style="padding: 10px 0px 10px 10px;">Reference</th> 
+                        <th style="padding: 10px 0px 10px 10px;">Add</th>    
+                    </tr>
+                </thead>  
+                <tbody>
+                {% for data in policiesLst %} 
+                        <tr>
+                            <!-- <td  style='display: none;'>{{data.policyIdx}}</td>    -->
+                            <td>{{data.policy}}</td>                                                                            
+                            <td>{{data.reference}}</td> 
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" id="btn_{{data.policyIdx}}" onclick="addRefer('{{data.policy}}','{{data.reference}}')">Add</button> 
+                            </td>
+                        </tr> 
+                {% endfor %}
+                </tbody>
+               </table>
+        </div>
+    </div>
+</div>
+
+<div id="divDocs" title="Documents" style="display: none;width:70%;"  onclick="hideComment()">
+    <div class="row form-group"> 
+        <div class="table-responsive table--no-card m-b-40"> 
+            <table id="tbldocs" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr> 
+                        <th style="padding: 10px 0px 10px 10px;">Document Type</th> 
+                        <th style="padding: 10px 0px 10px 10px;">Document Name</th>  
+                    </tr>
+                </thead>  
+                <tbody>
+                {% for data in modelDocs %} 
+                        <tr>
+                            {% if data.docref == None %} 
+                                <td>{{data.doc}}</td>   
+                            {%else%} 
+                                <td><div style="display: flex;">
+                                        <div style="margin-right: 10px;">{{data.doc}}</div>   
+                                        <div class="blob" id="div_{{data.docIdx}}" title="View Comments" onclick="showdocCom(this.id,'{{data.docref}}')"></div>
+                                    </div>
+                                </td>    
+                            {%endif%}          
+                            <td><a href="\static\document_files\{{data.doc_file}}"  target="_blank">{{data.doc_file}}</a></td>                                                                                             
+                            <!-- <td><a href="\static\document_files\{{data.doc_file}}" target="_blank">{{data.doc_file}}</a></td>                           -->
+                        </tr> 
+                 {% endfor %}
+                <!--{% if modelUsage%}
+                <tr>
+                    <td>Model Usage</td>                                                                            
+                    <td><a href="{{modelUsageFile}}" target="_blank">Model Owner's Comments</a></td>                          
+                </tr> 
+                {% endif %} -->
+                </tbody>
+               </table>
+        </div>
+    </div>
+</div>
+
+<div id="divRptPrv" title="Preview comment (Double click to edit text. Right click to delete text.)" style="display: none;width:70%;height: 70%;" >
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12"> 
+
+             <div id="divReportOutput" style="font-size: 12pt;border:1px solid black;width: 100%;height: 500px;white-space: pre-wrap;overflow: scroll;">
+                 
+             </div>
+        </div>
+    </div>
+</div>
+<div id="divProcesStatus" title="Process Status" style="display: none;width:70%;height: 70%;" >
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12"> 
+            <div class="table-responsive table--no-card m-b-40">
+                <table id="missingData" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr>
+                        <th>Process</th>
+                        <th>Status</th> 
+                    </tr>
+                </thead>  
+                <tbody>      
+                    {% for data in df %}
+                    <tr> 
+                        <td>
+                            {{data.Process}}
+                        </td>
+                        <td>
+                            <!-- {{data.Status}} -->
+                            {% if data.Status == 'Done' %}
+                                <div class="fullCircleGreen"></div>
+                            {% else %}
+                                <div class="fullCircleRed"></div>                                                 
+                            {% endif %}
+                        </td>                                            
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div> 
+        </div>
+    </div>
+</div>
+<div id="divImg" title="Add image" style="display: none;width:70%">
+    <div style="width:100%"> 
+            
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1" style="max-width: 6%;padding-right: 0px;"> 
+                Image  
+            </div>
+            <div class="col-12 col-md-1" style="max-width: 4%;padding-right: 0px;"> 
+                <a   href="" id="downChartRpt" target="_blank" style="display: none;color: Red; margin-left:0px"> 
+                    <!-- <i class="fa fa-external-link"  style="font-size: 12px;"></i>onmouseover="$('#divDocComments').show()" onmouseout="$('#divDocComments').hide()"  -->
+                    <div class="blob" id="imgbob" ></div>
+                </a>
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectImg" class="form-control" style="height: 30px;" onchange="getImg()">        
+                    <option value="Select">Select</option> 
+                    {% for data in imgFiles %}
+                        <option  value="{{data.destination}}">{{data.chartType}} - {{data.chartImg}}</option>
+                    {% endfor %}
+                    {% for imgfile in imgReplication %}
+                        <option  value="static\replicationoutput\{{imgfile}}">{{imgfile}}</option>
+                    {% endfor %}
+                    {% for imgfile in imgScn %}
+                        <option  value="static\scenarioOutput\{{imgfile}}">{{imgfile}}</option>
+                    {% endfor %}
+                    <option value="-1">Add New</option> 
+                </select>
+                <select  id="selectImgComment" class="form-control" style="height: 30px;display: none;" onchange="getImg()">        
+                    <option value="Select">Select</option> 
+                    {% for data in imgFiles %}
+                        <option  value="{{data.destination}}">{{data.comments}}</option>
+                    {% endfor %} 
+                </select>
+            </div>
+            <div class="col-12 col-md-2"> 
+                <select  id="selectImgAlign" class="form-control" style="height: 30px;">        
+                    <option value="Select">Align</option>  
+                    <option value="left">Left</option>  
+                    <option value="center">Center</option>  
+                    <option value="right">Right</option>  
+                </select>
+            </div>
+            <div class="col-12 col-md-3" style="max-width: 30%;">
+                <input type="text" style="border:1px solid black;width:100%;text-align: center;" placeholder="Image Title" id="txtImgTitle"/> 
+            </div>
+            <div class="col-12 col-md-2"> 
+                <select  id="selectTitleAlign" class="form-control" style="height: 30px;">        
+                    <option value="Select">Align</option>  
+                    <option value="top">Top</option>  
+                    <option value="bottom">Bottom</option>   
+                </select>
+            </div>
+        </div>
+        <div  id="divImgUpload" style="display:none" class="row form-group">
+            <div class="col-12 col-md-2" style="max-width: 10%;"> 
+                Select   
+            </div>
+            <div class="col-12 col-md-3"> 
+            <input type="file" name="myfile" id="myfile" required> 
+            </div>
+            <div class="col-12 col-md-1"> 
+                <button  class="btn btn-primary btn-sm"  type="button" onclick="upload_file()">Upload</button>
+            </div>  
+        </div>
+        <div class="row form-group"> 
+
+            <div class="col-12 col-md-2" style="max-width: 10%;"> 
+                Resize 
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_25" value="0.25" onchange="resizeImg(25)" name="rb_resize"/> 25%  
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_50" value="0.50" onchange="resizeImg(50)" name="rb_resize"/> 50%   
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_75" value="0.75" onchange="resizeImg(75)" name="rb_resize"/> 75%   
+            </div>
+            <div class="col-12 col-md-2"> 
+                <input type="radio" id="chk_100" value="1" onchange="resizeImg(100)" checked="checked" name="rb_resize"/> 100%   
+            </div>
+        </div>
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1"> 
+            </div>
+            <div class="col-12 col-md-10"> 
+                <img id="imgGraph" src="" style="height: 400px;width:100%"> 
+            </div> 
+        </div>
+        
+   </div> 
+</div>
+
+<div id="divTables" title="Add table" style="display: none;width:70%">
+    <div style="width:100%"> 
+            
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1" style="max-width: 6%;padding-right: 0px;"> 
+                Table  
+            </div>
+            <div class="col-12 col-md-1" style="max-width: 4%;padding-right: 0px;"> 
+                <a   href="" id="downChartRpt" target="_blank" style="display: none;color: Red; margin-left:0px"> 
+                    <!-- <i class="fa fa-external-link"  style="font-size: 12px;"></i>onmouseover="$('#divDocComments').show()" onmouseout="$('#divDocComments').hide()"  -->
+                    <div class="blob" id="imgbob" ></div>
+                </a>
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectTbl" class="form-control" style="height: 30px;" onchange="getTable()">        
+                    {{isValFindings}}
+                    <option value="Select">Select</option> 
+                    {% for data in lstTables %}
+                        <option  value="{{data.tableType}}">{{data.tableName}}</option>
+                    {% endfor %} 
+                    {% if isValFindings == 'true' %}
+                        <option  value="ValFindings">Validation Findings</option>
+                    {% endif %}
+                </select> 
+            </div> 
+        </div> 
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1"> 
+            </div>
+            <div id="divTbl" class="col-12 col-md-10" style="height: 300px; overflow-y: auto;"> 
+                
+            </div> 
+        </div>
+        
+   </div> 
+</div>
+
+<div id="divFormula" title="Add Equation" style="display: none;width:70%;height: 70%;overflow: hidden;" >
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12"> 
+            <div id="editor"></div>
+        </div>
+        <div class="col-12 col-md-12"> 
+            <textarea id="testbox1" rows="3" cols="40"  style="resize: none;width: 100%;" class="form-control form-control-sm"></textarea>
+        </div>
+        <div class="col-12 col-md-12" style="margin: 10px 0px;display: flex;justify-content: center;"> 
+            <img id="equation1"/> 
+        </div>
+        <div class="col-12 col-md-12">  
+            <span id="export1" style="display: none;"></span>
+        </div>
+    </div>
+</div>
+<div  title="Generating Report"  style="display: none;background-color: inherit" id="divRptProgress">
+    <div style="text-align: center;background-color: inherit">Processing request...</div>
+    <div class="progress mb-3"  >                       
+        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="25"
+         aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+<div id="divDocComments" class="bubble" style="display: none;z-index: 3000;">
+
+</div>
+<div id="divCRAllComments" title="Comments - Code Review" style="display: none;width:70%">
+    <div style="height: 500px;overflow:auto" id="divCRAllCommentsData"> 
+    
+        
+   </div> 
+</div>                          
+<div id="divQuestionlog" title="Question Log" style="display: none;width:70%">
+    <div class="table-responsive table--no-card m-b-40"  style="height: 100%;min-height:300px ;"> 
+        <table id='csvQtnLogData' class="table table-borderless table-striped table-earning">
+              <thead>
+                  <tr> 
+                      <th style='padding-top:10px;padding-bottom:10px;width:7%;' >
+                          RFI #
+                      </th>
+                      {% for data in headers %}
+                      <th style='padding-top:10px;padding-bottom:10px;width:7%;' >
+                          {{data}}
+                      </th> 
+                      {% endfor %}
+                  </tr>
+              </thead>
+              <tbody>
+                  
+                     
+
+                      {% for k in qtnresult %} 
+                      <tr> 
+                      <td style="border: 1px solid black;padding:5px;width:7%;text-align: center;"> 
+                          {{k.idx}}
+                      </td> 
+                      {% for key, val in k.items %}
+                          
+                          {%if key == "question"%}
+                              <td ondblclick="showQues('{{k.reqID}}')"  style="border: 1px solid black;padding:5px;width:7%;text-align: center;vertical-align: middle;"> 
+                                  <textarea cols="50" rows="{{k.txtrows}}" style="height: {{k.rowH}}px; resize: none;" readonly   > {{ val }}</textarea>  
+                              
+                              </td>
+                          {%else%} 
+                              {%if not key == "txtrows" and not key == "rowH" and not key == "idx" and not key == "reqID"%}
+                                  <td style="border: 1px solid black;padding:5px;width:7%;text-align: center;vertical-align: middle;"> 
+                                      {{ val }}   
+                                  </td>
+                              {%endif%}
+                          {%endif%}
+                      {% endfor %} 
+                       </tr>
+                      {% endfor %}
+                 
+              </tbody>
+          </table> 
+          </div>
+</div>
+<input type="text" style="display: none;" id="txtreqId"/>
+<input type="text" style="display: none;" id="txtSecId"/>
+<input type="text" style="display: none;" id="txtSubSecId"/>
+</form>   
+{% endblock content %}   
+{%  block script %}  
+<script type="text/javascript" src="{% static 'richtexteditor/rte.js' %}"></script> 
+<script type="text/javascript" src="{% static 'richtexteditor/plugins/all_plugins.js' %}"></script> 
+<script src="https://latex.codecogs.com/js/eq_config.js"></script>
+<script src="https://latex.codecogs.com/js/eq_editor-lite-19.js"></script>
+<!-- <script src="{% static 'richtexteditor/res/patch.js' %}"></script>   -->
+<script type="text/javascript"> 
+    let refnum=0;  
+    let screenX,screenY,divId;
+    let _txtTitleComment="";
+    let _txtSubTitleComment="";
+    let _txtSubSubTitleComment="";
+    window.onload=function(){ 
+        $('#txtComments').css("height",($(document).height()*0.60)+"px");
+        $('#divComments').css("height",($(document).height()*0.60)+"px");
+        divId='nodiv'
+        $('.rte-fixed').css('display','none');
+        $('.blob').click(function(e){  
+            screenY=e.pageY;
+            screenX= e.pageX;  
+            $("#divDocComments").css({top:screenY-25, left:screenX+20   , position:'absolute'});      
+           });
+        var editor1cfg = {}
+        editor1cfg.toolbar = "mytoolbar"; 
+        editor1cfg.showSelectedBlock=false;
+        editor1cfg.toolbar_mytoolbar = "{bold,italic}|insertchars|justifyleft|justifycenter|justifyright|justifyfull|indent|outdent|insertblockquote|insertorderedlist|insertunorderedlist|"
+            + "#{undo,redo,fullscreenenter,fullscreenexit}";
+            /*"{bold,italic}|{fontname,fontsize}|{forecolor,backcolor}|insertchars|inserttable|removeformat|justifyleft|justifycenter|justifyright|justifyfull|indent|outdent|insertblockquote|insertorderedlist|insertunorderedlist|"
+            + "#{undo,redo,fullscreenenter,fullscreenexit}";*/
+        editor1cfg.showFloatParagraph =false;
+        editor1cfg.showPlusButton=false;
+        editor1cfg.showTagList=false;
+        editor1cfg.showStatistics=false;
+        editor1cfg.tabSpaces=4;
+        editor1 = new RichTextEditor("#txtComments",editor1cfg);   
+        $('.rte-fixed').css('display','none'); 
+        document.getElementById('txtComments').addEventListener('keydown', function(e) {
+          if (e.key == 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) +
+              "\t" + this.value.substring(end);
+        
+            // put caret at right position again
+            this.selectionStart =
+              this.selectionEnd = start + 1;
+          }
+        });
+        if($('#txtComments').val().length>0)
+        {
+            $('#divComments').empty()
+            $('#divComments').append($('#txtComments').val())
+            $('#divComments').show()
+            $('#divRTE').hide()
+        }
+        EqEditor.embed('editor','');// ,'mini','en-us');
+        var a=new EqTextArea('equation1', 'testbox1');
+        EqEditor.add(a,false);
+        a.addExportArea('export1','url');
+        editor1.setReadOnly(true);
+        $('td[readonly]').click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        $('#table1').off('click'); 
+        // $('#csvQtnLogData').DataTable({
+        //     sDom: 'lrtip',
+        //     "ordering": false,
+        //     scrollY: 450,
+        //     scrollX: true,
+        //     scroller: true,
+        //     paging:false,
+        //     info:false,
+        //     autoWidth: false
+
+        //     });  
+            MergeGridCells('csvQtnLogData',[2])
+    };
+    
+
+    function hideSidebar(){ 
+         
+         let barHeigh=$('#sidebarMain').height()
+          
+         if($('#sidebarCntr').is(":visible")){
+            $('#sidebarMain').height('75px');
+            $('.page-container').css({"padding-left": "0px"});  
+         }                       
+         else {
+            $('.page-container').css({"padding-left": "300px"});
+            $('#sidebarMain').height('100%')
+         }
+         $('#sidebarCntr').toggle(300);
+             
+    }
+    function showdocCom(id,ref){  
+         
+        if(id==divId){
+            $('#divDocComments').hide() 
+            divId='';
+        }
+        else{
+            divId=id;
+            $("#divDocComments").empty();
+            $("#divDocComments").append(ref);
+            $("#divDocComments").show();
+            
+        }
+       // alert(ref)
+    }
+    function addRefer(pol,ref){
+        refnum=refnum+1;
+        unicodesarr={'1':'\u00b9','2':'\u00b2','3':'\u00b3','0':'\u2070','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079' 	}
+        $.ajax({
+            url: '/addRptRef/', 
+            data:{ policy: pol,reference:ref },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                refnum=data.refNo
+                if(refnum<10){
+                    $("#txtComments").val($("#txtComments").val()+unicodesarr[refnum])
+                }
+                else{
+                    val=refnum/10;
+                    remain=refnum%10;
+                    $("#txtComments").val($("#txtComments").val()+unicodesarr[val]+unicodesarr[remain]) 
+                   // $("#txtComments").val($("#txtComments").val()+'\u00b9\u2070');
+                }
+               }
+            }
+        });
+        
+            //alert((policy+ ' ,' +reference)) 
+        $("#divReferences").dialog("close");
+    }
+
+    function showDocs(){
+        $("#divDocs").dialog({   
+          width: "50%", 
+          modal: true,
+          buttons: [
+              {
+                  text: "Cancel",
+                  "class": 'btn btn-primary btn-sm',
+                  click: function() {
+                      // Save code here
+                      $('#divDocComments').hide() 
+                      $(this).dialog("close");
+                  }
+              }
+          ],  
+      });   
+    }
+
+
+
+function showEmail(){
+    $("#divEmail").dialog({   
+      width: "50%", 
+      modal: true,
+      buttons: [
+        {
+            text: "Send",
+            "class": 'btn btn-primary btn-sm',
+            click: function() { 
+                if($("#txtemail").val().trim().length>0 & $("#txtsubject").val().trim().length>0 & $("#txtemailcomment").val().trim().length>0 ){
+                $.ajax({
+                    url: '/sendReportMail/',  
+                    data:{ 'emailId':$("#txtemail").val(),'emailSub':$("#txtsubject").val(),'emailTxt':$("#txtemailcomment").val()},
+                    dataType: 'json',
+                    success: function (data) {              
+                       if(data.is_taken){
+                            console.log(data) ;
+                            alert('Mail sent successfully.') 
+                            $("#txtemail").val('');
+                            $("#txtsubject").val('');
+                            $("#txtemailcomment").val('');
+                           //window.location="{% url 'downloadReport' %}"
+                       }
+                       else{
+                        alert('Error occured while sending mail.') 
+                       }
+                    }
+                });
+                $(this).dialog("close");
+            }
+            else{
+                alert('Please fill all the fields.')
+            }
+            }
+        },
+          {
+              text: "Cancel",
+              "class": 'btn btn-primary btn-sm',
+              click: function() { 
+                  $(this).dialog("close");
+              }
+          }
+      ],  
+  }); 
+
+}
+
+    function showReferences(){
+        $("#divReferences").dialog({   
+          width: "70%",   
+          modal: true,
+          buttons: [
+              {
+                  text: "Cancel",
+                  "class": 'btn btn-primary btn-sm',
+                  click: function() {
+                      // Save code here
+                      $(this).dialog("close");
+                  }
+              }
+          ],  
+      }); 
+  
+  }
+
+    function generateReport(){  
+        $("#divRptProgress").dialog({   
+            width: "70%",   
+            modal: true, 
+            height:150,
+        });
+        $.ajax({
+            url: '/generateReportTxtEd/',  
+            data:{ Title:$("#txtTitle").val(),SubTitle1:$("#txtSubTitle1").val(),SubTitle2:$("#txtSubTitle2").val(),SubTitle3:$("#txtSubTitle3").val()},
+            dataType: 'json',
+            success: function (data) {              
+               if(data.is_taken){
+                    console.log(data) 
+                    $("#divReportOutput").empty();
+                    $('#divRptProgress').dialog("close");
+                    if(data.is_taken)
+                        alert('Report generated successfully.');
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        
+    }
+
+    function addToReport(){ 
+       // $('#downRpt').onclick = function(){ console.log('clicked')}; 
+       $("#txtComments").val(editor1.getHTMLCode());
+        console.log('table index' + $("#txtComments").val().indexOf('<div class="appTvl"'))
+        if($('#selectSecTitle').val()=="0" & $("#txtreqId").val()=='')
+        {
+            alert('Please select title before saving.');
+        }
+        else{
+        if($("#txtComments").val().trim().length>0){
+                
+                TitleCnt=$('#txtTitleCnt').val(); 
+                TitleCnt=parseInt(TitleCnt)+1; 
+                vartxtToreplace=TitleCnt+' '+$('#txtTitle').val()+"\n";
+                varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+                let SubTitleCnt = $("#txtSubTitleCnt").val();
+                let SubSubTitleCnt = $("#txtSubSubTitleCnt").val();
+                if($('#selectSubTitle').val()!='0'){
+                    SubTitleCnt=parseInt(SubTitleCnt)+1
+                    SubTitleCnt=TitleCnt+'.'+SubTitleCnt;
+                    vartxtToreplace=SubTitleCnt+' '+$('#txtSubTitle').val()+"\n";
+                    varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+                }
+                else{
+                    SubTitleCnt=0;
+                }
+                if($('#selectSubSubTitle').val()!='0'){
+                    let SubTitleCnt2 = $("#txtSubTitleCnt").val();
+                    SubTitleCnt2=parseInt(SubTitleCnt2)+1
+                    SubSubTitleCnt=parseInt(SubSubTitleCnt)+1
+                    //console.log('TitleCnt '+TitleCnt+ ' SubTitleCnt '+SubTitleCnt2+ ' SubSubTitleCnt1 '+SubSubTitleCnt)
+                    SubSubTitleCnt=TitleCnt+'.'+SubTitleCnt2+'.'+SubSubTitleCnt;
+                    //console.log('SubSubTitleCnt2 '+SubSubTitleCnt)
+                    vartxtToreplace=SubSubTitleCnt+' '+$('#txtSubSubTitle').val()+"\n";
+                    varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+                }
+                else{
+                    SubSubTitleCnt=0; 
+                }
+                /*$.ajax({ 
+                url: '/saveReportCommentTxtEd/',
+                data:{'comment': varComment,'reqId':$("#txtreqId").val(),'titleIdx':TitleCnt,'title':$('#txtTitle').val(),'subtitleIdx':SubTitleCnt,'subtitle':$('#txtSubTitle').val(),'subsubtitleIdx':SubSubTitleCnt,'subsubtitle':$('#txtSubSubTitle').val()},
+                dataType: 'json',
+                success: function (data) {
+                        if(data.is_taken)
+                        { 
+                            if($("#txtreqId").val()!=''){
+                                $("#div_"+$("#txtreqId").val()).empty();
+                                $("#div_"+$("#txtreqId").val()).append("<span>"+$("#txtComments").val()+"</span>");
+                            }
+                            else{
+                                $("#divReportOutput").append("<br><div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' ondblclick='editComment(this.id)'><span>"+$("#txtComments").val()+"</span></div>");
+                            }
+                            $("#txtComments").val('');
+                            $("#txtreqId").val('');
+                            $("#txtTitleCnt").val(data.titleIdx);
+                            $("#divComments").empty();
+                            $("#divComments").append(data.savedReportData);
+                            editor1.setHTMLCode(data.savedReportData);
+                            //$("#txtComments").hide();
+                            //$("#divComments").show();
+                            alert('Report updated.')
+                                        
+                        }   
+                }
+                });  */
+               
+                comment = encodeURIComponent(varComment);
+                var csrftoken = $("[name=csrfmiddlewaretoken]").val(); 
+                var x = new XMLHttpRequest();
+                x.open("POST","/saveReportCommentTxtEd/",true);
+                x.setRequestHeader("Content-Type", 'text/plain'); 
+                x.setRequestHeader( "X-CSRFToken",csrftoken);  
+                var data = JSON.stringify({"comment":varComment,'reqId':$("#txtreqId").val(),'titleIdx':TitleCnt,'title':$('#txtTitle').val(),'subtitleIdx':SubTitleCnt,'subtitle':$('#txtSubTitle').val(),'subsubtitleIdx':SubSubTitleCnt,'subsubtitle':$('#txtSubSubTitle').val()});
+                //x.send('{"comment":"'+comment+'"}');
+                x.onreadystatechange = function () { 
+                    console.log('x.status is '+x.status)
+                    if (x.readyState == 4 && x.status == 200) {
+                        console.log('x.responseText is ',x.responseText);
+                        var resdata = JSON.parse(x.responseText); 
+                        if(resdata.is_taken)
+                        { 
+                            if($("#txtreqId").val()!=''){
+                                $("#div_"+$("#txtreqId").val()).empty();
+                                $("#div_"+$("#txtreqId").val()).append("<span>"+$("#txtComments").val()+"</span>");
+                            }
+                            else{
+                                $("#divReportOutput").append("<br><div id='div_"+ resdata.reqId +"' oncontextmenu='deleteComment(this.id)' ondblclick='editComment(this.id)'><span>"+$("#txtComments").val()+"</span></div>");
+                            }
+                            $("#txtComments").val('');
+                            $("#txtreqId").val('');
+                            $("#txtTitleCnt").val(resdata.titleIdx);
+                         
+                            /*editor1.setHTMLCode('<p></p>');
+                            editor1.setHTMLCode(resdata.savedReportData);*/
+                            editor1.setReadOnly(true);
+                            $('#divComments').empty()
+                            $('#divComments').append(resdata.savedReportData);
+                            $('#divComments').show()
+                            $('#divRTE').hide() 
+                            clearCtrls();
+                            alert('Report updated.')
+                                        
+                        }   
+                            
+                    }
+                }
+                x.send(data)
+                }
+            else{
+                alert('Please enter text.')
+            }
+        }
+    }
+
+    function editComment(id){ 
+        $("#txtComments").val('')
+        $("#txtComments").val($("#"+id).text());
+    $("#txtreqId").val(id.split('_')[1]);
+        //$("#divRptPrv").dialog("close");
+        //$("#txtComments").show();
+       // $("#divComments").hide();
+    }
+
+    function deleteComment(e)
+    {
+        if($('#selectSecTitle').val()=="0" & $("#txtreqId").val()=='')
+        {
+            alert('Please select title before saving.');
+            return false;
+        }
+        console.log('$("#txtreqId").val() is ',$("#txtreqId").val())
+        TitleCnt=$('#txtTitleCnt').val(); 
+        TitleCnt=parseInt(TitleCnt)+1;  
+        let SubTitleCnt = $("#txtSubTitleCnt").val();
+        let SubSubTitleCnt = $("#txtSubSubTitleCnt").val();
+        if($('#selectSubTitle').val()!='0'){
+            SubTitleCnt=parseInt(SubTitleCnt)+1
+            SubTitleCnt=TitleCnt+'.'+SubTitleCnt; 
+        }
+        else{
+            SubTitleCnt=0;
+        }
+        if($('#selectSubSubTitle').val()!='0'){
+            let SubTitleCnt2 = $("#txtSubTitleCnt").val();
+            SubTitleCnt2=parseInt(SubTitleCnt2)+1
+            SubSubTitleCnt=parseInt(SubSubTitleCnt)+1 
+            SubSubTitleCnt=TitleCnt+'.'+SubTitleCnt2+'.'+SubSubTitleCnt;
+            
+        }
+        else{
+            SubSubTitleCnt=0; 
+        }
+        $("#divDeleteComment").dialog({   
+            width: "40%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Yes",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        $.ajax({ 
+                            url: '/deleteReportComment/',
+                            data:{'reqID': $("#txtreqId").val() ,'titleIdx':TitleCnt,'title':$('#txtTitle').val(),'subtitleIdx':SubTitleCnt,'subtitle':$('#txtSubTitle').val(),'subsubtitleIdx':SubSubTitleCnt},
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        $("#txtComments").val('');
+                                        $("#txtreqId").val('');
+                                        $("#txtTitleCnt").val(data.titleIdx); 
+                                        /*editor1.setHTMLCode('<p></p>');
+                                        editor1.setHTMLCode(data.savedReportData);*/
+                                        editor1.setReadOnly(true);  
+                                        $('#divComments').empty()
+                                        $('#divComments').append(resdata.savedReportData);
+                                        $('#divComments').show()
+                                        $('#divRTE').hide() 
+                                        clearCtrls();
+                                        alert('Report updated.') 
+                                    }            
+                            }
+                        }); 
+                        
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        });
+        return false;
+        //return false;
+    }
+    function showRptPrv(){
+        $("#divRptPrv").dialog({   
+            width: "70%",   
+            height:650,
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+    
+    function showProcess(){
+        $("#divProcesStatus").dialog({   
+            width: "70%",   
+            height:650,
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+    
+    function showTitles(){
+          clearCtrls(); //to be uncommented
+          $("#divTitles").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        AddSection(); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Clear",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        clearCtrls()
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    
+    }
+    function showImages()
+    {  if($('#selectSecTitle').val()=="0" & $("#txtreqId").val()=='')
+        {
+            alert('Please select title before adding image.');
+        }
+        else{
+            $('#selectImgAlign').val('Select');
+            $('#selectTitleAlign').val('Select');
+            $('#txtImgTitle').val('');
+            $('#selectImg').val('Select');
+            $("#imgGraph").attr("src",""); 
+            $("#divImg").dialog({   
+                width: "70%",   
+                modal: true,
+                buttons:             /* Save: function() {
+                    $(this).dialog("close");
+                    } */ [
+                    {
+                        text: "Add",
+                        "class": 'btn btn-primary btn-sm',
+                        click: function() { 
+                            var image = $('#imgGraph');
+                            scalev=($("input[name='rb_resize']:checked").val());
+                            
+                            imgHeight=parseFloat(image.css("height"))*scalev+"px;" ;
+                            imgWidth=parseFloat(image.css("width"))*scalev +"px;"; 
+                            /*TitleCnt=$('#txtTitleCnt').val(); 
+                            TitleCnt=parseInt(TitleCnt)+1; 
+                            vartxtToreplace=TitleCnt+' '+$('#txtTitle').val()+"\n";
+                            varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+                            let SubTitleCnt = $("#txtSubTitleCnt").val();
+                            let SubSubTitleCnt = $("#txtSubSubTitleCnt").val();
+                            if($('#selectSubTitle').val()!='0'){
+                                SubTitleCnt=parseInt(SubTitleCnt)+1
+                                SubTitleCnt=TitleCnt+'.'+SubTitleCnt;
+                                vartxtToreplace=SubTitleCnt+' '+$('#txtSubTitle').val()+"\n";
+                                varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+                            }
+                            else{
+                                SubTitleCnt=0;
+                            }
+                            if($('#selectSubSubTitle').val()!='0'){
+                                let SubTitleCnt2 = $("#txtSubTitleCnt").val();
+                                SubTitleCnt2=parseInt(SubTitleCnt2)+1
+                                SubSubTitleCnt=parseInt(SubSubTitleCnt)+1
+                                //console.log('TitleCnt '+TitleCnt+ ' SubTitleCnt '+SubTitleCnt2+ ' SubSubTitleCnt1 '+SubSubTitleCnt)
+                                SubSubTitleCnt=TitleCnt+'.'+SubTitleCnt2+'.'+SubSubTitleCnt;
+                                //console.log('SubSubTitleCnt2 '+SubSubTitleCnt)
+                                vartxtToreplace=SubSubTitleCnt+' '+$('#txtSubSubTitle').val()+"\n";
+                                varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+                            }
+                            else{
+                                SubSubTitleCnt=0; 
+                            }*/
+                            /* var img=editor1.insertByTagName("IMG");      
+                            img.src='\\'+ $("#selectImg").val() ;
+                            img.width=400;
+                            img.height=250; */
+                            if($('#selectTitleAlign').val()=='top' & $('#txtImgTitle').val().trim().length>0){
+                                editor1.insertHTML('<div style="width:400; text-align: center;"><span>'+$('#txtImgTitle').val() +'</span></div><br><img src="\\' + $("#selectImg").val() +'" height="250" width="400"/><br>');
+                                //editor1.insertHTML(' ');
+                            }
+                            else if($('#selectTitleAlign').val()=='bottom'  & $('#txtImgTitle').val().trim().length>0){
+                                editor1.insertHTML('<img src="\\' + $("#selectImg").val() +'" height="250" width="400"/> <br><div style="width:400; text-align: center;"><span>'+$('#txtImgTitle').val() +'</span></div><br>');
+                               // editor1.insertHTML('<p>'+$('#txtImgTitle').val() +'</p>');
+                            }
+                            else if($('#selectTitleAlign').val()=='Select'  & $('#txtImgTitle').val().trim().length<=0){
+                                editor1.insertHTML('<img src="\\' + $("#selectImg").val() +'" height="250" width="400"/>');
+                               // editor1.insertHTML('<p>'+$('#txtImgTitle').val() +'</p>');
+                            }
+                            editor1.selectDoc(false);
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        "class": 'btn btn-primary btn-sm',
+                        click: function() {
+                            // Save code here
+                            $(this).dialog("close");
+                        }
+                    }
+                ],  
+            }); 
+        }
+    }
+
+    function showTables()
+    {  if($('#selectSecTitle').val()=="0" & $("#txtreqId").val()=='')
+        {
+            alert('Please select title before adding table.');
+        }
+        else{
+            $("#divTables").dialog({   
+                width: "70%",   
+                modal: true,
+                buttons:             /* Save: function() {
+                    $(this).dialog("close");
+                    } */ [
+                    {
+                        text: "Add",
+                        "class": 'btn btn-primary btn-sm',
+                        click: function() { 
+                            $.ajax({ 
+                                url: '/getTableInfo/',
+                                data:{tableType:$('#selectTbl').val(),tableName:$('#selectTbl option:selected').text()}, 
+                                dataType: 'json',
+                                success: function (data) {
+                                        if(data.is_taken)
+                                        {  
+                                            editor1.selectDoc(false);
+                                             editor1.insertHTML(data.tblCode);
+                                             editor1.focus();
+                                            console.log('tableSting ')
+                                            console.log(data.tblCode);
+			                                editor1.selectDoc(false);
+                                            $('#table1').off('click');
+                                        }            
+                                }
+                            }); 
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        "class": 'btn btn-primary btn-sm',
+                        click: function() {
+                            // Save code here
+                            $(this).dialog("close");
+                        }
+                    }
+                ],  
+            }); 
+        }
+    }
+
+
+    function showEqEdtr()
+    {  if($('#selectSecTitle').val()=="0" & $("#txtreqId").val()=='')
+        {
+            alert('Please select title before adding equation.');
+        }
+        else{
+           
+            //EqnExport=function(text) { alert(text); };
+            //EqEditor.ExportButton.add(a, 'copybutton2', EqnExport, 'html'); 
+            $("#divFormula").dialog({   
+                width: "55%",   
+                modal: true,
+                buttons:             /* Save: function() {
+                    $(this).dialog("close");
+                    } */ [
+                    {
+                        text: "Add",
+                        "class": 'btn btn-primary btn-sm',
+                        click: function() { 
+                            console.log($("#export1").text()) 
+                            /* var img=editor1.insertByTagName("IMG");      
+                            img.src= $("#export1").text() ; 
+                            img.height=24 */
+                            editor1.insertHTML('<img src="' +  $("#export1").text() +'" height="24"/> ');
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        "class": 'btn btn-primary btn-sm',
+                        click: function() {
+                            // Save code here
+                            $(this).dialog("close");
+                        }
+                    }
+                ],  
+            }); 
+        }
+    }
+
+    function resizeImg(per){
+        //alert(per)
+        $('#imgGraph').css("transform", "scale("+ (per/100) +")");
+        $('#imgGraph').css('transform-origin','0px 0px');
+    }
+ 
+    function getImg(){
+       
+     
+        if($('#selectImg').val()=="-1"){
+            $('#divImgUpload').show();
+        }
+        else{
+            $('#divImgUpload').hide();
+            $("#imgGraph").attr("src","\\"+ $("#selectImg").val()); 
+            $('#selectImgComment').val($('#selectImg').val())
+            chartImg=$('#selectImg option:selected').text().split('-')[1];
+            imgcomments=$('#selectImgComment option:selected').text()
+            if(imgcomments.trim().length>0){
+                $('#downChartRpt').show();
+                $("#downChartRpt").attr('href', "{{showPlotnComm}}?ImgId="+chartImg.trim()+"");
+            }
+            else{
+                $('#downChartRpt').hide();
+            }
+        }
+    }
+
+    function getTable(){
+        $('#divTbl').empty()
+        $.ajax({ 
+            url: '/getTableInfo/',
+            data:{tableType:$('#selectTbl').val(),tableName:$('#selectTbl option:selected').text()}, 
+            dataType: 'json',
+            success: function (data) {
+                    if(data.is_taken)
+                    { 
+                         $('#divTbl').empty()
+                         $('#divTbl').append(data.tblCode)
+                    }            
+            }
+        }); 
+    }
+    function getTitle(){ 
+        $('#txtTitle').val('');
+        $('#txtSubTitle').val('');
+        $('#txtSubSubTitle').val('');
+        $('#selectSubTitle option').remove();    
+        $('#selectSubTitle').append(new Option("Select Sub Title","0"));               
+        $('#selectSubTitle').append(new Option("Add New","-1"));
+        if( $('#selectSecTitle').val()!='0'){
+           $('#txtTitle').val($('#selectSecTitle option:selected').text());
+           _txtTitleComment="";
+           $.ajax({
+            url: '/getSubTitle/',  
+            data:{ title:$("#selectSecTitle").val(),titleTxt:$('#selectSecTitle option:selected').text()},
+            dataType: 'json',
+            success: function (data) {          
+                $('#selectSubTitle option').remove();    
+                $('#selectSubTitle').append(new Option("Select Sub Title","0"));
+                for(var x in data.subTtl){
+                    console.log(data.subTtl[x])
+                    
+                    subTitleVal=$('#selectSecTitle').val()+'.'+ (parseInt(x)+1);
+                    $('#selectSubTitle').append(new Option(data.subTtl[x],subTitleVal));
+                    
+                }
+                $("#txtTitleCnt").val(data.titleIdx);
+                console.log('data.titleIdx is ',data.titleIdx)
+                _txtTitleComment=data.savedComments;
+                console.log('data.savedComments is ',data.savedComments.length)
+                $('#selectSubTitle').append(new Option("Add New","-1"));
+                if(data.savedComments.length>0){
+                    $('#selectSubTitle').prop('disabled',false);
+                }
+                else{
+                    $('#selectSubTitle').prop('disabled',true);
+                }
+                }
+            });
+        }
+        if($('#selectSecTitle').val()=='-1')
+        {
+            $('#txtTitle').val('');
+            $('#selectSecTitle').hide();
+            $('#txtTitle').show();
+        }
+   }
+   
+function getSubTitle(){ 
+    $('#txtSubTitle').val('');
+    $('#txtSubSubTitle').val('');
+    $('#selectSubSubTitle option').remove();    
+    $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));               
+    $('#selectSubSubTitle').append(new Option("Add New","-1"));
+    if($('#selectSubTitle').val()!='0'){
+       $('#txtSubTitle').val($('#selectSubTitle option:selected').text());
+       $('#txtTitle').val($('#selectSecTitle option:selected').text());
+       _txtSubTitleComment="";
+           $.ajax({
+            url: '/getSubSubTitle/',  
+            data:{ title:$("#selectSubTitle").val(),titleTxt:$('#selectSecTitle option:selected').text(),subtitleTxt:$('#selectSubTitle option:selected').text()},
+            dataType: 'json',
+            success: function (data) {          
+                $('#selectSubSubTitle option').remove();    
+                $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));
+                for(var x in data.subsubTtl){
+                    subTitleVal=$('#selectSubTitle').val()+'.'+ (parseInt(x)+1);
+                    $('#selectSubSubTitle').append(new Option(data.subsubTtl[x],subTitleVal));
+                    
+                }
+                $("#txtSubTitleCnt").val(data.titleIdx);
+                _txtSubTitleComment=data.savedComments;
+                //console.log('data.savedComments is  ' +data.savedComments);
+                $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                if(data.savedComments.length>0){
+                    $('#selectSubSubTitle').prop('disabled',false);
+                }
+                else{
+                    $('#selectSubSubTitle').prop('disabled',true);
+                }
+                }
+            });
+    }
+    if($('#selectSubTitle').val()=='-1')
+    {
+        $('#txtSubTitle').val('');
+        $('#txtSubTitle').show();
+        $('#selectSubTitle').hide();
+    }
+}
+
+function getSubSubTitle(){ 
+    $('#txtSubSubTitle').val('');
+    if($('#selectSubSubTitle').val()!='0'){
+       $('#txtSubSubTitle').val($('#selectSubSubTitle option:selected').text());
+           $.ajax({
+            url: '/getSubSubTitleIdx/',  
+            data:{ subsubtitleTxt:$('#selectSubSubTitle option:selected').text(),titleTxt:$('#selectSecTitle option:selected').text(),subtitleTxt:$('#selectSubTitle option:selected').text()},
+            dataType: 'json',
+            success: function (data) {  
+                $("#txtSubSubTitleCnt").val(data.titleIdx);
+                _txtSubSubTitleComment=data.savedComments;
+                console.log('subsubtile savedComments is ',data.savedComments)
+                }
+            });
+    }
+    if($('#selectSubSubTitle').val()=='-1')
+    {
+        $('#txtSubSubTitle').val('');
+        $('#txtSubSubTitle').show();
+        $('#selectSubSubTitle').hide();
+    }
+}
+
+   function clearCtrls(){
+    $('#txtSubTitle').val('');
+    $('#txtSubTitle').hide();
+    $('#selectSubTitle').show();
+    $('#txtTitle').val('');
+    $('#selectSecTitle').show();
+    $('#txtTitle').hide();
+    $('#txtSubSubTitle').val('');
+    $('#txtSubSubTitle').hide();
+    $('#selectSubSubTitle').show();
+    $('#selectSecTitle').val('0');
+    $('#selectSubTitle').val('0');
+    $('#selectSubSubTitle').val('0');
+   } 
+
+   function AddSection(){  
+    $("#txtComments").val('')
+        console.log('$("#txtTitle").val() is ',$("#txtTitle").val())
+       if($("#txtTitle").val().trim().length>0)
+       {
+         
+            if($("#txtSubSubTitle").val().trim().length>0){ 
+                let SubSubTitleCnt = $("#txtSubSubTitleCnt").val();
+                let SubTitleCnt = $("#txtSubTitleCnt").val();
+                let TitleCnt=$('#txtTitleCnt').val(); 
+                TitleCnt=parseInt(TitleCnt)+1; 
+                SubTitleCnt=parseInt(SubTitleCnt)+1;
+                SubSubTitleCnt= parseInt(SubSubTitleCnt)+1;
+                SubTitleCnt = TitleCnt +'.'+SubTitleCnt+'.'+SubSubTitleCnt
+                if($('#selectSubSubTitle').val()=='-1'){
+                    $('#selectSubSubTitle option:last').remove();
+                    subTitleVal=$('#selectSubTitle').val()+'.'+$('select#selectSubSubTitle option').length;
+                    $('#selectSubSubTitle').append(new Option($('#txtSubSubTitle').val(),subTitleVal));
+                    $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                     
+                    $('#selectSubSubTitle').val(subTitleVal);
+
+                    
+                    if(_txtSubSubTitleComment!="")
+                    {
+                        editor1.setHTMLCode(_txtSubSubTitleComment);
+                    }
+                    else{
+                       // $("#txtComments").val($("#txtComments").val()+SubTitleCnt+' '+$('#txtSubSubTitle').val()+"\n")
+                       editor1.setHTMLCode('<b>'+SubTitleCnt+' '+$('#txtSubSubTitle').val()+'</b>');
+                    }
+                    editor1.focus();
+                    $('#divComments').hide()
+                    $('#divRTE').show() 
+                }
+                else{    
+                    if(_txtSubSubTitleComment!="")
+                    {
+                        editor1.setHTMLCode(_txtSubSubTitleComment);
+                    }
+                    else{
+                        //$("#txtComments").val($("#txtComments").val()+SubTitleCnt+' '+$('#txtSubSubTitle').val()+"\n")
+                        editor1.setHTMLCode('<b>'+SubTitleCnt+' '+$('#txtSubSubTitle').val()+'</b>');
+                    }
+                    editor1.focus();  
+                    $('#divComments').hide()
+                    $('#divRTE').show() 
+                }
+            }
+           else if($("#txtSubTitle").val().trim().length>0){ 
+               
+                if($('#selectSubTitle').val()=='-1'){
+                    $('#selectSubTitle option:last').remove();
+                    subTitleVal=$('#selectSecTitle').val()+'.'+$('select#selectSubTitle option').length;
+                    $('#selectSubTitle').append(new Option($('#txtSubTitle').val(),subTitleVal));
+                    $('#selectSubTitle').append(new Option("Add New","-1"));
+                    console.log(subTitleVal)
+                    $('#selectSubTitle').val(subTitleVal);
+                    let SubTitleCnt = $("#txtSubTitleCnt").val();
+                    let TitleCnt=$('#txtTitleCnt').val(); 
+                    TitleCnt=parseInt(TitleCnt)+1; 
+                    SubTitleCnt=parseInt(SubTitleCnt)+1;
+                    SubTitleCnt = TitleCnt +'.'+SubTitleCnt
+                    console.log(SubTitleCnt+' '+$('#txtSubTitle').val())
+                    if(_txtSubTitleComment!="")
+                    {
+                        editor1.setHTMLCode(_txtSubTitleComment);
+                    }
+                    else{
+                        editor1.setHTMLCode('<b>'+SubTitleCnt+' '+$('#txtSubTitle').val()+'</b>');
+                    }
+                    $('#divComments').hide()
+                    $('#divRTE').show() 
+                }
+                else{ 
+                    let SubTitleCnt = $("#txtSubTitleCnt").val();
+                    let TitleCnt=$('#txtTitleCnt').val();  
+                    TitleCnt=parseInt(TitleCnt)+1; 
+                    SubTitleCnt=parseInt(SubTitleCnt)+1;
+                    SubTitleCnt = TitleCnt +'.'+SubTitleCnt
+                    /*if($("#txtComments").val().length>0){            
+                        //$("#txtComments").val($("#txtComments").val()+' \n'+SubTitleCnt+' '+$('#txtSubTitle').val()+"\n")
+                        editor1.insertHTML(SubTitleCnt+' '+$('#txtSubTitle').val());
+                    }
+                    else{
+                       // $("#txtComments").val($("#txtComments").val()+SubTitleCnt+' '+$('#txtSubTitle').val()+"\n")
+                       editor1.insertHTML(SubTitleCnt+' '+$('#txtSubTitle').val());
+
+                    }
+                    $("#txtComments").val($("#txtComments").val()+_txtSubTitleComment);
+                    $("#txtComments").focus();
+                    */
+                    if(_txtSubTitleComment!="")
+                    {
+                        editor1.setHTMLCode(_txtSubTitleComment);
+                    }
+                    else{
+                        editor1.setHTMLCode('<b>'+SubTitleCnt+' '+$('#txtSubTitle').val()+'</b>');
+                    }
+                    $('#divComments').hide()
+                    $('#divRTE').show() 
+                }
+           }
+           else{
+                if($('#selectSecTitle').val()=='-1'){
+                    $('#selectSecTitle option:last').remove();
+                    $('#selectSecTitle').append(new Option($('#txtTitle').val(),$('select#selectSecTitle option').length));
+                    $('#selectSecTitle').append(new Option("Add New","-1")); 
+                    $('#selectSecTitle').val($('select#selectSecTitle option').length-2);
+                    TitleCnt=$('#txtTitleCnt').val(); 
+                    TitleCnt=parseInt(TitleCnt)+1;
+                    if($("#txtComments").val().length>0){
+                       // $("#txtComments").val($("#txtComments").val()+' \n'+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                      // editor1.insertHTML("<p>"+TitleCnt+' '+$('#txtTitle').val() +"</p><br>");
+                        if(_txtTitleComment!="")
+                        {
+                            editor1.setHTMLCode(_txtTitleComment);
+                        }
+                        else{
+                            editor1.setHTMLCode('<b>'+TitleCnt+' '+$('#txtTitle').val()+'</b><br>');
+                        }
+                        editor1.selectDoc(false);
+                        editor1.focus();
+                        $('#divComments').hide()
+                    $('#divRTE').show() 
+                    }
+                    else{
+                       // $("#txtComments").val($("#txtComments").val()+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                      // editor1.insertHTML("<p>"+TitleCnt+' '+$('#txtTitle').val() +"</p><br>");
+                        if(_txtTitleComment!="")
+                        {
+                            editor1.setHTMLCode(_txtTitleComment);
+                        }
+                        else{
+                            editor1.setHTMLCode('<b>'+TitleCnt+' '+$('#txtTitle').val()+'</b><br>');
+                        }
+                        editor1.selectDoc(false);
+                        editor1.focus();
+                        $('#divComments').hide()
+                    $('#divRTE').show() 
+                    }
+                    //$("#txtComments").val($("#txtComments").val()+_txtTitleComment);
+                    //$("#txtComments").focus();
+                    
+                }
+                else{   
+                    TitleCnt= $('#txtTitleCnt').val(); 
+                    TitleCnt=parseInt(TitleCnt)+1;  
+
+                    if($("#txtComments").val().length>0){           
+                        //$("#txtComments").val($("#txtComments").val()+' \n'+TitleCnt+' '+$('#txtTitle').val()+"\n") 
+                        if(_txtTitleComment!="")
+                        {
+                            editor1.setHTMLCode(_txtTitleComment);
+                        }
+                        else{
+                            editor1.setHTMLCode('<b>'+TitleCnt+' '+$('#txtTitle').val()+'</b><br>');
+                        }
+                        editor1.selectDoc(false);
+                        editor1.focus();
+                        $('#divComments').hide()
+                        $('#divRTE').show() 
+                         
+                    }
+                    else{
+                        //$("#txtComments").val($("#txtComments").val()+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                        
+                        if(_txtTitleComment!="")
+                        {
+                            editor1.setHTMLCode(_txtTitleComment);
+                        }
+                        else{ 
+                            editor1.setHTMLCode('<b>'+TitleCnt+' '+$('#txtTitle').val()+'</b><br><p></p>');
+                            //editor1.selectDoc(false);
+                            editor1.focus();
+                        }
+                        $('#divComments').hide()
+                        $('#divRTE').show() 
+                        
+                    }
+                    $("#txtComments").val($("#txtComments").val()+_txtTitleComment);
+                   // $("#txtComments").focus();
+                }
+                
+           }
+           editor1.setReadOnly(false);
+           $('.rte-fixed').css('display','none');
+        }
+      
+      // $("#txtComments").show();
+      //  $("#divComments").hide();
+   }
+
+   function getAllCRComments(){
+    $('#divCRAllCommentsData').empty();  
+   $.ajax({ 
+    url: '/getAllCRComments/',
+    data:{section:$("#selectCROpt").val()  },
+    dataType: 'json',
+    success: function (data) {
+            if(data.is_taken)
+            {
+                $.each(data.comment,function(key,val){
+                    console.log(val.header+' , '+val.comments);
+                    appendBodyData= '<div class="row"><div class="col-lg-12">';
+                        appendBodyData+='<b> '+val.header+':</b> <br>'+ val.comments+''
+                        appendBodyData+='</div> </div><div style="height:15px"></div>';  
+                        $('#divCRAllCommentsData').append(appendBodyData)  
+                });
+            }            
+    }
+
+    });
+    $("#divCRAllComments").dialog({   
+        width: "70%",   
+       // modal: true,
+        buttons: [
+            
+            {
+                text: "Cancel",
+                "class": 'btn btn-primary btn-sm',
+                click: function() {
+                    // Save code here
+                    $(this).dialog("close");
+                }
+            }
+        ],  
+    });   
+}
+
+function showQtnLog(){
+    
+    $("#divQuestionlog").dialog({   
+        width: "70%", 
+        height:"600",
+       // modal: true,
+        buttons: [
+            
+            {
+                text: "Cancel",
+                "class": 'btn btn-primary btn-sm',
+                click: function() {
+                    // Save code here
+                    $(this).dialog("close");
+                }
+            }
+        ],  
+    });  
+}
+
+function getData(id){
+    //alert('div clicked'+id) 
+    $("#txtreqId").val(id);
+    //console.log('data',$("#div_"+id).html())
+    editor1.setHTMLCode('<p></p>');
+    editor1.setHTMLCode($("#div_"+id).html());
+    editor1.setReadOnly(false);
+    $('#divComments').hide()
+    $('#divRTE').show()
+    $('.rte-fixed').css('display','none');
+}
+
+function toggleHeight(id,ctrlId){ 
+    console.log(ctrlId) 
+    if ( $("#div_"+id).height() != 20){
+        $("#div_"+id).css('overflow','hidden');
+        $("#div_"+id).css( 'height',20);
+        $("#"+ctrlId).removeClass("fa fa-minus-square-o");
+        $("#"+ctrlId).addClass("fa fa-plus-square-o");
+        
+    }
+    else{
+        $("#div_"+id).css('overflow','auto');  
+        $("#div_"+id).css( 'height','');
+        $("#"+ctrlId).removeClass("fa fa-plus-square-o");
+        $("#"+ctrlId).addClass("fa fa-minus-square-o");
+    }
+}
+
+function getSection(ttl,subttl,TtlCnt){
+   // alert('div clicked '+ttl+' , '+subttl+', '+TtlCnt) 
+    if(subttl=="" || subttl=='0'){  
+        if(ttl=='-1'){
+            showTitles();
+            $("#selectSecTitle").val('-1');
+            $('#txtTitle').val('');
+            $('#selectSecTitle').hide();
+            $.ajax({
+                url: '/getSubTitle/',  
+                data:{ title:"",titleTxt:ttl},
+                dataType: 'json',
+                success: function (data) {          
+                        $('#selectSubTitle option').remove();    
+                        $('#selectSubTitle').append(new Option("Select Sub Title","0"));
+                        for(var x in data.subTtl){
+                            console.log(data.subTtl[x])
+                            
+                            subTitleVal=$('#selectSecTitle').val()+'.'+ (parseInt(x)+1);
+                            $('#selectSubTitle').append(new Option(data.subTtl[x],subTitleVal));
+                            
+                        }  
+                        $("#txtTitleCnt").val(data.titleIdx);
+                        _txtTitleComment=data.savedComments;
+                        $('#selectSubTitle').append(new Option("Add New","-1"));
+                        if(data.savedComments.length>0){
+                            $('#selectSubTitle').prop('disabled',false);
+                        }
+                        else{
+                            $('#selectSubTitle').prop('disabled',true);
+                        }                   
+                       
+                    }
+                });
+            $('#txtTitle').show();
+        }
+        else{
+            $("#selectSecTitle option").filter(function() { return this.text == ttl;  }).attr('selected', true);
+            $.ajax({
+                url: '/getSubTitle/',  
+                data:{ title:"",titleTxt:ttl},
+                dataType: 'json',
+                success: function (data) {          
+                        $('#selectSubTitle option').remove();    
+                        $('#selectSubTitle').append(new Option("Select Sub Title","0"));
+                        for(var x in data.subTtl){
+                            console.log(data.subTtl[x])
+                            
+                            subTitleVal=$('#selectSecTitle').val()+'.'+ (parseInt(x)+1);
+                            $('#selectSubTitle').append(new Option(data.subTtl[x],subTitleVal));
+                            
+                        } 
+                        $("#txtTitle").val(ttl);
+                        $("#txtTitleCnt").val(data.titleIdx);
+                        _txtTitleComment=data.savedComments;
+                        $('#selectSubTitle').append(new Option("Add New","-1"));
+                        if(data.savedComments.length>0){
+                            $('#selectSubTitle').prop('disabled',false);
+                        }
+                        else{
+                            $('#selectSubTitle').prop('disabled',true);
+                        }
+                        TitleCnt=parseInt(data.titleIdx)+1;                    
+                        editor1.setHTMLCode('<b>'+TitleCnt+' '+ttl+'</b><br>');                    
+                        
+                        editor1.setReadOnly(false);
+                        editor1.selectDoc(false);
+                        editor1.focus();
+                        $('.rte-fixed').css('display','none');
+                        $('#divComments').hide()
+                        $('#divRTE').show() 
+                    }
+                });
+        
+        }
+    }
+    else {
+        if(subttl=='-1'){
+            showTitles();
+            $("#selectSecTitle option").filter(function() { return this.text == ttl;  }).attr('selected', true);
+            
+            $('#txtSubTitle').show()
+            $('#selectSubTitle').val('-1')
+            $('#txtSubTitle').val('')
+            $('#txtTitle').val(ttl);
+            $('#selectSubTitle').hide()
+            $.ajax({
+                url: '/getSubSubTitle/',  
+                data:{ title:$("#selectSubTitle").val(),titleTxt:ttl,subtitleTxt:subttl},
+                dataType: 'json',
+                success: function (data) {          
+                        $('#selectSubSubTitle option').remove();    
+                        $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));
+                        for(var x in data.subsubTtl){
+                            subTitleVal=$('#selectSubTitle').val()+'.'+ (parseInt(x)+1);
+                            $('#selectSubSubTitle').append(new Option(data.subsubTtl[x],subTitleVal));
+                            
+                        }
+                        $("#txtSubTitleCnt").val(data.titleIdx);
+                        $("#txtTitleCnt").val(parseInt(TtlCnt)-1); 
+                        $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                        if(data.savedComments.length>0){
+                            $('#selectSubSubTitle').prop('disabled',false);
+                        }
+                        else{
+                            $('#selectSubSubTitle').prop('disabled',true);
+                        } 
+                    }
+                });
+        }
+        else{
+            $("#selectSecTitle option").filter(function() { return this.text == ttl;  }).attr('selected', true);
+            
+            
+            $.ajax({
+            url: '/getSubTitle/',  
+            data:{ title:TtlCnt,titleTxt:ttl},
+            dataType: 'json',
+            success: function (data) {          
+                    $('#selectSubTitle option').remove();    
+                    $('#selectSubTitle').append(new Option("Select Sub Title","0"));
+                    for(var x in data.subTtl){                        
+                        subTitleVal=$('#selectSecTitle').val()+'.'+ (parseInt(x)+1);
+                        $('#selectSubTitle').append(new Option(data.subTtl[x],subTitleVal));
+                        
+                    } 
+                    $("#txtTitle").val(ttl);
+                    $("#txtTitleCnt").val(data.titleIdx);
+                    _txtTitleComment=data.savedComments;
+                    $('#selectSubTitle').append(new Option("Add New","-1"));
+                    if(data.savedComments.length>0){
+                        $('#selectSubTitle').prop('disabled',false);
+                    }
+                    else{
+                        $('#selectSubTitle').prop('disabled',true);
+                    }
+                    $("#selectSubTitle option").filter(function() { return this.text == subttl;  }).attr('selected', true);
+                    $.ajax({
+                        url: '/getSubSubTitle/',  
+                        data:{ title:$("#selectSubTitle").val(),titleTxt:ttl,subtitleTxt:subttl},
+                        dataType: 'json',
+                        success: function (data) {          
+                                $('#selectSubSubTitle option').remove();    
+                                $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));
+                                for(var x in data.subsubTtl){
+                                    subTitleVal=$('#selectSubTitle').val()+'.'+ (parseInt(x)+1);
+                                    $('#selectSubSubTitle').append(new Option(data.subsubTtl[x],subTitleVal));
+                                    
+                                }
+                                $("#txtSubTitleCnt").val(data.titleIdx);
+                                $("#txtSubTitle").val(subttl); 
+                                SubTitleCnt=parseInt(data.titleIdx)+1;
+                                SubTitleCnt = TtlCnt +'.'+SubTitleCnt
+                                $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                                if(data.savedComments.length>0){
+                                    $('#selectSubSubTitle').prop('disabled',false);
+                                }
+                                else{
+                                    $('#selectSubSubTitle').prop('disabled',true);
+                                }
+                                editor1.setHTMLCode('<b>'+SubTitleCnt+' '+subttl+'</b><br>');                    
+                                
+                                editor1.setReadOnly(false);
+                                editor1.selectDoc(false);
+                                editor1.focus();
+                                $('.rte-fixed').css('display','none');
+                                $('#divComments').hide()
+                                $('#divRTE').show() 
+                            }
+                        });
+                }
+            });
+        
+        }
+    }
+}
+
+function previewReport(){
+    editor1.setReadOnly(true);
+    $('#divComments').show()
+    $('#divRTE').hide()
+    $('.rte-fixed').css('display','none');
+}
+
+function MergeGridCells(TableID,rCols) {
+            var dimension_cells = new Array();
+            var dimension_col = null; 
+            for(Col in rCols) {
+              dimension_col=2;//rCols[Col];
+              // first_instance holds the first instance of identical td
+              var first_Hash="";
+              var first_instance = null;
+              var rowspan = 1;
+              // iterate through rows
+              $("#"+TableID+"> tbody > tr").children("td").attr('hidden', false);
+              $("#"+TableID+"> tbody > tr").children("td").attr('rowspan', 1);
+              $("#"+TableID).find('tr').each(function () {
+                // find the td of the correct column (determined by the dimension_col set above)
+                var dimension_td = $(this).find('td:nth-child(' + dimension_col + ')');
+                //console.log('dimension_td is ',dimension_td)
+                var dim_Hash="";
+                for(x=1;x<dimension_col;x++){
+                  dim_Hash+=$(this).find('td:nth-child(' + x + ')').text();
+                }
+                
+                if (first_instance === null) {
+                    // must be the first row
+                    first_instance = dimension_td;
+                 //   console.log('0' + dimension_td.text() +', '+ first_instance.text())
+                } else if (dimension_td.text() === first_instance.text()) {
+                    // the current td is identical to the previous AND the Hashes are as well
+                    // remove the current td
+                    // dimension_td.remove();
+                    dimension_td.attr('hidden', true);
+                    ++rowspan;
+                    // increment the rowspan attribute of the first instance
+                    first_instance.attr('rowspan', rowspan);
+                   // console.log('1' + dimension_td.text() +', '+ first_instance.text())
+                } else {
+                    // this cell is different from the last
+                    first_instance = dimension_td;
+                    first_Hash = dim_Hash;
+                    rowspan = 1;
+                  //  console.log('2' +dimension_td.text() +', '+ first_instance.text())
+                }
+              });
+            }
+          }  
+          
+
+function upload_file(start, path) {
+    var file  = document.getElementById('myfile').files[0]; 
+    var filename = file .name;
+    console.log('filename is ',filename) 
+
+    var csrftoken = $("[name=csrfmiddlewaretoken]").val(); 
+    var x = new XMLHttpRequest();
+    x.open("POST","/uploadImage/",true); 
+    x.setRequestHeader( "X-CSRFToken",csrftoken); 
+    //x.send('{"comment":"'+comment+'"}');
+    var fd = new FormData();
+    
+    fd.append("filename", file,filename);
+    fd.append("filenm", filename);
+   //fd.append("myfile", filename );
+    x.send(fd);
+    x.onreadystatechange = function () { 
+        if (x.readyState == 4 && x.status == 200) {
+            var json = JSON.parse(x.responseText);
+            console.log(json)
+            if(json.is_taken)
+            {
+               
+                $('#selectImg option:last').remove();
+                $('#selectImg').append(new Option(json.ddlTxt,json.ddlVal));
+                $('#selectImg').append(new Option("Add New","-1"));
+                $('#selectImg').val(json.ddlVal)
+                getImg();
+            }
+                
+        }
+    }
+    
+        
+}
+ </script>
+{% endblock script %} 

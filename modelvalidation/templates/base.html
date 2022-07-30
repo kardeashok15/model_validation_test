@@ -1,0 +1,883 @@
+{% load static %}
+{% url 'home' as home %} 
+{% url 'viewData' as viewData %} 
+{% url 'viewDataType' as viewDataType %} 
+{% url 'viewNumData' as viewNumData %} 
+{% url 'missingData' as missingData %} 
+{% url 'dataCleaning' as dataCleaning %} 
+{% url 'showCatColFreq' as showCatColFreq %} 
+{% url 'showChartTypes' as showChartTypes %} 
+{% url 'showUniVarChartTypes' as showUniVarChartTypes %}
+{% url 'showSNSChart' as showSNSChart %} 
+{% url 'showCatCountPlot' as showCatCountPlot %} 
+{% url 'showDistPlot' as showDistPlot %} 
+{% url 'showBoxPlot' as showBoxPlot  %} 
+{% url 'showPieChart' as showPieChart %}
+{% url 'pairwise_correlation' as pairwise_correlation %}
+{% url 'vehicleclaim' as vehicleclaim %}
+{% url 'scattred3d' as scattred3d %}
+{% url 'bubblePlot3d' as bubblePlot3d %}
+{% url 'plotinsured_occupations' as plotinsured_occupations %}
+{% url 'plotinsoccuvsincstate' as plotinsoccuvsincstate %}
+{% url 'plotinsoccuvsincstatestacked' as plotinsoccuvsincstatestacked %}
+{% url 'vardistbyfraud' as vardistbyfraud %}
+{% url 'vardistbyfraud2' as vardistbyfraud2 %}
+{% url 'stripplot' as stripplot %}
+{% url 'totalclaim_boxplot' as totalclaim_boxplot %}
+{% url 'showcorrelation' as showcorrelation %}
+{% url 'dist_numevari_catvar' as dist_numevari_catvar %}
+{% url 'dummy_vars' as dummy_vars %}
+{% url 'std_features' as std_features %}
+{% url 'test_multicollinearity' as test_multicollinearity %}
+{% url 'dropfeatures' as dropfeatures %}
+{% url 'detect_outliers' as detect_outliers %}
+{% url 'setScheduler' as setScheduler %}
+{% url 'setProfile' as setProfile %}
+{% url 'renameCols' as renameCols %}
+{% url 'tuneParams' as tuneParams %}
+{% url 'updateData' as updateData %}
+{% url 'randomForest' as randomForest %}
+{% url 'xgBoost' as xgBoost %}
+{% url 'MLP' as MLP %}
+{% url 'GBC' as GBC %}
+{% url 'KNN' as KNN %}
+{% url 'SVM' as SVM %}
+{% url 'BC' as BC %}  
+{% url 'confirmSrc' as confirmSrc %}
+{% url 'resample' as resample %}
+{% url 'dataQuality' as dataQuality  %}
+{% url 'Report' as Report %}
+{% url 'processStatus' as processStatus%}
+{% url 'modelValReq' as modelValReq%}
+{% url 'impCtrl' as impCtrl %}
+{% url 'valFindings' as valFindings %}
+{% url 'documentation'  as documentation%}
+{% url 'runModel' as runModel %}
+{% url 'policies'  as policies%}
+{% url 'contacts' as contacts %}
+{% url 'modelUsage' as modelUsage %}
+{%url 'WIP' as WIP %}
+{% url 'conceptualsoundness' as conceptualsoundness %}
+{% url 'viewConcSnd' as viewConcSnd %}
+{% url 'viewModelUsage' as viewModelUsage %}
+{% url 'showPlotnComm' as showPlotnComm %}
+{% url 'replication' as replication %}
+{% url 'viewDI' as viewDI %}
+{% url 'dataIntegrity' as dataIntegrity %}
+{% url 'skipUpdateData' as skipUpdateData %}
+{% url 'selCols' as selCols %}
+{% url 'importScnData' as importScnData %}
+{% url 'VaroReport' as VaroReport %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="au theme template">
+    <meta name="author" content="Hau Nguyen">
+    <meta name="keywords" content="au theme template">
+
+    <!-- Title Page-->
+    <title>Statistical Helper Around MRM</title>
+
+    <!-- Fontfaces CSS-->
+    <link href="{% static 'css/font-face.css' %}" rel="stylesheet" media="all">     
+    <link href="{% static 'vendor/font-awesome-5/css/fontawesome-all.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/font-awesome-4.7/css/font-awesome.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/mdi-font/css/material-design-iconic-font.min.css' %}" rel="stylesheet" media="all">
+
+    <!-- Bootstrap CSS-->
+    <link href="{% static 'vendor/bootstrap-4.1/bootstrap.min.css' %}" rel="stylesheet" media="all">
+     <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">   -->
+     <link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+    <!-- Vendor CSS-->
+    <link href="{% static 'vendor/animsition/animsition.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/wow/animate.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/css-hamburgers/hamburgers.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/slick/slick.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/select2/select2.min.css' %}" rel="stylesheet" media="all">
+    <link href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="{% static 'css/theme.css' %}" rel="stylesheet" media="all">
+<style>
+    .disaledmenu:hover {
+        color: yellow;
+     }
+</style>
+</head>
+
+<body class="animsition1">
+    <div class="page-wrapper"> 
+
+        <!-- MENU SIDEBAR-->
+        <aside class="menu-sidebar d-none d-lg-block" id="sidebarMain" style="overflow: hidden;">
+            <div class="logo" style="z-index: 100;">
+                <a href="#">
+                    <img src="/static/images/icon/logo.png" alt="" />
+                    <!-- <h3 style="color: #007bff;">Model Validation Automation</h3> -->
+                </a>
+            </div>
+            <div class="menu-sidebar__content js-scrollbar1" id="sidebarCntr">
+                <nav class="navbar-sidebar">
+                    <ul class="list-unstyled navbar__list">
+                        <li  class="has-sub">
+                            <a class="js-arrow open" href="#">Administrator</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulAdm">
+                                    <li>
+                                        <a id="lisetScheduler" href="{{setScheduler}}">Set Schedular</a>
+                                    </li>
+                                    <li>
+                                        <a id="lisetProfile" href="{{setProfile}}">Set Profile</a>
+                                    </li>
+                                    <li>
+                                        <a id="licontacts" href="{{contacts}}">Contacts</a>
+                                    </li>
+                                    <li>
+                                        <a id="lipolicies" href="{{policies}}">Policies</a>
+                                    </li>
+                                    <li>
+                                        <a id="liprocessStatus" href="{{processStatus}}">Process Status</a>
+                                    </li>   
+                                    <li>
+                                        <a id="limodelValReq" href="{{modelValReq}}">Request For Model Validation
+                                        </a>
+                                    </li> 
+                                    <li>
+                                        <a  id="limodelinv" href="{{WIP}}">Model Inventory</a>
+                                    </li> 
+                                </ul>                            
+                        </li>      
+                        <li  class="has-sub">
+                            <a class="js-arrow open" href="#">
+                                Data Import & Preprocessing</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulDIP">
+                                    <li>
+                                        <a id="lihome" href="{{home}}">Import & View Data</a>
+                                    </li>
+                                    <!-- <li>
+                                        <a href="{{viewData}}"> Data</a>
+                                    </li>  -->
+                                    
+                                    <li>
+                                        <a id="lidataCleaning" href="{{dataCleaning}}">Set Target Variable</a>
+                                    </li> 
+                                    <li>
+                                        <a id="liupdateData" href="{{updateData}}">Data Correction</a>
+                                    </li>
+                                </ul>                            
+                        </li>    
+                        <li class="has-sub">
+                            <a class="js-arrow open" href="#"> Data Description</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulDtDesc">
+                                    <li>
+                                        <a  id="liviewDataType" href="{{viewDataType}}">View Variables by Type & Count</a>
+                                    </li>
+                                    <li>
+                                        <a id="lishowCatColFreq" href="{{showCatColFreq}}">View Frequency of Categorical Variable</a>
+                                    </li>
+                                    <li>
+                                        <a id="liviewNumData" href="{{viewNumData}}">View Data Statistics of Numerical Variables</a>
+                                    </li>
+                                    <li>
+                                        <a id="lishowcorrelation" href="{{showcorrelation}}">View Correlation of Independent Numeric Variables</a>
+                                    </li>
+                                    <li>
+                                        <a id="lidist_numevari_catvar" href="{{dist_numevari_catvar}}">View Distribution of Numeric variables for Selected Categorical Variable</a>
+                                    </li>
+                                </ul>   
+                        </li>                     
+                        <li class="has-sub">
+                            <a class="js-arrow open" href="#"> Data Visualization</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulDataVisualization"> 
+                                    <li>
+                                        <a id="liselCols" href="{{selCols}}" onclick="showalert();">View Pair Plots</a>
+                                    </li>
+                                    <li>
+                                        <a id="lishowUniVarChartTypes" href="{{showUniVarChartTypes}}" onclick="showalert();">View Univariate Graphs</a>
+                                    </li>
+                                    <li>
+                                        <a id="lishowChartTypes" href="{{showChartTypes}}">View Multivariate Graphs</a>
+                                    </li>
+                                </ul>
+                        </li>
+                        
+                        <li class="has-sub">
+                            <a class="js-arrow open" href="#"> Data Preparation</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulDtPrep">
+                                    <li>
+                                        <a id="limissingData" href="{{missingData}}">Handle Missing Values</a>
+                                    </li>
+                                    <li>
+                                        <a id="lidropfeatures" href="{{dropfeatures}}">Drop Features</a>
+                                    </li>                                    
+                                    <li>
+                                        <a id="lidetect_outliers" href="{{detect_outliers}}">View Outliers</a>
+                                    </li>
+                                    <li>
+                                        <a id="lidummy_vars" href="{{dummy_vars}}">Create Dummy Variables</a>
+                                    </li>
+                                    <li>
+                                        <a id="listd_features" href="{{std_features}}">Standardize Features</a>
+                                    </li>
+                                    <li>
+                                        <a id="litest_multicollinearity" href="{{test_multicollinearity}}">Test Multi Collinearity & Remove Highly Corelated Features</a>
+                                    </li>
+                                    <li style="display: none;">
+                                        <a href="#">Remove Highly Corelated Features</a>
+                                    </li>
+                                    <li>
+                                        <a id="lirenameCols" href="{{renameCols}}">Rename Columns</a>
+                                    </li>
+                                    <li>
+                                        <a id="liresample" href="{{resample}}">Resample Data</a>
+                                    </li>
+                                </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow open" href="#">ML Modeling</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulML">
+                                    <li>
+                                        <a id="lituneParams" href="{{tuneParams}}">Tune Parameters</a>
+                                    </li> 
+                                    <li>
+                                        <a id="lirunModel" href="{{runModel}}">Models</a>
+                                    </li>
+                                    
+                                    <!-- <li>
+                                        <a href="{{randomForest}}">Random Forest</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{xgBoost}}">XGBoost</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{MLP}}"> Multi-Layer Perceptron (MLP)</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{GBC}}">Gradient Boosting</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{KNN}}">K Nearest Neighbors (KNN)</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{SVM}}">Support Machine Vector (SVM)</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{BC}}">Bagging Classifier</a>
+                                    </li> -->
+                                </ul>   
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow open" href="#"  id="liDataV">Model Validation</a>
+                                <ul class="list-unstyled navbar__sub-list js-sub-list" id="ulModelVal">
+                                    <li>
+                                        <a id="lidocumentation" href="{{documentation}}">Documentation</a>                                         
+                                    </li> 
+                                    <li class="has-sub">  
+                                        <a class="js-arrow open" href="#" >Input & Data Integrity</a> 
+                                        <ul class="list-unstyled navbar__sub-list js-sub-list" id="sub_sub_menu" style="display: none;">
+                                            <li>
+                                                <li>
+                                                    <a id="liconfirmSrc"  href="{{confirmSrc}}">Confirm Datasource & Data Quality</a>
+                                                </li>
+                                            </li> 
+                                          
+                                           <li>
+                                                <a href="{{WIP}}">Data Consistency (Stability)</a>
+                                            </li>
+                                            <li>
+                                                <a id="lidataIntegrity" href="{{dataIntegrity}}">Data Integrity</a>
+                                            </li> 
+                                        </ul>
+                                    </li> 
+                                    <li>
+                                        <a id="liconceptualsoundness"  href="{{conceptualsoundness}}">Conceptual Soundness</a>                                         
+                                    </li> 
+                                    <li class="has-sub">
+                                        <a style="cursor: default;" class="js-arrow open" href="#">Model Performance & Testing</a>
+                                        <ul class="list-unstyled navbar__sub-list js-sub-list" id="sub_sub_menu3" style="display: none;">
+                                            <li>
+                                                <a id="lireplication" href="{{replication}}"  style="cursor: default;" >Replication</a>
+                                            </li> 
+                                            <li>
+                                                <a id="liimportScnData" href="{{importScnData}}"  style="cursor: default;" >Scenario Analysis</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{WIP}}"  style="cursor: default;" >Testing </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{WIP}}"  style="cursor: default;" >Performance </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{WIP}}"  style="cursor: default;" >Backtesting </a>
+                                            </li>
+                                            <li>
+                                                <a href="{{WIP}}"  style="cursor: default;" >Benchmarking </a>
+                                            </li>
+                                            
+                                        </ul>
+                                    </li> 
+                                    <li>
+                                        <a id="liimpCtrl" href="{{impCtrl}}">Implementation & Controls</a>
+                                        
+                                    </li> 
+                                    <li>
+                                        <a id="limodelUsage" href="{{modelUsage}}">Model Usage</a>
+                                        
+                                    </li> 
+                                    <li class="has-sub">
+                                        <a class="js-arrow open" href="#">Governance & Oversight</a>
+                                        <ul class="list-unstyled navbar__sub-list js-sub-list" id="sub_sub_menu6" style="display: none;">
+                                            <li>
+                                                <a href="{{WIP}}">Governance Committee</a>
+                                            </li>  
+                                            <li>
+                                                <a href="{{WIP}}">Audit & Regulatory Compliance</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{WIP}}">Roles & Responsibilities</a>
+                                            </li>
+                                        </ul>
+                                        
+                                    </li> 
+                                    
+                                    <li>
+                                        <a id="livalFindings" href="{{valFindings}}">Validation Findings</a>
+                                    </li>
+                                </ul>   
+                        </li>
+                        <li>
+                            <a id="liReport" href="#" onclick="selectTemplate()">Validation Report</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+        <!-- END MENU SIDEBAR-->
+
+        <!-- PAGE CONTAINER-->
+        <div class="page-container" div="divMainContent">
+            <!-- HEADER DESKTOP-->
+            <header class="header-desktop">
+                <div class="section__content section__content--p30">
+                    <div class="container-fluid">
+                        <div class="header-wrap">
+                            <form class="form-header" action="" method="POST">
+                                <input class="au-input au-input--xl" style="display:none;" type="text" name="search" placeholder="Search for datas &amp; reports..." />
+                                <button class="au-btn--submit" style="display: none;" type="submit">
+                                    <i class="zmdi zmdi-search"></i>
+                                </button>
+                            </form>
+                            <div class="header-button">
+                                <div style="display: none;"  class="noti-wrap">
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-comment-more"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="mess-dropdown js-dropdown">
+                                            <div class="mess__title">
+                                                <p>You have 2 news message</p>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Michelle Moreno" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Michelle Moreno</h6>
+                                                    <p>Have sent a photo</p>
+                                                    <span class="time">3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Diane Myers" />
+                                                </div>
+                                                <div class="content">
+                                                    <h6>Diane Myers</h6>
+                                                    <p>You are now connected on message</p>
+                                                    <span class="time">Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="mess__footer">
+                                                <a href="#">View all messages</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-email"></i>
+                                        <span class="quantity">1</span>
+                                        <div class="email-dropdown js-dropdown">
+                                            <div class="email__title">
+                                                <p>You have 3 New Emails</p>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-06.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, 3 min ago</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-05.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, Yesterday</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__item">
+                                                <div class="image img-cir img-40">
+                                                    <img src="images/icon/avatar-04.jpg" alt="Cynthia Harvey" />
+                                                </div>
+                                                <div class="content">
+                                                    <p>Meeting about new dashboard...</p>
+                                                    <span>Cynthia Harvey, April 12,,2018</span>
+                                                </div>
+                                            </div>
+                                            <div class="email__footer">
+                                                <a href="#">See all emails</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="noti__item js-item-menu">
+                                        <i class="zmdi zmdi-notifications"></i>
+                                        <span class="quantity">3</span>
+                                        <div class="notifi-dropdown js-dropdown">
+                                            <div class="notifi__title">
+                                                <p>You have 3 Notifications</p>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c1 img-cir img-40">
+                                                    <i class="zmdi zmdi-email-open"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a email notification</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c2 img-cir img-40">
+                                                    <i class="zmdi zmdi-account-box"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>Your account has been blocked</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__item">
+                                                <div class="bg-c3 img-cir img-40">
+                                                    <i class="zmdi zmdi-file-text"></i>
+                                                </div>
+                                                <div class="content">
+                                                    <p>You got a new file</p>
+                                                    <span class="date">April 12, 2018 06:50</span>
+                                                </div>
+                                            </div>
+                                            <div class="notifi__footer">
+                                                <a href="#">All notifications</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div >
+                                    <img id="imgStatus" src=""  alt="" style="height: 45px;"/>
+                                </div>
+                                <div class="account-wrap">
+                                  
+                                    <div class="account-item clearfix js-item-menu">
+                                        
+                                        <div class="content">
+                                            <a class="js-acc-btn" href="#">User1</a>
+                                        </div>
+                                        <div class="account-dropdown js-dropdown">
+                                            <div style="display: none;"  class="info clearfix">
+                                                <div class="image">
+                                                    <a href="#">
+                                                        <img src="images/icon/avatar-001.jpg" alt="" />
+                                                    </a>
+                                                </div>
+                                                <div class="content">
+                                                    <h5 class="name">
+                                                        <a href="#">User1</a>
+                                                    </h5>
+                                                    <span class="email">johndoe@example.com</span>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__body">
+                                                <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-account"></i>Account</a>
+                                                </div>
+                                                <div class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-settings"></i>Setting</a>
+                                                </div>
+                                                <div style="display:none;" class="account-dropdown__item">
+                                                    <a href="#">
+                                                        <i class="zmdi zmdi-money-box"></i>Billing</a>
+                                                </div>
+                                            </div>
+                                            <div class="account-dropdown__footer">
+                                                <a href="#">
+                                                    <i class="zmdi zmdi-power"></i>Logout</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <!-- HEADER DESKTOP-->
+
+            <!-- MAIN CONTENT-->
+            <div class="main-content" >
+                <div style="display: none;margin-left: 5%;margin-top: 25%;width:90%;background-color: inherit" id="divProgress">
+                    <div style="text-align: center;background-color: inherit">Processing request...</div>
+                    <div class="progress mb-3" >                       
+                        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="25"
+                         aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                
+                
+                <div id="divContainer" class="container-fluid"> 
+                  
+                    {% block style %}
+                    {% endblock style %}
+                    {% block content %}
+                    {% endblock content %}
+                    {% block script %} 
+                        <!-- Jquery JS-->
+                  
+                        
+                    {% endblock script %}
+                </div>
+                 
+            </div>
+            <!-- END MAIN CONTENT-->
+            <!-- END PAGE CONTAINER-->
+        </div>
+        <div id="divTemplate" title="Report Template" style="display: none;width:70%;height: 70%;">
+            <div class="row form-group"> 
+                <div class="col-12 col-md-12">  
+                    Select a report template to proceed.
+                </div>
+            </div>
+        </div> 
+    </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.min.js' %}" type="text/javascript"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>    -->
+     <script src="{% static 'vendor/jquery-ui.min.js' %}"></script> 
+    <!-- Bootstrap JS-->
+    <script src="{% static 'vendor/bootstrap-4.1/popper.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-4.1/bootstrap.min.js' %}"></script>
+    <!-- Vendor JS       -->
+    <script src="{% static 'vendor/slick/slick.min.js' %}">
+    </script>
+    <script src="{% static 'vendor/wow/wow.min.js' %}"></script>
+    <script src="{% static 'vendor/animsition/animsition.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-progressbar/bootstrap-progressbar.min.js' %}">
+    </script>
+    <script src="{% static 'vendor/counter-up/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'vendor/counter-up/jquery.counterup.min.js' %}">
+    </script>
+    <script src="{% static 'vendor/circle-progress/circle-progress.min.js' %}"></script>
+    <script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.js' %}"></script>
+    <script src="{% static 'vendor/chartjs/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'vendor/select2/select2.min.js' %}">
+    </script>
+    
+    <!-- Main JS-->
+  <script src="{% static 'js/main.js' %}"></script> 
+      <!-- <script src="{% static 'jquery-3.5.1.js' %}"></script>
+    
+    <script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script> -->
+    <script src="{% static 'dataTables.min.js' %}"></script>  
+    <script type="text/javascript">
+    var actColor='#007bff';
+        $(document).ready( function () {  
+            actPage=(window.location.pathname.split('/')[2])
+            $('#liDataV').click(function(){
+                $('#sub_sub_menu').hide();
+                $('#sub_sub_menu2').hide();
+                $('#sub_sub_menu3').hide();
+                $('#sub_sub_menu4').hide();
+                $('#sub_sub_menu5').hide();
+                $('#sub_sub_menu6').hide();
+                $('#sub_sub_menu7').hide();
+            }); 
+             
+            if(actPage=='viewDataType'){
+                $('#liviewDataType').css('color',actColor); 
+                $('#ulDtDesc').show()
+            }
+            else if(actPage=='showCatColFreq'){
+                $('#lishowCatColFreq').css('color',actColor); 
+                $('#ulDtDesc').show()
+            }
+            else if(actPage=='viewNumData'){
+                $('#liviewNumData').css('color',actColor); 
+                $('#ulDtDesc').show()
+            }
+            else if(actPage=='showcorrelation'){
+                $('#lishowcorrelation').css('color',actColor); 
+                $('#ulDtDesc').show()
+            }
+            else if(actPage=='dist_numevari_catvar'){
+                $('#lidist_numevari_catvar').css('color',actColor); 
+                $('#ulDtDesc').show()
+            }
+            else if(actPage=='setScheduler'){
+                $('#lisetScheduler').css('color',actColor); 
+                $('#ulAdm').show()
+            } 
+            else if(actPage=='setProfile'){
+                $('#lisetProfile').css('color',actColor); 
+                $('#ulAdm').show()
+            } 
+            else if(actPage=='contacts'){
+                $('#licontacts').css('color',actColor); 
+                $('#ulAdm').show()
+            } 
+            else if(actPage=='policies'){
+                $('#lipolicies').css('color',actColor); 
+                $('#ulAdm').show()
+            } 
+            else if(actPage=='processStatus'){
+                $('#liprocessStatus').css('color',actColor); 
+                $('#ulAdm').show()
+            } 
+            else if(actPage=='modelValReq'){
+                $('#limodelValReq').css('color',actColor); 
+                $('#ulAdm').show()
+            } 
+            else if(actPage==''){
+                $('#lihome').css('color',actColor); 
+                $('#ulDIP').show()
+            }
+            else if(actPage=='dataCleaning'){
+                $('#lidataCleaning').css('color',actColor); 
+                $('#ulDIP').show()
+            }
+            else if(actPage=='updateData'){
+                $('#liupdateData').css('color',actColor); 
+                $('#ulDIP').show()
+            }
+            else if(actPage=='showUniVarChartTypes' || actPage=='showDistPlot' || actPage=='showPieChart' || actPage=='showBoxPlot' || actPage=='showCatCountPlot'){
+                $('#lishowUniVarChartTypes').css('color',actColor); 
+                $('#ulDataVisualization').show()
+            }
+            else if(actPage=='showChartTypes' || actPage=='plotinsoccuvsincstate' || actPage=='plotinsoccuvsincstatestacked' ||
+                    actPage=='stripplot' || actPage=='vardistbyfraud' || actPage=='totalclaim_boxplot' || actPage=='vehicleclaim' || actPage=='scattred3d'){
+                $('#lishowChartTypes').css('color',actColor); 
+                $('#ulDataVisualization').show()
+            }
+            else if(actPage=='selCols'){
+                $('#liselCols').css('color',actColor); 
+                $('#ulDataVisualization').show()
+            } 
+            else if(actPage=='missingData'){
+                $('#limissingData').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='dropfeatures'){
+                $('#lidropfeatures').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='detect_outliers'){
+                $('#lidetect_outliers').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='dummy_vars'){
+                $('#lidummy_vars').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='std_features'){
+                $('#listd_features').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='test_multicollinearity'){
+                $('#litest_multicollinearity').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='renameCols'){
+                $('#lirenameCols').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='resample'){
+                $('#liresample').css('color',actColor); 
+                $('#ulDtPrep').show()
+            }
+            else if(actPage=='tuneParams'){
+                $('#lituneParams').css('color',actColor); 
+                $('#ulML').show()
+            }
+            else if(actPage=='runModel'){
+                $('#lirunModel').css('color',actColor); 
+                $('#ulML').show()
+            }
+            else if(actPage=='documantation'){
+                $('#lidocumentation').css('color',actColor); 
+                $('#ulModelVal').show()
+            }
+            else if(actPage=='conceptualsoundness'){
+                $('#liconceptualsoundness').css('color',actColor); 
+                $('#ulModelVal').show()
+            }
+            else if(actPage=='impCtrl'){
+                $('#liimpCtrl').css('color',actColor); 
+                $('#ulModelVal').show()
+            }
+            else if(actPage=='modelUsage'){
+                $('#limodelUsage').css('color',actColor); 
+                $('#ulModelVal').show()
+            }
+            else if(actPage=='valFindings'){
+                $('#livalFindings').css('color',actColor); 
+                $('#ulModelVal').show()
+            } 
+            else if(actPage=='confirmSrc'){
+                $('#liconfirmSrc').css('color',actColor); 
+                $('#ulModelVal').show()
+                $('#sub_sub_menu').show()
+            } 
+            else if(actPage=='dataIntegrity'){
+                $('#lidataIntegrity').css('color',actColor); 
+                $('#ulModelVal').show()
+                $('#sub_sub_menu').show()
+            } 
+            else if(actPage=='replication'){
+                $('#lireplication').css('color',actColor);  
+                $('#ulModelVal').show()
+                $('#sub_sub_menu3').show()
+                $('#sub_sub_menu3').scrollTop($('#sub_sub_menu3 li:nth-child(3)').position().top);
+            } 
+            else if(actPage=='importScnData'){
+                $('#liimportScnData').css('color',actColor); 
+                $('#ulModelVal').show()
+                $('#sub_sub_menu3').show()
+                var $box_parent = $('#liimportScnData').parent()
+                var top_offset = $box_parent.position().top;
+                console.log('top_offset ',$('#liimportScnData').position().top,top_offset,$('#ulModelVal').position().top)
+                console.log('top_offset ' ,$('#ulML').position().top)                
+            }
+            else if(actPage=='Report'){
+                $('#liReport').css('color',actColor); 
+                            
+            }
+            getProcessDone() //to be uncommented
+            window.addEventListener("beforeunload", function(event) {console.log('on beforeunload'), showProgress();});
+            $('img').each(function(){
+                var date = new Date;      
+                // add the current unix timestamp in microseconds to the the image src as a query string 
+                     this.src = this.src + '?' + date.getTime();   
+            });
+        } );
+         function hideSubSubMenus()
+         { 
+            $("#divIDISub").attr("style", "display:none");
+           
+         }
+         function showProgress(){
+                $("#divProgress").show();
+                $("#divContainer").hide();
+         }
+
+        function showdivDataQuality11()
+        {   
+        $("#divDataQuality").dialog({   
+            width: "50%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Yes",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {  
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "No",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function getProcessDone(){
+        $.ajax({
+            url: '/getProcessDone/', 
+            data:{  },
+            dataType: 'json',
+            success: function (data) { 
+               $("#imgStatus").attr("src","/static/images/"+data.idx+".png"); 
+                
+            }
+          }); 
+    }
+   
+    function  gotohome()
+    {
+        window.location="{% url 'home' %}"
+    }
+
+    function selectTemplate()
+    {
+        $("#divTemplate").dialog({   
+            width: "40%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "General",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                         
+                        $(this).dialog("close");
+                        window.location="{% url 'Report' %}"
+                    }
+                },
+                {
+                    text: "Varo",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                        window.location="{% url 'VaroReport' %}"
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close"); 
+                    }
+                }
+            ],  
+        });
+        return false;
+        //return false;
+    }
+</script>
+</body>
+
+</html>
+<!-- end document-->

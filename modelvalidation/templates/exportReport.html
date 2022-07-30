@@ -1,0 +1,125 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% load static %} 
+{% block style %} 
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> 
+{% endblock style %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;">   
+        
+  
+               
+                <div class="col-lg-7">
+                    <div class="card">
+                        <div class="card-header">
+                            <strong>Consolidated Report</strong> 
+                        </div>
+                        <div class="card-body card-block">                           
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Title </label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="text" style="border-color: black;" id="txtTitle" name="text-input" class="form-control-sm form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Sub Title 1 </label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="text" style="border-color: black;" id="txtSubTitle1" name="text-input" class="form-control-sm form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Sub Title 2 </label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="text" style="border-color: black;" id="txtSubTitle2" name="text-input" class="form-control-sm form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Sub Title 3 </label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <input type="text" style="border-color: black;" id="txtSubTitle3" name="text-input" class="form-control-sm form-control">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3">
+                                        <label class=" form-control-label">Comments </label>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                         <textarea id="txtComments" rows="4" style="resize: none; border:1px solid black;width: 100%;" ></textarea>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;">  
+                                <a href="{{ pdfFile }}" download id="downRpt" target="_blank"> &nbsp;<i class="fa fa-download" style="font-size: 12px;" title="Export to PDF"></i> </a>
+                                &nbsp;&nbsp;<button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" onclick="generateReport()" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="downRptclick()" >Cancel</button>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+   
+</div>
+</form>   
+                        {% endblock content %}
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript">   
+    window.onload=function(){
+        document.getElementById('txtComments').addEventListener('keydown', function(e) {
+          if (e.key == 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) +
+              "\t" + this.value.substring(end);
+        
+            // put caret at right position again
+            this.selectionStart =
+              this.selectionEnd = start + 1;
+          }
+        });
+    };
+
+    function generateReport(){ 
+        $.ajax({
+            url: '/generateReport/',  
+            data:{ Title:$("#txtTitle").val(),SubTitle1:$("#txtSubTitle1").val(),SubTitle2:$("#txtSubTitle2").val(),SubTitle3:$("#txtSubTitle3").val(), Comments:$("#txtComments").val() },
+            dataType: 'json',
+            success: function (data) {
+              
+               if(data.is_taken){
+                    console.log(data) 
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        
+    }
+
+    function downRptclick(){ 
+       // $('#downRpt').onclick = function(){ console.log('clicked')};
+    }
+
+    function myScript(){
+        console.log('clicked')
+    }
+
+ </script>
+{% endblock script %} 

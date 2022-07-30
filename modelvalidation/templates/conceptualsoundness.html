@@ -1,0 +1,912 @@
+{% extends 'base.html' %} 
+{% url 'exportReport' as exportReport %} 
+{% url 'openFile' as openFile %} 
+{% load static %} 
+{% block style %} 
+<!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">  -->
+<link href="{% static 'css/jquery-ui.css' %}" rel="stylesheet" media="all"> 
+<style>
+    .fullCircleGreen
+{
+  width: 20px;
+  height:20px;
+  bordeR: 1px solid;
+  border-radius: 50%;
+  border-color:green;
+  background-color: green;
+  margin-left: 5px;
+  }
+
+.fullCircleRed
+{
+  width: 20px;
+  height:20px;
+  bordeR: 1px solid;
+  border-radius: 50%;
+  border-color:red;
+  background-color: red;
+  margin-left: 5px;
+  }
+  
+  .blob {
+	background: orange;
+	border-radius: 50%;
+	margin: 7px 0px 0px 0px;
+	height: 15px;
+	width: 15px;
+
+	box-shadow: 0 0 0 0 rgb(228, 100, 15);
+	transform: scale(1);
+	animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.7);
+	}
+
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 165,0, 0);
+	}
+
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 165,0, 0);
+	}
+}
+
+/* Speech bubble with a border */
+
+.bubble {
+	position: absolute;
+	background: #292b37;;
+	border: 1px solid #292b37;
+    color: white;
+    padding: 5px;
+}
+.bubble:after, .bubble:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.bubble:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-right-color: #292b37;
+	border-width: 10px;
+	margin-top: -10px;
+}
+.bubble:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-right-color: #292b37;
+	border-width:11px;
+	margin-top: -11px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+<div class="col-lg-2">
+       
+</div> 
+<div style="margin-left:auto;display: flex; justify-content:center;"> 
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                Conceptual Soundness
+            </div>
+            <div class="card-body card-block" style="padding-bottom: 0;">
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-4" style="display: flex; justify-content: flex-start; margin-left:1px; margin-bottom:5px;"> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:0px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addtitle.png" onclick="showTitles()" title="Add Title" style="cursor:pointer;">
+                            <!-- <a href="#" style="color:black;"> &nbsp;<i class="fa fa-text-width" style="font-size: 12px;"  onclick="showTitles()" title="Add Title"></i> </a> -->
+                        </div> 
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\save.png" onclick="addToReport()" title="Save" style="cursor:pointer;">
+                            <!-- <a href="#" style="color:black;"> &nbsp;<i class="fa fa-edit" style="font-size: 12px;"  onclick="addToReport()" title="Add comment"></i> </a> -->
+                        </div> 
+                        <div style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\addimage.png" onclick="showImages()" title="Insert Figures/Tables" style="cursor:pointer;">
+                            <!-- <a href="#"  style="color:black;" onclick="showImages()" > &nbsp;<i class="fa fa-picture-o" style="font-size: 12px;" title="Insert picture"></i> </a> -->
+                        </div>  
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:21px;">
+                            <img src="\static\images\equation.png" title="Equation Editor" style="cursor:pointer;">
+                        </div>  
+                        <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src="\static\images\symbol.png" title="Symbols" style="cursor:pointer;">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4"   style="display: flex; justify-content:center; margin-left:1px; margin-bottom:5px;"> 
+                      
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\documents.png'  title="Documents" style='cursor:pointer;' onclick="showDocs()"/>
+                        </div>   
+                        <div  style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\reference.png'  title="References" style='cursor:pointer;' onclick="showReferences()"/>
+                        </div>  
+                    </div>
+                    <div class="col-12 col-md-4"   style="max-width: 33%;display: flex; justify-content: flex-end; margin-left:1px; margin-bottom:5px;"> 
+                        <div style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\previewcomment.png' onclick="showRptPrv()" title="Preview" style='cursor:pointer;'/>
+                            <!-- <a href="#"  style="color:black;" onclick="showRptPrv()"> &nbsp;<i class="fa fa-check-square-o" style="font-size: 12px;" title="Preview"></i> </a> -->
+                        </div> 
+                        <!-- <div style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <img src='\static\images\save.png' onclick="generateReport()" title="Save" style='cursor:pointer;'/>
+                            to be commented <a href="#"  style="color:black;" onclick="generateReport()"> &nbsp;<i class="fa fa-save" style="font-size: 12px;" title="Save"></i> </a> 
+                        </div>   -->
+                        <div  style="display:none;border:solid 1px #b0acab; width: 24x;height:24px; margin-left:4px;text-align:center;line-height:20px;">
+                            <a href="{{ pdfFile }}" style="color:black;width:20px"  download id="downRpt" target="_blank"> <img src='\static\images\download.png'  title="Export to pdf" style='cursor:pointer;' /> </a>
+                        </div>
+                        <div  style="display:none;border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">   
+                            <img src='\static\images\processstatus.png' onclick="showProcess()" title="Process status"  style='cursor:pointer;'/>
+                        </div>
+                        <div  style="border:solid 1px #b0acab; width: 24px;height:24px; margin-left:4px;text-align:center;line-height:20px;">   
+                            <img src='\static\images\help.png' title="Help"  style='cursor:pointer;'/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row form-group"> 
+                    <div class="col-12 col-md-12">
+                            <textarea id="txtComments" rows="15" style="resize: none;width: 100%;font-size: 10pt;" class="form-control form-control-sm"></textarea>
+                    </div>
+                </div>
+            </div>  
+            <div class="card-footer">  
+                <div class="row" style="display: flex; justify-content: flex-end">  
+                    <button  class="btn btn-primary btn-sm"    onclick="goNext()" style="margin-left: 10px;" type="button">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>   
+</div>
+
+<div id="divTitles" title="Add Title" style="display: none;width:40%">
+    <div style="width:100%"> 
+        <div class="row form-group">
+            <div class="col-12 col-md-12"> 
+                <select id="selectSecTitle" onchange="getTitle()" class="form-control-sm form-control"> 
+                    <option value="0">Select Title</option>
+                    <option value="1">Literature Reviewast/Similar Model Reference</option>
+                    <option value="2">Consideration Of Alternative Theories</option>
+                    <option value="3">Model Assumptions</option>
+                    <option value="4">Appropriate Model (Reasoning Aligned With Business And Data)</option>
+                    <option value="5">Splitting Data</option>
+                    <option value="6">Data Sampling</option>
+                    <option value="7">Data Transformation</option>
+                    <option value="8">Standardize Features (Normalization)</option>
+                    <option value="9">Variable Selection (Quantitative & Qualitative)</option>
+                    <option value="10">Balance Data (Automated)</option>
+                    <option value="11">Different Methods/Algorithms</option>
+                    <option value="12">Tune Parameters (Random And Grid Search)</option>
+                    <option value="-1">Add New</option>  
+                </select>
+                <input type="text" style="border-color: black;display: none;" id="txtTitle"  class="form-control-sm form-control">
+                <input type="text" style="border-color: black;display: none;" id="txtTitleCnt" value="0"  class="form-control-sm form-control">
+            </div> 
+            <!-- <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px">
+                <select id="selectSubTitle" onchange="getSubTitle()" class="form-control-sm form-control">
+                    <option value="0">Select Sub Title</option> 
+                    <option value="-1">Add New</option>
+                </select>  
+                <input type="text" style="border-color: black;display:none;" id="txtSubTitle" class="form-control-sm form-control"> 
+                <input type="text" style="border-color: black;display:none;" id="txtSubTitleCnt"  value="0" class="form-control-sm form-control">
+            </div>
+            <div class="col-12 col-md-4" style="max-width: 30%;padding-right: 0px">
+                <select id="selectSubSubTitle" onchange="getSubSubTitle()" class="form-control-sm form-control">
+                    <option value="0">Select Sub Sub Title</option> 
+                    <option value="-1">Add New</option>
+                </select>  
+                <input type="text" style="border-color: black;display:none;" id="txtSubSubTitle"  class="form-control-sm form-control"> 
+                <input type="text" style="border-color: black;display:none;" id="txtSubSubTitleCnt"  value="0" class="form-control-sm form-control"> 
+
+            </div> -->
+            <!-- <div class="col-12 col-md-1"> 
+                <input type="text" style="border-color: black;" id="txtSubTitle1" name="text-input" class="form-control-sm form-control"> 
+                <button type="button" id="btnAddTitle" onclick="AddSection()" class="btn btn-primary btn-sm">Add</button>
+            </div> -->
+            
+        </div> 
+        
+   </div> 
+</div>
+<div id="divDeleteComment" title="Delete comment" style="display: none;width:70%;height: 70%;">
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12">  
+            Are you sure you want to delete comment?
+        </div>
+    </div>
+</div>
+
+<div id="divReferences" title="Policies" style="display: none;width:70%;height: 70%;">
+    <div class="row form-group"> 
+        <div class="table-responsive table--no-card m-b-40">
+            <table id="policies" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr> 
+                        <th style="padding: 10px 0px 10px 10px;">Policy</th> 
+                        <th style="padding: 10px 0px 10px 10px;">Reference</th> 
+                        <th style="padding: 10px 0px 10px 10px;">Add</th>    
+                    </tr>
+                </thead>  
+                <tbody>
+                {% for data in policiesLst %} 
+                        <tr>
+                            <!-- <td  style='display: none;'>{{data.policyIdx}}</td>    -->
+                            <td>{{data.policy}}</td>                                                                            
+                            <td>{{data.reference}}</td> 
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" id="btn_{{data.policyIdx}}" onclick="addRefer('{{data.policy}}','{{data.reference}}')">Add</button> 
+                            </td>
+                        </tr> 
+                {% endfor %}
+                </tbody>
+               </table>
+        </div>
+    </div>
+</div>
+
+<div id="divDocs" title="Documents" style="display: none;width:70%;">
+    <div class="row form-group"> 
+        <div class="table-responsive table--no-card m-b-40"> 
+            <table id="tbldocs" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr> 
+                        <th style="padding: 10px 0px 10px 10px;">Document Type</th> 
+                        <th style="padding: 10px 0px 10px 10px;">Document Name</th>  
+                    </tr>
+                </thead>  
+                <tbody>
+                    {% for data in modelDocs %} 
+                        <tr>
+                            {% if data.docref == None %} 
+                                <td>{{data.doc}}</td>   
+                            {%else%} 
+                                <td><div style="display: flex;">
+                                        <div style="margin-right: 10px;">{{data.doc}}</div>   
+                                        <div class="blob" id="div_{{data.docIdx}}" title="View Comments" onclick="showdocCom(this.id,'{{data.docref}}')"></div>
+                                    </div>
+                                </td>    
+                            {%endif%}          
+                            <td><a href="\static\document_files\{{data.doc_file}}"  target="_blank">{{data.doc_file}}</a></td>                                                                                             
+                            <!-- <td><a href="\static\document_files\{{data.doc_file}}" target="_blank">{{data.doc_file}}</a></td>                           -->
+                        </tr> 
+                    {% endfor %}
+                {% if modelUsage%}
+                <tr>
+                    <td>Model Usage</td>                                                                            
+                    <td><a href="{{modelUsageFile}}" target="_blank">Model Owner's Comments</a></td>                          
+                </tr> 
+                {% endif %}
+                </tbody>
+               </table>
+        </div>
+    </div>
+</div>
+
+<div id="divRptPrv" title="Preview comment (Double click to edit text. Right click to delete text.)" style="display: none;width:70%;height: 70%;" >
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12"> 
+
+             <div id="divReportOutput" style="font-size: 12pt;border:1px solid black;width: 100%;height: 500px;white-space: pre-wrap;overflow: scroll;"></div>
+        </div>
+    </div>
+</div>
+<div id="divProcesStatus" title="Process Status" style="display: none;width:70%;height: 70%;" >
+    <div class="row form-group"> 
+        <div class="col-12 col-md-12"> 
+            <div class="table-responsive table--no-card m-b-40">
+                <table id="missingData" class="table table-borderless table-striped table-earning">
+                <thead>
+                    <tr>
+                        <th>Process</th>
+                        <th>Status</th> 
+                    </tr>
+                </thead>  
+                <tbody>      
+                    {% for data in df %}
+                    <tr> 
+                        <td>
+                            {{data.Process}}
+                        </td>
+                        <td>
+                            <!-- {{data.Status}} -->
+                            {% if data.Status == 'Done' %}
+                                <div class="fullCircleGreen"></div>
+                            {% else %}
+                                <div class="fullCircleRed"></div>                                                 
+                            {% endif %}
+                        </td>                                            
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div> 
+        </div>
+    </div>
+</div>
+<div id="divImg" title="Add image" style="display: none;width:70%">
+    <div style="width:100%"> 
+            
+        <div class="row form-group"> 
+            <div class="col-12 col-md-2" style="max-width: 10%;padding-right: 0px;"> 
+                Image <a   href="" download id="downChartRpt" target="_blank" style="display: none;color: Red; margin-left:10px"> 
+                    <i class="fa fa-external-link"  style="font-size: 12px;"></i> </a>
+            </div>
+            <div class="col-12 col-md-3"> 
+                <select  id="selectImg" class="form-control" style="height: 30px;" onchange="getImg()">        
+                    <option value="Select">Select</option> 
+                    {% for data in imgFiles %}
+                        <option  value="{{data.destination}}">{{data.chartType}} - {{data.chartImg}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12 col-md-2"> 
+                <select  id="selectImgAlign" class="form-control" style="height: 30px;">        
+                    <option value="Select">Align</option>  
+                    <option value="left">Left</option>  
+                    <option value="center">Center</option>  
+                    <option value="right">Right</option>  
+                </select>
+            </div>
+            <div class="col-12 col-md-3" style="max-width: 30%;">
+                <input type="text" style="border:1px solid black;width:100%;text-align: center;" placeholder="Image Title" value="{{imgPDFFile}}"  id="txtImgTitle"/> 
+            </div>
+            <div class="col-12 col-md-2"> 
+                <select  id="selectTitleAlign" class="form-control" style="height: 30px;">        
+                    <option value="Select">Align</option>  
+                    <option value="top">Top</option>  
+                    <option value="bottom">Bottom</option>   
+                </select>
+            </div>
+        </div>
+        <div class="row form-group"> 
+
+            <div class="col-12 col-md-2" style="max-width: 10%;"> 
+                Resize 
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_25" value="0.25" onchange="resizeImg(25)" name="rb_resize"/> 25%  
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_50" value="0.50" onchange="resizeImg(50)" name="rb_resize"/> 50%   
+            </div>
+            <div class="col-12 col-md-1"> 
+                <input type="radio" id="chk_75" value="0.75" onchange="resizeImg(75)" name="rb_resize"/> 75%   
+            </div>
+            <div class="col-12 col-md-2"> 
+                <input type="radio" id="chk_100" value="1" onchange="resizeImg(100)" checked="checked" name="rb_resize"/> 100%   
+            </div>
+        </div>
+        <div class="row form-group"> 
+            <div class="col-12 col-md-1"> 
+            </div>
+            <div class="col-12 col-md-10"> 
+                <img id="imgGraph" src="" style="height: 400px;width:100%"> 
+            </div> 
+        </div>
+        
+   </div> 
+</div>
+<div  title="Generating Report"  style="display: none;background-color: inherit" id="divRptProgress">
+    <div style="text-align: center;background-color: inherit">Processing request...</div>
+    <div class="progress mb-3"  >                       
+        <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="25"
+         aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+</div>
+<input type="text" style="display: none;" id="txtreqId"/>
+<input type="text" style="display: none;" id="txtSecId"/>
+<input type="text" style="display: none;" id="txtSubSecId"/>
+</form>   
+{% endblock content %}   
+{%  block script %}  
+<!-- <script src="{% static 'bootstrap_datepicker/js/bootstrap-datepicker.js' %}"></script> -->
+ 
+ 
+<script type="text/javascript"> 
+    let refnum=0;  
+    window.onload=function(){ 
+        $('#txtComments').css("height",($(document).height()*0.50)+"px");
+       // document.addEventListener('contextmenu', event => event.preventDefault());
+       divId='nodiv'
+        $('.blob').click(function(e){  
+            screenY=e.pageY;
+            screenX= e.pageX;  
+            $("#divDocComments").css({top:screenY-25, left:screenX+20   , position:'absolute'});      
+           });
+        $('#tblDocs').DataTable({
+            sDom: 'lrtip',
+            "ordering": false,
+            scrollY: 280, 
+            scroller: true,
+            paging:         false,
+            info:false
+            });
+        document.getElementById('txtComments').addEventListener('keydown', function(e) {
+          if (e.key == 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+        
+            // set textarea value to: text before caret + tab + text after caret
+            this.value = this.value.substring(0, start) +
+              "\t" + this.value.substring(end);
+        
+            // put caret at right position again
+            this.selectionStart =
+              this.selectionEnd = start + 1;
+          }
+        });
+    };
+
+    function showdocCom(id,ref){  
+         
+        if(id==divId){
+            $('#divDocComments').hide() 
+            divId='';
+        }
+        else{
+            divId=id;
+            $("#divDocComments").empty();
+            $("#divDocComments").append(ref);
+            $("#divDocComments").show();
+            
+        }
+       // alert(ref)
+    }
+    
+    function addRefer(pol,ref){
+        refnum=refnum+1;
+        unicodesarr={'1':'\u00b9','2':'\u00b2','3':'\u00b3','0':'\u2070','4':'\u2074','5':'\u2075','6':'\u2076','7':'\u2077','8':'\u2078','9':'\u2079' 	}
+        $.ajax({
+            url: '/addRptRef/', 
+            data:{ policy: pol,reference:ref },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                refnum=data.refNo
+                if(refnum<10){
+                    $("#txtComments").val($("#txtComments").val()+unicodesarr[refnum])
+                }
+                else{
+                    val=refnum/10;
+                    remain=refnum%10;
+                    $("#txtComments").val($("#txtComments").val()+unicodesarr[val]+unicodesarr[remain]) 
+                   // $("#txtComments").val($("#txtComments").val()+'\u00b9\u2070');
+                }
+               }
+            }
+        });
+        
+            //alert((policy+ ' ,' +reference)) 
+        $("#divReferences").dialog("close");
+    }
+
+    function showDocs(){
+        $("#divDocs").dialog({   
+          width: "50%", 
+          modal: true,
+          buttons: [
+              {
+                  text: "Cancel",
+                  "class": 'btn btn-primary btn-sm',
+                  click: function() {
+                      // Save code here
+                      $(this).dialog("close");
+                  }
+              }
+          ],  
+      }); 
+  
+  }
+
+
+    function showReferences(){
+        $("#divReferences").dialog({   
+          width: "70%",   
+          modal: true,
+          buttons: [
+              {
+                  text: "Cancel",
+                  "class": 'btn btn-primary btn-sm',
+                  click: function() {
+                      // Save code here
+                      $(this).dialog("close");
+                  }
+              }
+          ],  
+      }); 
+  
+  }
+
+    function generateReport(){  
+        $("#divRptProgress").dialog({   
+            width: "70%",   
+            modal: true, 
+            height:150,
+        });
+        $.ajax({
+            url: '/generateReport/',  
+            data:{ Title:$("#txtTitle").val(),SubTitle1:$("#txtSubTitle1").val(),SubTitle2:$("#txtSubTitle2").val(),SubTitle3:$("#txtSubTitle3").val()},
+            dataType: 'json',
+            success: function (data) {              
+               if(data.is_taken){
+                    console.log(data) 
+                    $("#divReportOutput").empty();
+                    $('#divRptProgress').dialog("close");
+                   //window.location="{% url 'downloadReport' %}"
+               }
+            }
+        });
+        
+    }
+
+    function addToReport(){ 
+       // $('#downRpt').onclick = function(){ console.log('clicked')};
+       if($("#txtComments").val().trim().length>0){
+            
+            TitleCnt=$('#txtTitleCnt').val(); 
+            TitleCnt=parseInt(TitleCnt)+1; 
+            vartxtToreplace=TitleCnt+' '+$('#txtTitle').val()+"\n";
+            varComment =$("#txtComments").val().replace(vartxtToreplace,"")
+             
+            $.ajax({ 
+            url: '/saveCSData/',
+            data:{'comment': varComment,'reqId':$("#txtreqId").val(),'titleIdx':TitleCnt,'title':$('#txtTitle').val()},
+            dataType: 'json',
+            success: function (data) {
+                    if(data.is_taken)
+                    { 
+                        if($("#txtreqId").val()!=''){
+                            $("#div_"+$("#txtreqId").val()).empty();
+                            $("#div_"+$("#txtreqId").val()).append("<span>"+$("#txtComments").val()+"</span>");
+                        }
+                        else{
+                            $("#divReportOutput").append("<br><div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' ondblclick='editComment(this.id)'><span>"+$("#txtComments").val()+"</span></div>");
+                        }
+                        $("#txtComments").val('');
+                        $("#txtreqId").val('');
+                        $("#txtTitleCnt").val(data.titleIdx);
+                        alert('Comment saved successfully.')                    
+                    }   
+            }
+            });  
+        }
+        else{
+            alert('Please enter text.')
+        }
+       
+    }
+
+    function editComment(id){ 
+        $("#txtComments").val('')
+        $("#txtComments").val($("#"+id).text());
+        $("#txtreqId").val(id.split('_')[1]);
+        $("#divRptPrv").dialog("close");
+    }
+
+    function deleteComment(e)
+    {
+        $("#divDeleteComment").dialog({   
+            width: "40%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Yes",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        $.ajax({ 
+                            url: '/deleteReportComment/',
+                            data:{'reqID': e.split('_')[1] },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        $("#"+e).empty();
+                                        alert('Comment updated successfully.')
+                                    }            
+                            }
+                        }); 
+                        
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        });
+        return false;
+        //return false;
+    }
+    function showRptPrv(){
+        $("#divRptPrv").dialog({   
+            width: "70%",   
+            height:650,
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+    
+    function showProcess(){
+        $("#divProcesStatus").dialog({   
+            width: "70%",   
+            height:650,
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [ 
+                {
+                    text: "Close",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+    
+    function showTitles(){
+          $("#divTitles").dialog({   
+            width: "30%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        AddSection(); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    
+    }
+    function showImages()
+    {  
+        $("#divImg").dialog({   
+            width: "70%",   
+            modal: true,
+            buttons:             /* Save: function() {
+                $(this).dialog("close");
+                } */ [
+                {
+                    text: "Add",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() { 
+                        var image = $('#imgGraph');
+                        scalev=($("input[name='rb_resize']:checked").val());
+                         
+                        imgHeight=parseFloat(image.css("height"))*scalev+"px;" ;
+                        imgWidth=parseFloat(image.css("width"))*scalev +"px;"; 
+                        
+                        $.ajax({ 
+                            url: '/saveReportImage/',
+                            data:{'ImgTitle': $("#txtImgTitle").val() ,'TitleAlign':$("#selectTitleAlign").val(),'imgHeight':scalev,'imgWidth':scalev,'img':$("#selectImg").val(),'imgAlign': $("#selectImgAlign").val() },
+                            dataType: 'json',
+                            success: function (data) {
+                                    if(data.is_taken)
+                                    {
+                                        alert('Image added to comment.')
+                                        $("#divReportOutput").append("<div>");
+                                            divTitleContent="<br> <div style='margin-left:auto;display: flex; justify-content:center;'>"+ $("#txtImgTitle").val() + "</div>"
+                                            if($("#selectTitleAlign").val()=="top"){
+                                                $("#divReportOutput").append(divTitleContent);
+                                                $("#divReportOutput").append("<br> <div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' style='margin-left:auto;display: flex; justify-content:"+ $("#selectImgAlign").val() +";'><img src='\\"+ $("#selectImg").val()+"' style='height: "+ imgHeight +";width:"+imgWidth+"'> </div>");
+                                               
+                                            }
+                                            else{
+                                                $("#divReportOutput").append("<br> <div id='div_"+ data.reqId +"' oncontextmenu='deleteComment(this.id)' style='margin-left:auto;display: flex; justify-content:"+ $("#selectImgAlign").val() +";'><img src='\\"+ $("#selectImg").val()+"' style='height: "+ imgHeight +";width:"+imgWidth+"'> </div>");
+                                                $("#divReportOutput").append(divTitleContent);
+                                            }
+                                            $("#divReportOutput").append("</div>")
+                                    }            
+                            }
+                        }); 
+                        $(this).dialog("close");
+                    }
+                },
+                {
+                    text: "Cancel",
+                    "class": 'btn btn-primary btn-sm',
+                    click: function() {
+                        // Save code here
+                        $(this).dialog("close");
+                    }
+                }
+            ],  
+        }); 
+    }
+
+    function resizeImg(per){
+        //alert(per)
+        $('#imgGraph').css("transform", "scale("+ (per/100) +")");
+        $('#imgGraph').css('transform-origin','0px 0px');
+    }
+ 
+    function getImg(){
+        $("#imgGraph").attr("src","\\"+ $("#selectImg").val()); 
+        $("#downChartRpt").attr('href', "\\"+ $("#selectImg").val().replace('.png','.pdf'));
+        let jsonData="{{imgFiles|safe}}"     
+        jsonData=jsonData.replaceAll("'",'"');
+        jsonData=jsonData.replaceAll("\\","\\\\");
+        jsonData=jsonData.replaceAll('None','"-"');
+        jsonData=$.parseJSON(jsonData)
+        jsonData.forEach((element,index) => { 
+            if(element.destination==$('#selectImg').val()){
+                console.log(' index is ',index)
+            }
+          });
+
+        var index = jsonData.findIndex(obj => obj.destination==$('#selectImg').val());  
+        if(jsonData[index].comments !='-'){
+            $('#downChartRpt').show();
+        }
+        else{
+            $('#downChartRpt').hide();
+        }
+    }
+
+    function getTitle(){ 
+        $('#txtTitle').val('');
+        $('#txtSubTitle').val('');
+        $('#txtSubSubTitle').val('');
+        $('#selectSubTitle option').remove();    
+        $('#selectSubTitle').append(new Option("Select Sub Title","0"));               
+        $('#selectSubTitle').append(new Option("Add New","-1"));
+        if( $('#selectSecTitle').val()!='0'){
+           $('#txtTitle').val($('#selectSecTitle option:selected').text());
+           $.ajax({
+            url: '/getSubTitleCS/',  
+            data:{ title:$("#selectSecTitle").val(),titleTxt:$('#selectSecTitle option:selected').text()},
+            dataType: 'json',
+            success: function (data) {
+                 $("#txtTitleCnt").val(data.titleIdx); 
+                }
+            });
+        }
+        if($('#selectSecTitle').val()=='-1')
+        {
+            $('#txtTitle').val('');
+            $('#selectSecTitle').hide();
+            $('#txtTitle').show();
+        }
+   }
+   
+function getSubTitle(){ 
+    $('#txtSubTitle').val('');
+    $('#txtSubSubTitle').val('');
+    $('#selectSubSubTitle option').remove();    
+    $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));               
+    $('#selectSubSubTitle').append(new Option("Add New","-1"));
+    if($('#selectSubTitle').val()!='0'){
+       $('#txtSubTitle').val($('#selectSubTitle option:selected').text());
+       $('#txtTitle').val($('#selectSecTitle option:selected').text());
+           $.ajax({
+            url: '/getSubSubTitle/',  
+            data:{ title:$("#selectSubTitle").val(),titleTxt:$('#selectSecTitle option:selected').text(),subtitleTxt:$('#selectSubTitle option:selected').text()},
+            dataType: 'json',
+            success: function (data) {          
+                $('#selectSubSubTitle option').remove();    
+                $('#selectSubSubTitle').append(new Option("Select Sub Sub Title","0"));
+                for(var x in data.subsubTtl){
+                    subTitleVal=$('#selectSubTitle').val()+'.'+ (parseInt(x)+1);
+                    $('#selectSubSubTitle').append(new Option(data.subsubTtl[x],subTitleVal));
+                    
+                }
+                $("#txtSubTitleCnt").val(data.titleIdx);
+                console.log('txtSubTitleCnt ' +$("#txtSubTitleCnt").val());
+                $('#selectSubSubTitle').append(new Option("Add New","-1"));
+                }
+            });
+    }
+    if($('#selectSubTitle').val()=='-1')
+    {
+        $('#txtSubTitle').val('');
+        $('#txtSubTitle').show();
+        $('#selectSubTitle').hide();
+    }
+}
+
+function getSubSubTitle(){ 
+    $('#txtSubSubTitle').val('');
+    if($('#selectSubSubTitle').val()!='0'){
+       $('#txtSubSubTitle').val($('#selectSubSubTitle option:selected').text());
+           $.ajax({
+            url: '/getSubSubTitleIdx/',  
+            data:{ subsubtitleTxt:$('#selectSubSubTitle option:selected').text(),titleTxt:$('#selectSecTitle option:selected').text(),subtitleTxt:$('#selectSubTitle option:selected').text()},
+            dataType: 'json',
+            success: function (data) {  
+                $("#txtSubSubTitleCnt").val(data.titleIdx);
+                }
+            });
+    }
+    if($('#selectSubSubTitle').val()=='-1')
+    {
+        $('#txtSubSubTitle').val('');
+        $('#txtSubSubTitle').show();
+        $('#selectSubSubTitle').hide();
+    }
+}
+
+
+   function AddSection(){  
+       if($("#txtTitle").val().trim().length>0)
+       {
+            if($('#selectSecTitle').val()=='-1'){
+                $('#selectSecTitle option:last').remove();
+                $('#selectSecTitle').append(new Option($('#txtTitle').val(),$('select#selectSecTitle option').length));
+                $('#selectSecTitle').append(new Option("Add New","-1")); 
+                $('#selectSecTitle').val($('select#selectSecTitle option').length-2);
+                TitleCnt=$('#txtTitleCnt').val(); 
+                TitleCnt=parseInt(TitleCnt)+1;
+                if($("#txtComments").val().length>0){
+                    $("#txtComments").val($("#txtComments").val()+' \n'+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                }
+                else{
+                    $("#txtComments").val($("#txtComments").val()+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                }
+                $("#txtComments").focus();
+            }
+            else{   
+                    TitleCnt=$('#txtTitleCnt').val(); 
+                    TitleCnt=parseInt(TitleCnt)+1;  
+                    if($("#txtComments").val().length>0){           
+                        $("#txtComments").val($("#txtComments").val()+' \n'+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                    }
+                    else{
+                        $("#txtComments").val($("#txtComments").val()+TitleCnt+' '+$('#txtTitle').val()+"\n")
+                    }
+                    $("#txtComments").focus();
+                }
+          
+       }
+   }
+
+   function goNext(){
+    window.location="{% url 'replication' %}"
+} 
+
+ </script>
+{% endblock script %} 

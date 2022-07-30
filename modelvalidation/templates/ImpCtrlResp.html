@@ -1,0 +1,102 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% block content %} 
+
+<div style="margin-left:auto;display: flex; justify-content:center;">         
+            
+               
+                
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                             {{section}} 
+                        </div>
+                        <div class="card-body card-block">  
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Validator's Comments </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                         <textarea id="txtvalidatorComment" disabled="disabled"   rows="4" style="resize: none;width: 100%;" class="form-control form-control-sm">{{validatorComment}}</textarea>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Response </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                        <input type="radio" id="chk_yes_{{srcName}}" name="rbTarget_{{srcName}}"/> Yes 
+                                        <input type="radio" id="chk_no_{{srcName}}" name="rbTarget_{{srcName}}"/> No
+                                  
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col col-md-3" style="margin-left: 10px;padding: 0;">
+                                        <label class=" form-control-label">Comments </label>
+                                    </div>
+                                    <div class="col col-md-8" style="margin: 0;padding: 0;">
+                                         <textarea id="txtrecipientComment" onchange="enableBtn()" rows="4" style="resize: none;width: 100%;" class="form-control form-control-sm"></textarea>
+                                    </div>
+                                </div> 
+                                <div class="card-footer">
+                                    <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                        <button type="button" class="btn btn-primary btn-sm" id="btn_mail" disabled="disabled" onclick="updateResp('{{srcName}}')">Confirm</button> 
+                                    </div>
+                                </div> 
+                        </div>
+                        <!-- <div class="card-footer">
+                            <div class="row" style="display: flex; justify-content: flex-end;"> 
+                                <button type="button" class="btn btn-primary btn-sm" style="margin-right: 10px;" >Save</button>
+                                <button type="button" class="btn btn-primary btn-sm" >Cancel</button>
+                            </div>
+                        </div> -->
+                    </div> 
+                </div>
+                 
+            </div> 
+
+{% endblock content %}
+{%  block script %}
+<script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'jquery-3.5.1.js' %}"></script>
+<!-- Jquery JS-->
+<script src="{% static 'vendor/jquery-3.2.1.min.js' %}"></script>
+<script src="{% static 'dataTables.min.js' %}"></script>
+<script type='text/javascript' >
+    var myTable;
+    var colDtTbl;
+    $(document).ready( function () { 
+        $('#liDataV').click(function(){
+        $('#sub_sub_menu').hide();
+        });
+        
+    } ); 
+
+    function updateResp(id){
+        //alert('src is '+ $("#txt_src").val() + ', email is '+ $("#txt_email").val() +' , cols are '+ $("#selectCols").val() )
+        console.log('clicked '+$('#chk_yes_'+id).prop('checked') )
+        $.ajax({
+            url: '/updateImpCtrlResp/', 
+            data:{ reqId: id,Resp: $('#chk_yes_'+id).prop('checked')?"Yes":"No",recpComment:$('#txtrecipientComment').val()  },
+            dataType: 'json',
+            success: function (data) {
+               // alert(data)
+               if(data.is_taken){
+                   alert('Mail sent successfully.'); 
+               }
+            }
+        });
+        
+    }
+
+    function enableBtn(id){ 
+        //alert($("#txt_email").val().length  +',' + $("#txt_src").val().length)
+        if($("#txtrecipientComment").val().trim().length ==0){
+            $("#btn_mail").prop('disabled', true);
+        }
+        else{
+            $("#btn_mail").prop('disabled', false);
+        }
+    }
+</script>
+{% endblock script %}
